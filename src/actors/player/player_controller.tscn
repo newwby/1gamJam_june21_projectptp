@@ -1,0 +1,30 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://src/actors/player/class_player.gd" type="Script" id=1]
+[ext_resource path="res://art/kenneynl_testsprite_dog.png" type="Texture" id=2]
+[ext_resource path="res://src/technical/rocking_tween.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/technical/abilities/weapon_ability.tscn" type="PackedScene" id=4]
+[ext_resource path="res://src/technical/abilities/active_ability.tscn" type="PackedScene" id=5]
+
+[sub_resource type="RectangleShape2D" id=1]
+
+[node name="Player" type="KinematicBody2D"]
+script = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="SpriteHolder" type="Node2D" parent="."]
+
+[node name="StaticSprite" type="Sprite" parent="SpriteHolder"]
+texture = ExtResource( 2 )
+
+[node name="RockingTween" parent="SpriteHolder/StaticSprite" instance=ExtResource( 3 )]
+
+[node name="AbilityHolder" type="Node2D" parent="."]
+
+[node name="WeaponAbility" parent="AbilityHolder" instance=ExtResource( 4 )]
+
+[node name="ActiveAbility1" parent="AbilityHolder" instance=ExtResource( 5 )]
+
+[node name="ActiveAbility2" parent="AbilityHolder" instance=ExtResource( 5 )]
