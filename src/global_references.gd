@@ -11,6 +11,15 @@ const sprite_weapon_rapid_shot = "res://art/icons/lorc-gameicons_missile_swarm.p
 const sprite_weapon_heavy_shot = "res://art/icons/lorc-gameicons_comet_spark.png"
 const sprite_weapon_vortex_shot = "res://art/icons/lorc-gameicons_orbital.png"
 
+#TODO add weapon collectable and projectile graphics to weapon style data
+# paths to projectile graphics
+const sprite_projectile_split_shot = "res://art/projectile/kenney_simplespace/meteor_squareLarge.png"
+const sprite_projectile_triple_burst_shot = "res://art/projectile/kenney_simplespace/meteor_squareDetailedLarge.png"
+const sprite_projectile_sniper_shot = "res://art/projectile/kenney_simplespace/station_B.png"
+const sprite_projectile_rapid_shot = "res://art/projectile/kenney_simplespace/star_large.png"
+const sprite_projectile_heavy_shot = "res://art/projectile/kenney_simplespace/meteor_detailedLarge.png"
+const sprite_projectile_vortex_shot = "res://art/projectile/kenney_simplespace/meteor_large.png"
+
 # string references for descriptions
 # descriptions for weapon types
 const DESC_SPLIT_SHOT =\

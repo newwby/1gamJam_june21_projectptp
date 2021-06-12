@@ -9,8 +9,14 @@ const INHERITED_VELOCITY_MULTIPLIER := 0.5
 # TODO investigate old shooter prototype I made and how I implemented
 # burst fire/projectile spread
 
+# coloUr code for modulate. of the sprite
+# default white
+var projectile_colour_code = Color.white
+
 # projectile is sized according to this variable
-export(int) var projectile_set_size = 8
+var projectile_set_size = 1.0
+# projectile collision area uses this base value
+var projectile_collision_base_radius = 28
 # projectile records where it spawned
 var starting_position = Vector2(0,0)
 # projectile deletes itself if it travels further than this from spawn
@@ -18,6 +24,9 @@ var maximum_range = 800
 # projectile deletes itself if it moves for more than this many ticks
 var current_ticks_has_moved = 0
 var maximum_ticks_moving = 10000
+
+# how fast the projectile rotates each tick
+var rotation_per_tick
 
 # projectile moves at this rate
 var projectile_speed = 1600
@@ -42,9 +51,12 @@ var projectile_lifespan := 5.0
 # projectile has this much of a grace period once offscreen before deletion
 var offscreen_lifespan := 1.0
 
+var projectile_sprite_path
+
 # array of every sprite involved with the projectile
-# TODO rewrite this with sprite_handler node
 onready var projectile_sprite_holder = $SpriteHolder
+# sprite handler replaced with simple sprite
+onready var simple_sprite = $SpriteHolder/ProjectileSprite
 
 # nodes in the projectile
 onready var projectile_collision = $ProjectileCollision
@@ -64,10 +76,16 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	_process_handle_movement(delta)
+	_process_rotate_self(delta)
 
 
 ##############################################################################
 
+
+# simplified movement instructions
+func _process_rotate_self(dt):
+	for i in projectile_sprite_holder.get_children():
+		i.rotation_degrees += rotation_per_tick
 
 # simplified movement instructions
 func _process_handle_movement(dt):
@@ -103,20 +121,33 @@ func _process_ticks_travelled(dt):
 
 # initial setup of collision size and sprite size
 func setup_collision_and_sprite_size():
-	var set_size_as_vector = Vector2(projectile_set_size, projectile_set_size)
-	setup_collision_extents(set_size_as_vector/2)
-	setup_sprite_size(set_size_as_vector)
+	# no longer necessary
+#	var set_size_as_vector = Vector2(projectile_set_size, projectile_set_size)
+	set_projectile_scale()
+
+# sets the collision and projectile size
+func set_projectile_scale():
+	# if the projectile is size modified, also modify the collision area
+	simple_sprite.scale =\
+	 Vector2(projectile_set_size, projectile_set_size)
+	projectile_collision.shape.radius =\
+	 projectile_collision_base_radius * projectile_set_size
+	# set sprite
+	if projectile_sprite_path != null:
+		simple_sprite.texture = load(projectile_sprite_path)
+	simple_sprite.modulate = projectile_colour_code
 
 
+# NOW DEFUNCT, this is the original func I used for testing
 # projectile collision is set according to var projectile_set_size
-func setup_collision_extents(given_vector):
+func defunct_setup_collision_extents(given_vector):
 	projectile_collision.shape.extents = given_vector
 
-
+# NOW DEFUNCT, this is the original func I used for testing
 # sprite holder node contains animated sprites that make up projectile graphics
 # this function assigns a scale adjustment to all children of that node
 # scale adjustment is  set according to var projectile_set_size
-func setup_sprite_size(size_to_set):
+func defunct_setup_sprite_size(size_to_set):
 	# sprite scale adjustment set to default
 	var set_sprite_scale = Vector2(1.0, 1.0)
 	

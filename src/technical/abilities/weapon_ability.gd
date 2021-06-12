@@ -9,6 +9,8 @@ var weapon = preload("res://src/technical/abilities/json_weapon_styles.gd")
 # reference a string path held elsewhere (for simpler path changes)
 const PROJECTILE_PATH = GlobalReferences.default_projectile
 
+var base_weapon_style = weapon.Style.SNIPER_SHOT
+
 var current_weapon_style
 
 # damage dealt by a single instance of the attack
@@ -73,7 +75,7 @@ onready var projectile_object = preload(PROJECTILE_PATH)
 #
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	set_weapon_style(weapon.Style.SNIPER_SHOT)
+	set_weapon_style(base_weapon_style)
 	set_new_cooldown_timer()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -188,7 +190,7 @@ func call_spawn_pattern_spread():
 	# if an odd number of projectiles, spawn a center projectile
 	# and set the additional spread to +1
 	if not projectile_count_even:
-		spawn_new_projectile(get_spawn_origin, given_velocity)
+		spawn_new_projectile(get_spawn_origin, given_velocity, 0)
 		additional_spread = 1.0
 	# else additional spread (for even # of projectiles) is +0.5
 	else:
@@ -268,24 +270,51 @@ func instance_new_projectile(weapon_style):
 	# maximum number of ticks projectile can be moving before deletion
 	new_projectile.maximum_ticks_moving =\
 	 current_weapon_style[weapon.DataType.PROJECTILE_MAX_MOVE_TICKS]
+	
+	# rotation of degrees per tick
+	new_projectile.rotation_per_tick =\
+	 current_weapon_style[weapon.DataType.PROJECTILE_SPRITE_ROTATE]
+	
+	# TODO change to be a sprite scaling function
+	
+	# this property is called on projectile to scale projectile size
+	new_projectile.projectile_set_size =\
+	 current_weapon_style[weapon.DataType.PROJECTILE_SIZE]
+	
+	# this determines the path of the projectile's sprite
+	new_projectile.projectile_sprite_path =\
+	 current_weapon_style[weapon.DataType.PROJECTILE_SPRITE_TYPE]
+	# this determines the projectile's colour code
+	new_projectile.projectile_colour_code =\
+	 current_weapon_style[weapon.DataType.PROJECTILE_SPRITE_COLOUR]
 
 	# return the instanced projectile
 	return new_projectile
 
 
 # func for creating a new projectile and setting it on its way
-func spawn_new_projectile(spawn_position, spawn_velocity, rotation_alteration = 0):
+func spawn_new_projectile(spawn_position, spawn_velocity, rotation_alteration):
 
 	# call the function to instance a new projectile correctly
 	# it applies all the related weapon style data dict values to
 	# the newly created projectile
 	var new_projectile = instance_new_projectile(current_weapon_style)
 
-	# if spread has been applied, affix a sprite change
-	new_projectile.rotation_degrees = rotation_alteration*10
-
 	new_projectile.position = spawn_position
 	new_projectile.velocity = spawn_velocity
+
+#
+#	# if spread has been applied, affix a sprite change
+	new_projectile.rotation_degrees = rotation_alteration*10
+#
+#	TODO - having problems with projectile rotation toward target, need
+#	to fix that if I ever want to (re)introduce pointed projectiles
+#	- for now just going to use circular projectiles
+#
+#	#new_projectile.rotation_degrees = 90
+##	var offset = owner.position - owner.firing_target
+#	var offset = owner.firing_target - owner.position
+#	new_projectile.rotation -= offset.angle();
 
 	# add projectile to the root viewport for now # TODO replace this
 	var projectile_parent = get_tree().get_root()

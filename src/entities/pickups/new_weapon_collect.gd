@@ -54,6 +54,7 @@ func set_by_key():
 
 
 func set_weapon_to_collect():
+	# TODO change this to utilise the style data entry
 	match chosen_weapon_style:
 		weapon.Style.SPLIT_SHOT:
 			sprite_path = GlobalReferences.sprite_weapon_split_shot
