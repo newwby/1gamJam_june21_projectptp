@@ -73,7 +73,7 @@ onready var projectile_object = preload(PROJECTILE_PATH)
 #
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	current_weapon_style = get_weapon_style(weapon.Style.SNIPER_SHOT)
+	set_weapon_style(weapon.Style.SNIPER_SHOT)
 	set_new_cooldown_timer()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -87,7 +87,7 @@ func _ready():
 # everything the weapon node needs to know about handling projectiles
 # is included in the data returned with this function
 # when changing weapon (e.g. via pickup) use this function
-func get_weapon_style(new_weapon_style):
+func set_weapon_style(new_weapon_style):
 	# current_weapon_style should be set to the enum weapon.Style
 	# pulls from weapon.STYLE_DATA and populates ability data dict
 	var ability_data
@@ -104,7 +104,9 @@ func get_weapon_style(new_weapon_style):
 			ability_data = weapon.STYLE_DATA[weapon.Style.HEAVY_SHOT]
 		weapon.Style.VORTEX_SHOT :
 			ability_data = weapon.STYLE_DATA[weapon.Style.VORTEX_SHOT]
-	return ability_data
+	
+	# set the current weapon_style
+	current_weapon_style = ability_data
 #
 #
 ################################################################################
@@ -142,17 +144,13 @@ func call_projectile_spawn_pattern_function():
 			call_spawn_pattern_spread()
 
 
-
 func call_spawn_pattern_spread():
 	# TODO implement handling for 
 	# use our current weapon style to get the number of projectiles fired
-	var get_projectile_count = \
-	current_weapon_style[weapon.DataType.PROJECTILE_COUNT]
+	projectile_count = current_weapon_style[weapon.DataType.PROJECTILE_COUNT]
 #
-#	# get the rotation applied to velocity for spread shots
-	var base_projectile_spread = weapon.SPREAD_PATTERN_WIDTH
-
-	var projectile_spread_increment = (weapon.SPREAD_PATTERN_WIDTH * 0.75)
+#	# get the spread pattern rotation applied to velocity
+	var projectile_spread_increment = (weapon.SPREAD_PATTERN_WIDTH)
 ##
 #	# get our position for spawn origin
 	var get_spawn_origin = owner.position
@@ -166,59 +164,74 @@ func call_spawn_pattern_spread():
 	# adjusted velocity is the velocity accounting for projectile spread
 	var adjusted_velocity
 	# this is to store the total rotation applied to projectile velocity
-	var total_spread_increment_counter
+	var spread_adjustment
+	# TODO rename this variable to be more representative
+	# this variable is basically an additive to spawn_loop to get an
+	# even distance between projectiles, it varies whether the
+	# projectile count is odd or even
+	var additional_spread
 	
-	spawn_new_projectile(get_spawn_origin, given_velocity)
+	# TODO account for projecitle size in spread
+	
+	var projectile_count_even = projectile_count % 2 == 0
+	
+	if GlobalDebug.projectile_spread_pattern: print("projectile count even = ", projectile_count_even)
+	
+	# while spawning projectiles  e are going to loop a number of times
+	# equal to half the projectiles if even, or half-1 if odd
+	var half_projectile_count =\
+	projectile_count / 2 if projectile_count_even\
+	else (projectile_count - 1) / 2
 
-func overridden_call_spawn_pattern_spread():
-	# TODO implement handling for 
-	# use our current weapon style to get the number of projectiles fired
-	var get_projectile_count = \
-	current_weapon_style[weapon.DataType.PROJECTILE_COUNT]
-#
-#	# get the rotation applied to velocity for spread shots
-	var base_projectile_spread = weapon.SPREAD_PATTERN_WIDTH
-
-	var projectile_spread_increment = (weapon.SPREAD_PATTERN_WIDTH * 0.75)
-##
-#	# get our position for spawn origin
-	var get_spawn_origin = owner.position
-	# initial velocity determined by the actor
-	# specifically by the actor's 'firing_target'
-	# for a player it is a vector toward their mouse position
-	# (at the time they pressed the fire key)
-	# for any AI it is the actor or entity they are aiming at
-	# (after introducing some fake 'poor aim' and/or 'aiming delay')
-	var given_velocity = get_projectile_initial_velocity()
-	# adjusted velocity is the velocity accounting for projectile spread
-	var adjusted_velocity
-	# this is to store the total rotation applied to projectile velocity
-	var total_spread_increment_counter
-##
-	# EVEN NUMBERS check if projectile count is even
-	if get_projectile_count % 2 == 0 and not 1 == 2:
-		# if it is even
-		# we are going to loop a number of times equal to half projectiles
-		var half_projectile_count = get_projectile_count / 2
-
-		# limited loop counting variable
-		var spawn_loop = 1
+	# on to the actual spawning of projectiles
+	
+	# if an odd number of projectiles, spawn a center projectile
+	# and set the additional spread to +1
+	if not projectile_count_even:
+		spawn_new_projectile(get_spawn_origin, given_velocity)
+		additional_spread = 1.0
+	# else additional spread (for even # of projectiles) is +0.5
+	else:
+		additional_spread = 0.5
+	if GlobalDebug.projectile_spread_pattern: print("additional spread value is ", additional_spread)
+	if GlobalDebug.projectile_spread_pattern: print("projectile count is ", projectile_count)
+	if GlobalDebug.projectile_spread_pattern: print("data type projectile count is ", current_weapon_style[weapon.DataType.PROJECTILE_COUNT])
+	# then we loop to spawn any flanking projectiles
+	if projectile_count > 1:
+		# limited loop counting variable5
+		var spawn_loop = 0
 		# bwgin the loop
+		if GlobalDebug.projectile_spread_pattern: print("beginning spawn loop!")
+		if GlobalDebug.projectile_spread_pattern: print("looping ", half_projectile_count, " times.")
 		while spawn_loop < half_projectile_count:
+			
+			if GlobalDebug.projectile_spread_pattern: print("loop count ", spawn_loop)
 
 			# each loop we will adjust the velocity twice before creating
 			# a new projectile with the adjusted velocity
 			# the first will positively rotate the spread by the increment total
 			# the second will negatively rotate the spread by the increment total
-			adjusted_velocity = given_velocity.rotated(projectile_spread_increment)
-			spawn_new_projectile(get_spawn_origin, adjusted_velocity)
-			adjusted_velocity = given_velocity.rotated(-projectile_spread_increment)
-			spawn_new_projectile(get_spawn_origin, adjusted_velocity)
+			
+			# spread gets wider each loop
+			spread_adjustment =\
+			projectile_spread_increment * (spawn_loop+additional_spread)
+			
+			# apply random variance to the fixed spread
+			spread_adjustment += return_shot_rotation_from_variance()
+			# rotate velocity by spread
+			adjusted_velocity = given_velocity.rotated(spread_adjustment)
+			# pass owner position for projectile spawn
+			# pass the rotated velocity
+			# pass the spread adjustment too, utilised for sprite rotation later
+			spawn_new_projectile(get_spawn_origin, adjusted_velocity, spread_adjustment)
+			
+			# repeat the above with negative values
+			spread_adjustment += return_shot_rotation_from_variance()
+			adjusted_velocity = given_velocity.rotated(-spread_adjustment)
+			spawn_new_projectile(get_spawn_origin, adjusted_velocity, -spread_adjustment)
+			
+			# increment the loop
 			spawn_loop += 1
-
-##	# for debugging
-	else:
-		spawn_new_projectile(get_spawn_origin, given_velocity)
 
 
 func call_spawn_pattern_series():
@@ -261,12 +274,15 @@ func instance_new_projectile(weapon_style):
 
 
 # func for creating a new projectile and setting it on its way
-func spawn_new_projectile(spawn_position, spawn_velocity):
+func spawn_new_projectile(spawn_position, spawn_velocity, rotation_alteration = 0):
 
 	# call the function to instance a new projectile correctly
 	# it applies all the related weapon style data dict values to
 	# the newly created projectile
 	var new_projectile = instance_new_projectile(current_weapon_style)
+
+	# if spread has been applied, affix a sprite change
+	new_projectile.rotation_degrees = rotation_alteration*10
 
 	new_projectile.position = spawn_position
 	new_projectile.velocity = spawn_velocity
@@ -280,22 +296,12 @@ func spawn_new_projectile(spawn_position, spawn_velocity):
 
 
 func get_projectile_initial_velocity():
+	if owner is Actor:
 		var firing_velocity = owner.firing_target.normalized()
 		return firing_velocity
-#	if owner is Actor:
-#		var firing_velocity = owner.firing_target
-##		return firing_velocity
-#	else:
-#		# this should not return, WeaponNode is currently actors-only
-#		return Vector2(0,0)
-
-
-# TODO, apply this
-func set_projectile_spread():
-	# calculated shot rotation
-	var shot_randomness = GlobalFuncs.ReturnRandomRange(-shot_spread, shot_spread)
-	# shot rotation applied to rotation
-	var spread_applied_velocity: Vector2 = shot_velocity.rotated(shot_randomness)
+	else:
+		# this should not return, WeaponNode is currently actors-only
+		return Vector2(0,0)
 
 
 # change projectile rotation_degree using weapon spread float
@@ -309,3 +315,37 @@ func return_shot_rotation_from_variance():
 	var rotation_degrees_randomisation = \
 	GlobalFuncs.ReturnRandomRange(-new_shot_spread, new_shot_spread)
 	return rotation_degrees_randomisation
+
+
+###############################################################################
+###############################################################################
+#
+# DEFUNCT FUNCTIONS BELOW HERE
+#
+## defunct, remove later
+#func defunct_testing_of_call_spawn_pattern_spread():
+#	# TODO implement handling for 
+#	# use our current weapon style to get the number of projectiles fired
+#	var get_projectile_count = \
+#	current_weapon_style[weapon.DataType.PROJECTILE_COUNT]
+##
+##	# get the rotation applied to velocity for spread shots
+#	var base_projectile_spread = weapon.SPREAD_PATTERN_WIDTH
+#
+#	var projectile_spread_increment = (weapon.SPREAD_PATTERN_WIDTH * 0.75)
+###
+##	# get our position for spawn origin
+#	var get_spawn_origin = owner.position
+#	# initial velocity determined by the actor
+#	# specifically by the actor's 'firing_target'
+#	# for a player it is a vector toward their mouse position
+#	# (at the time they pressed the fire key)
+#	# for any AI it is the actor or entity they are aiming at
+#	# (after introducing some fake 'poor aim' and/or 'aiming delay')
+#	var given_velocity = get_projectile_initial_velocity()
+#	# adjusted velocity is the velocity accounting for projectile spread
+#	var adjusted_velocity
+#	# this is to store the total rotation applied to projectile velocity
+#	var total_spread_increment_counter
+#
+#	spawn_new_projectile(get_spawn_origin, given_velocity)

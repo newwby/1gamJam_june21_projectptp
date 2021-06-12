@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://src/technical/vibrating_tween.gd" type="Script" id=1]
+
+[node name="VibratingTween" type="Tween"]
+script = ExtResource( 1 )
+[connection signal="tween_all_completed" from="." to="." method="_on_VibratingTween_tween_all_completed"]

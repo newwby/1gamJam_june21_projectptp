@@ -20,9 +20,14 @@ _global_script_classes=[ {
 "path": "res://src/actors/class_actor.gd"
 }, {
 "base": "Tween",
-"class": "AnimationTween_SpriteRocking",
+"class": "AnimationTween_SpriteVibrating",
 "language": "GDScript",
 "path": "res://src/technical/rocking_tween.gd"
+}, {
+"base": "Tween",
+"class": "AnimationTween_Spritevibrating",
+"language": "GDScript",
+"path": "res://src/technical/vibrating_tween.gd"
 }, {
 "base": "Node2D",
 "class": "BaseAbility",
@@ -47,7 +52,8 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "ActiveAbility": "",
 "Actor": "",
-"AnimationTween_SpriteRocking": "",
+"AnimationTween_SpriteVibrating": "",
+"AnimationTween_Spritevibrating": "",
 "BaseAbility": "",
 "Player": "",
 "Projectile": "",
@@ -56,9 +62,9 @@ _global_script_class_icons={
 
 [application]
 
-config/name="(1GaMJam-June21) Puppy Time Police"
+config/name="Puppy Time Police"
 run/main_scene="res://src/world/testing_environment.tscn"
-config/icon="res://icon.png"
+config/icon="res://art/kenneynl_testsprite_dog.png"
 
 [autoload]
 
@@ -72,7 +78,6 @@ GlobalFuncs="*res://src/global_funcs.gd"
 window/size/width=1680
 window/size/height=1024
 window/size/resizable=false
-window/size/fullscreen=true
 
 [input]
 
@@ -120,12 +125,13 @@ power_item_2={
 [layer_names]
 
 2d_physics/layer_1="player body"
-2d_physics/layer_2="player projectile"
+2d_physics/layer_2="player entity"
 2d_physics/layer_3="enemy body"
-2d_physics/layer_4="enemy projectile"
+2d_physics/layer_4="enemy entity"
 2d_physics/layer_5="obstacle"
 2d_physics/layer_6="ground effect"
 2d_physics/layer_7="room wall"
+2d_physics/layer_8="collectable"
 
 [rendering]
 

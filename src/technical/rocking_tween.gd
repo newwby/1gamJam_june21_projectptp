@@ -1,5 +1,5 @@
 
-class_name AnimationTween_SpriteRocking
+class_name AnimationTween_SpriteVibrating
 extends Tween
 
 # customisable values for the tween

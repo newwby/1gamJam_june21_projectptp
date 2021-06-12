@@ -2,7 +2,7 @@
 extends File
 
 # constant are utilised for the 'spread' spawn pattern
-const SPREAD_PATTERN_WIDTH: float = 0.05
+const SPREAD_PATTERN_WIDTH: float = 0.1
 
 # weapon style controls the style data a weapon ability uses
 enum Style {
@@ -77,6 +77,37 @@ enum DataType {
 	PROJECTILE_SHOT_VARIANCE,
 }
 
+# TODO
+# Add data types for
+
+#	bool	TriggerSecondaryWeapon	# or reference to another weapon?
+#	bool	TriggerSignal			# or reference to signal?
+#	bool	TriggerStatusEffect		# or status effect class
+#	bool	TriggerStackOnHit		# or stack class
+#	bool	TriggerAoE				# or AoE class
+
+#	enum	AoEShape {LINE, WAVE, CONE, NOVA}
+#	enum	AoESpawnType {AT_ATTACKER, AT_TARGET}
+#	float	AoE Size
+#	int		AoE Damage
+#	int		AoE Instances
+#	int		AoE Spacing
+#	bool	isAoEEchoing
+
+#	bool	isProjectileContactDamage
+
+# replace flightspeed w/
+#	float	ProjectileBaseSpeed
+#	float	ProjectileAcceleration	# (acceleration rate per tick?)
+#	float	ProjectileTopSpeed
+
+#	bool	isProjectileSeeking
+#	float	ProjectileSteering
+
+#	float	FixedSpreadWidth		# projectiles can go full circle atm
+
+#	bool	isFixedFiringTarget		# can the player aim freely whilst firing?
+#	bool	isRootedDuringShot		# can the player move whilst firing?
 
 # TODO
 # implement enum/array for on-contact actions
@@ -111,8 +142,8 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_MOVE_PATTERN	: MovementBehaviour.DIRECT,
 		DataType.PROJECTILE_SPAWN_PATTERN	: SpawnPattern.SPREAD,
 		DataType.PROJECTILE_SPAWN_DELAY		: 0,
-		DataType.PROJECTILE_COUNT			: 2,#3,
-		DataType.PROJECTILE_FLIGHT_SPEED	: 750,
+		DataType.PROJECTILE_COUNT			: 3,
+		DataType.PROJECTILE_FLIGHT_SPEED	: 600,
 		DataType.PROJECTILE_SHOT_VARIANCE	: 0.01,
 	
 	},
@@ -135,7 +166,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_MAX_LIFESPAN	: 4.0,
 		DataType.PROJECTILE_OFFSCREEN_SPAN	: 1.0,
 		DataType.PROJECTILE_MOVE_PATTERN	: MovementBehaviour.DIRECT,
-		DataType.PROJECTILE_SPAWN_PATTERN	: SpawnPattern.SPREAD,
+		DataType.PROJECTILE_SPAWN_PATTERN	: SpawnPattern.SERIES,
 		DataType.PROJECTILE_SPAWN_DELAY		: 0.4,
 		DataType.PROJECTILE_COUNT			: 3,
 		DataType.PROJECTILE_FLIGHT_SPEED	: 800,
@@ -150,7 +181,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_PARTICLES		: ProjectileParticles.NONE,
 		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
 		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
-		DataType.SHOT_USE_COOLDOWN			: 1.6,
+		DataType.SHOT_USE_COOLDOWN			: 0.8,
 		DataType.AI_MIN_USE_RANGE			: GlobalVariables.RangeGroup.NEAR,
 		DataType.AI_MAX_USE_RANGE			: GlobalVariables.RangeGroup.DISTANT,
 		DataType.BASE_DAMAGE				: 25,
@@ -161,7 +192,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_OFFSCREEN_SPAN	: 4.0,
 		DataType.PROJECTILE_MOVE_PATTERN	: MovementBehaviour.DIRECT,
 		DataType.PROJECTILE_SPAWN_PATTERN	: SpawnPattern.SNIPER,
-		DataType.PROJECTILE_SPAWN_DELAY	: 0,
+		DataType.PROJECTILE_SPAWN_DELAY		: 0.8,
 		DataType.PROJECTILE_COUNT			: 1,
 		DataType.PROJECTILE_FLIGHT_SPEED	: 1600,
 		DataType.PROJECTILE_SHOT_VARIANCE	: 0.01,
@@ -186,7 +217,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_OFFSCREEN_SPAN	: 1.0,
 		DataType.PROJECTILE_MOVE_PATTERN	: MovementBehaviour.DIRECT,
 		DataType.PROJECTILE_SPAWN_PATTERN	: SpawnPattern.SPREAD,
-		DataType.PROJECTILE_SPAWN_DELAY	: 0,
+		DataType.PROJECTILE_SPAWN_DELAY		: 0,
 		DataType.PROJECTILE_COUNT			: 1,
 		DataType.PROJECTILE_FLIGHT_SPEED	: 1000,
 		DataType.PROJECTILE_SHOT_VARIANCE	: 0.15,
@@ -211,7 +242,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_OFFSCREEN_SPAN	: 1.0,
 		DataType.PROJECTILE_MOVE_PATTERN	: MovementBehaviour.DIRECT,
 		DataType.PROJECTILE_SPAWN_PATTERN	: SpawnPattern.SPREAD,
-		DataType.PROJECTILE_SPAWN_DELAY	: 0,
+		DataType.PROJECTILE_SPAWN_DELAY		: 0,
 		DataType.PROJECTILE_COUNT			: 1,
 		DataType.PROJECTILE_FLIGHT_SPEED	: 400,
 		DataType.PROJECTILE_SHOT_VARIANCE	: 0.05,
@@ -236,7 +267,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_OFFSCREEN_SPAN	: 1.0,
 		DataType.PROJECTILE_MOVE_PATTERN	: MovementBehaviour.ORBIT,
 		DataType.PROJECTILE_SPAWN_PATTERN	: SpawnPattern.SPREAD,
-		DataType.PROJECTILE_SPAWN_DELAY	: 0,
+		DataType.PROJECTILE_SPAWN_DELAY		: 0,
 		DataType.PROJECTILE_COUNT			: 1,
 		DataType.PROJECTILE_FLIGHT_SPEED	: 500,
 		DataType.PROJECTILE_SHOT_VARIANCE	: 0.05,

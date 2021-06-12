@@ -11,4 +11,8 @@ var proj_sprite_handling = false
 # debug for ability unable to fire when activated console logging
 var ability_cooldown_not_met_logging = false
 # debug for projectile logging to console all exit behaviours
-var projectile_exit_logging = true
+var projectile_exit_logging = false
+# debug for spread projectile pattern spawning
+var projectile_spread_pattern = false
+# debug for the vibrating tween starting and stopping
+var player_vibrating_anim_tween = false
