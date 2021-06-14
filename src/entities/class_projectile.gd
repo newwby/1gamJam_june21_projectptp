@@ -233,7 +233,7 @@ func _on_FadeTween_tween_completed(object, key):
 	call_projectile_expiry()
 
 func _on_FadeTween_tween_all_completed():
-	pass
+	queue_free()
 
 
 ##############################################################################
@@ -241,10 +241,11 @@ func _on_FadeTween_tween_all_completed():
 
 # begin a tween to fade projectile away rapidly
 func begin_projectile_expiry():
-	call_projectile_expiry()
-#	fading_tween.interpolate_property(self,\
-#	 "a", modulate.a, 0, projectile_expiry_fade_duration,\
-#	 Tween.TRANS_LINEAR, Tween.EASE_OUT)
+#	call_projectile_expiry()
+	fading_tween.interpolate_property(self,\
+	 "modulate:a", modulate.a, 0, projectile_expiry_fade_duration,\
+	 Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	fading_tween.start()
 
 
 # whenever you feel ready to delete this safely godot, go for it

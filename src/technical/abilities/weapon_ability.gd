@@ -9,6 +9,8 @@ var weapon = preload("res://src/technical/abilities/json_weapon_styles.gd")
 # reference a string path held elsewhere (for simpler path changes)
 const PROJECTILE_PATH = GlobalReferences.default_projectile
 
+const MINIMUM_SHOT_COOLDOWN = 0.1
+
 var base_weapon_style = weapon.Style.RADAR_SWEEP_SHOT
 
 var current_weapon_style
@@ -45,6 +47,7 @@ var shot_spread: float = 0.15
 # resource path of the projectile actors can spawn
 onready var projectile_object = preload(PROJECTILE_PATH)
 onready var shot_spawn_delay_timer = $ShotDelayTimer
+onready var minimum_cooldown_timer = $MinimumShotCooldown
 
 ###############################################################################
 
@@ -83,6 +86,7 @@ onready var shot_spawn_delay_timer = $ShotDelayTimer
 func _ready():
 	set_new_weapon(base_weapon_style)
 	set_new_cooldown_timer()
+	set_minimum_cooldown_timer()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
@@ -157,6 +161,11 @@ func set_owner_targetting_sprites(override = null):
 			owner.can_rotate_target_sprites = override
 			owner.show_rotate_target_sprites = true
 
+
+func set_minimum_cooldown_timer():
+	minimum_cooldown_timer.wait_time = MINIMUM_SHOT_COOLDOWN
+
+
 #
 ################################################################################
 
@@ -195,26 +204,33 @@ func activate_ability():
 #
 ################################################################################
 #
-func call_projectile_spawn_pattern_function():
-	# projectiles are spawned travelling in the direction of last facing
-	# additionally spawner velocity is added to the projectile
-	var current_weapon_spawn_pattern = \
-	current_weapon_style[weapon.DataType.PROJECTILE_SPAWN_PATTERN]
-	
-	# we some variables that are utilised by every spawn pattern
-	# use our current weapon style to get the number of projectiles fired
-	projectile_count = current_weapon_style[weapon.DataType.PROJECTILE_COUNT]
-	# get spawn delay between projectiles
-	spawn_delay_per_shot = current_weapon_style[weapon.DataType.PROJECTILE_SPAWN_DELAY]
-		
-	# calculate starting velocity to calculate from
-	given_velocity = get_projectile_initial_velocity()
 
-	match current_weapon_spawn_pattern:
-		weapon.SpawnPattern.SPREAD:
-			call_spawn_pattern_spread()
-		weapon.SpawnPattern.SERIES:
-			call_spawn_pattern_series()
+# this is a switchboard for the weapon spawn pattern functions
+func call_projectile_spawn_pattern_function():
+	
+	# we do not process this function if minimum cooldown timer is
+	# in action/started
+	if minimum_cooldown_timer.is_stopped():
+		
+		# projectiles are spawned travelling in the direction of last facing
+		# additionally spawner velocity is added to the projectile
+		var current_weapon_spawn_pattern = \
+		current_weapon_style[weapon.DataType.PROJECTILE_SPAWN_PATTERN]
+		
+		# we some variables that are utilised by every spawn pattern
+		# use our current weapon style to get the number of projectiles fired
+		projectile_count = current_weapon_style[weapon.DataType.PROJECTILE_COUNT]
+		# get spawn delay between projectiles
+		spawn_delay_per_shot = current_weapon_style[weapon.DataType.PROJECTILE_SPAWN_DELAY]
+			
+		# calculate starting velocity to calculate from
+		given_velocity = get_projectile_initial_velocity()
+	
+		match current_weapon_spawn_pattern:
+			weapon.SpawnPattern.SPREAD:
+				call_spawn_pattern_spread()
+			weapon.SpawnPattern.SERIES:
+				call_spawn_pattern_series()
 
 
 func call_spawn_pattern_spread():
@@ -283,21 +299,16 @@ func call_spawn_pattern_spread():
 			
 			# get our position for spawn origin
 			get_spawn_origin = owner.position
-			
 			if GlobalDebug.projectile_spread_pattern: print("loop count ", spawn_loop)
-
 			# each loop we will adjust the velocity twice before creating
 			# a new projectile with the adjusted velocity
 			# the first will positively rotate the spread by the increment total
-			# the second will negatively rotate the spread by the increment total
-			
+			# the second will negatively rotate the spread by the increment total			
 			# spread gets wider each loop
 			spread_adjustment =\
 			projectile_spread_increment * (spawn_loop+additional_spread)
-			
 			# apply random variance to the fixed spread
 			spread_adjustment += return_shot_rotation_from_variance()
-			
 			
 			# update starting velocity in case it has changed
 			given_velocity = get_projectile_initial_velocity()
@@ -315,6 +326,8 @@ func call_spawn_pattern_spread():
 			
 			# increment the loop
 			spawn_loop += 1
+	
+	end_spawn_pattern()
 
 
 func call_spawn_pattern_series():
@@ -339,6 +352,11 @@ func call_spawn_pattern_series():
 	
 	var total_projectiles_spawned = 0
 	
+	# do not proceed if the timer is already running
+	# (that would mean we're waiting for a shot to fire)
+	if not shot_spawn_delay_timer.is_stopped():
+		return
+	
 	while total_projectiles_spawned < projectile_count:
 		shot_spawn_delay_timer.wait_time = spawn_delay_per_shot
 		shot_spawn_delay_timer.start()
@@ -357,7 +375,14 @@ func call_spawn_pattern_series():
 		spawn_new_projectile(get_spawn_origin, adjusted_velocity, -spread_adjustment)
 		total_projectiles_spawned += 1
 	owner.show_sniper_line = false
+	
 	set_owner_targetting_sprites(true)
+	
+	end_spawn_pattern()
+
+
+func end_spawn_pattern():
+	minimum_cooldown_timer.start()
 
 
 ###############################################################################
