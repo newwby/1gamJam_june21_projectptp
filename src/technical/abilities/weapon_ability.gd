@@ -9,7 +9,7 @@ var weapon = preload("res://src/technical/abilities/json_weapon_styles.gd")
 # reference a string path held elsewhere (for simpler path changes)
 const PROJECTILE_PATH = GlobalReferences.default_projectile
 
-var base_weapon_style = weapon.Style.SNIPER_SHOT
+var base_weapon_style = weapon.Style.RADAR_SWEEP_SHOT
 
 var current_weapon_style
 
@@ -38,7 +38,7 @@ var shot_spread: float = 0.15
 
 # resource path of the projectile actors can spawn
 onready var projectile_object = preload(PROJECTILE_PATH)
-
+onready var shot_spawn_delay_timer = $ShotDelayTimer
 
 ###############################################################################
 
@@ -106,20 +106,67 @@ func set_weapon_style(new_weapon_style):
 			ability_data = weapon.STYLE_DATA[weapon.Style.HEAVY_SHOT]
 		weapon.Style.VORTEX_SHOT :
 			ability_data = weapon.STYLE_DATA[weapon.Style.VORTEX_SHOT]
+		
+		# debugging and tesitng only for player
+		# enemy and turret weapon styles
+		
+		weapon.Style.RADAR_SWEEP_SHOT :
+			ability_data = weapon.STYLE_DATA[weapon.Style.RADAR_SWEEP_SHOT]
 	
 	# set the current weapon_style
 	current_weapon_style = ability_data
-#
-#
-################################################################################
 #
 #
 func set_new_cooldown_timer():
 	activation_cooldown =\
 	current_weapon_style[weapon.DataType.SHOT_USE_COOLDOWN]
 	activation_timer.stop()
-	setup_cooldown_timer()
+	set_cooldown_timer()
+#
+#
+################################################################################
 
+
+## shadow of the parent func
+#func attempt_ability():
+#	if GlobalDebug.ability_cooldown_not_met_logging: print("attempting to activate ability ", self.name)
+#	# if activation timer isn't set up, ability can't be activated
+#	if is_timer_setup:
+#		# check if timer is running
+#		if activation_timer.is_stopped():
+#			# if it isn't, run ability
+#			if GlobalDebug.ability_cooldown_not_met_logging: print("ability ", self.name, "activated!")
+#			activate_ability()
+#			activation_timer.start()
+#		else:
+#			if GlobalDebug.ability_cooldown_not_met_logging: print("ability ", self.name, " on cooldown!")
+##		.
+#		pass
+
+
+# the weapon ability version of this function exclusively handles the
+# stationary cooldown timer bonus to activation speed
+func attempt_ability():
+	.attempt_ability()
+	# follow the parent class function and make sure timer is setup
+	if is_timer_setup and not owner.is_moving:
+		# get the normal ability timer
+		var ability_timer_duration = activation_timer.wait_time
+		# get the stationary bonus multiplier
+		var stationary_bonus = current_weapon_style[weapon.DataType.SHOT_STATIONARY_BONUS]
+		# calculate the wait time multiplied by stationary bonus
+		var stationary_effective_timer =\
+		 ability_timer_duration*(1-stationary_bonus)
+		
+		# if beneath the effective timer after applying the stationary bonus,
+		# and the timer is still running,
+		# activate the ability and stop/start the timer
+		if activation_timer.time_left < stationary_effective_timer\
+		and not activation_timer.is_stopped():
+			activation_timer.stop()
+			activation_timer.start()
+			activate_ability()
+	#
 
 # TODO add more weapon ability variations
 # basic weapon ability 
@@ -141,8 +188,9 @@ func call_projectile_spawn_pattern_function():
 		weapon.SpawnPattern.SPREAD:
 			call_spawn_pattern_spread()
 		weapon.SpawnPattern.SERIES:
-			call_spawn_pattern_spread()
+			call_spawn_pattern_series()
 		weapon.SpawnPattern.SNIPER:
+			print("should be calling sniper")
 			call_spawn_pattern_spread()
 
 
@@ -237,7 +285,45 @@ func call_spawn_pattern_spread():
 
 
 func call_spawn_pattern_series():
-	pass
+	# use our current weapon style to get the number of projectiles fired
+	projectile_count = current_weapon_style[weapon.DataType.PROJECTILE_COUNT]
+	
+	# get spawn delay between projectiles
+	spawn_delay_per_shot = current_weapon_style[weapon.DataType.PROJECTILE_SPAWN_DELAY]
+#
+#	# get the spread pattern rotation applied to velocity
+	var projectile_spread_increment = (weapon.SPREAD_PATTERN_WIDTH)
+##
+#	# get our position for spawn origin
+	var get_spawn_origin = owner.position
+	
+	# determine starting velocity to calculate from
+	var given_velocity = get_projectile_initial_velocity()
+	# adjusted velocity is the velocity accounting for projectile spread
+	var adjusted_velocity
+	# this is to store the total rotation applied to projectile velocity
+	var spread_adjustment
+	# TODO rename this variable to be more representative
+	# this variable is basically an additive to spawn_loop to get an
+	# even distance between projectiles, it varies whether the
+	# projectile count is odd or even
+	var additional_spread
+	
+	# TODO account for projecitle size in spread
+
+	# on to the actual spawning of projectiles
+	
+	var total_projectiles_spawned = 0
+	
+	while total_projectiles_spawned < projectile_count:
+		spread_adjustment = return_shot_rotation_from_variance()
+		adjusted_velocity = given_velocity.rotated(-spread_adjustment)
+		spawn_new_projectile(get_spawn_origin, adjusted_velocity, -spread_adjustment)
+		total_projectiles_spawned += 1
+		shot_spawn_delay_timer.wait_time = spawn_delay_per_shot
+		shot_spawn_delay_timer.start()
+		yield(shot_spawn_delay_timer, "timeout")
+		
 
 
 func call_spawn_pattern_sniper():
@@ -249,11 +335,21 @@ func call_spawn_pattern_sniper():
 
 func instance_new_projectile(weapon_style):
 	var new_projectile = projectile_object.instance()
+	
+	# set who spawned the projectile
+	new_projectile.projectile_owner = self.owner
 
 	# set the values by weapon style here
 	# speed of the projectile
 	new_projectile.projectile_speed =\
 	 current_weapon_style[weapon.DataType.PROJECTILE_FLIGHT_SPEED]
+	# check if actor is moving, if so add portion of their move speed to proj speed
+	if owner.is_moving:
+		var speed_inherit_multiplier =\
+		 current_weapon_style[weapon.DataType.PROJECTILE_SPEED_INHERIT]
+		new_projectile.projectile_speed +=\
+		 (owner.movement_speed*speed_inherit_multiplier)
+	
 	# size of projectile
 	new_projectile.projectile_set_size =\
 	 current_weapon_style[weapon.DataType.PROJECTILE_SIZE]
@@ -287,6 +383,11 @@ func instance_new_projectile(weapon_style):
 	# this determines the projectile's colour code
 	new_projectile.projectile_colour_code =\
 	 current_weapon_style[weapon.DataType.PROJECTILE_SPRITE_COLOUR]
+	#
+	# this establishes how the projectile moves once spawned
+	# TODO movement behaviours could become projectile subclasses
+	new_projectile.projectile_movement_behaviour =\
+	 current_weapon_style[weapon.DataType.PROJECTILE_MOVE_PATTERN]
 
 	# return the instanced projectile
 	return new_projectile
@@ -315,22 +416,41 @@ func spawn_new_projectile(spawn_position, spawn_velocity, rotation_alteration):
 ##	var offset = owner.position - owner.firing_target
 #	var offset = owner.firing_target - owner.position
 #	new_projectile.rotation -= offset.angle();
-
-	# add projectile to the root viewport for now # TODO replace this
-	var projectile_parent = get_tree().get_root()
-	projectile_parent.add_child(new_projectile)
+	
+	var get_move_style = new_projectile.projectile_movement_behaviour
+	if get_move_style == GlobalVariables.ProjectileMovement.DIRECT:
+		# add projectile to the root viewport for now # TODO replace this
+		var projectile_parent = get_tree().get_root()
+		projectile_parent.add_child(new_projectile)
+	elif get_move_style == GlobalVariables.ProjectileMovement.ORBIT:
+		
+		var projectile_parent = new_projectile.projectile_owner.orbit_handler_node
+		var count_children = projectile_parent.get_child_count()
+		var new_parent = Node2D.new()
+		new_parent.rotation_degrees = 45 * count_children
+		new_parent.add_child(new_projectile)
+		projectile_parent.add_child(new_parent)
+		
+	elif get_move_style == GlobalVariables.ProjectileMovement.RADAR:
+		
+		var projectile_parent = new_projectile.projectile_owner.orbit_handler_node
+		projectile_parent.add_child(new_projectile)
 
 
 ###############################################################################
 
 
 func get_projectile_initial_velocity():
+	var firing_velocity =  Vector2(0,0)
 	if owner is Actor:
-		var firing_velocity = owner.firing_target.normalized()
-		return firing_velocity
+		if current_weapon_style[weapon.DataType.SHOT_AIM_TYPE] == weapon.AimType.FIXED_ON_HOLD:
+			firing_velocity = owner.firing_target.normalized()
+		elif current_weapon_style[weapon.DataType.SHOT_AIM_TYPE] == weapon.AimType.FREE_AIM:
+			firing_velocity = owner.current_mouse_target.normalized()
 	else:
-		# this should not return, WeaponNode is currently actors-only
-		return Vector2(0,0)
+		if GlobalDebug.weapon_initial_velocity_check: print("initial velocity not set")
+	# if it returns 0,0 there has been a problem
+	return firing_velocity
 
 
 # change projectile rotation_degree using weapon spread float

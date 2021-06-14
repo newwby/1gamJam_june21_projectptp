@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://src/actors/player/class_player.gd" type="Script" id=1]
 [ext_resource path="res://art/kenneynl_testsprite_dog.png" type="Texture" id=2]
 [ext_resource path="res://src/technical/rocking_tween.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/technical/abilities/weapon_ability.tscn" type="PackedScene" id=4]
 [ext_resource path="res://src/technical/abilities/active_ability.tscn" type="PackedScene" id=5]
+[ext_resource path="res://art/projectile/kenney_simplespace/ship_D.png" type="Texture" id=6]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -29,3 +30,16 @@ texture = ExtResource( 2 )
 [node name="ActiveAbility1" parent="AbilityHolder" instance=ExtResource( 5 )]
 
 [node name="ActiveAbility2" parent="AbilityHolder" instance=ExtResource( 5 )]
+
+[node name="OrbitalProjectileHolder" type="Node2D" parent="."]
+
+[node name="TargetingSpriteHolder" type="Node2D" parent="."]
+rotation = 1.5708
+
+[node name="TargetingSprite" type="Sprite" parent="TargetingSpriteHolder"]
+modulate = Color( 1, 1, 1, 0.196078 )
+show_behind_parent = true
+position = Vector2( -0.280609, -1.1225 )
+scale = Vector2( 2, 1 )
+texture = ExtResource( 6 )
+offset = Vector2( 0, -100 )

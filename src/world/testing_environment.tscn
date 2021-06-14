@@ -6,6 +6,7 @@
 [node name="Node2D" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
+position = Vector2( 152.827, 221.749 )
 
 [node name="NewWeaponPickup" parent="." instance=ExtResource( 2 )]
 position = Vector2( 893.165, 333.016 )
@@ -27,5 +28,5 @@ position = Vector2( 1297.71, 590.724 )
 weapon_style_index = 4
 
 [node name="NewWeaponPickup6" parent="." instance=ExtResource( 2 )]
-position = Vector2( 422.696, 851.43 )
+position = Vector2( 416.703, 219.144 )
 weapon_style_index = 5

@@ -18,21 +18,21 @@ var activation_cooldown = 0.2
 var is_timer_setup = false
 # reference to timer node that controls activation and cooldown
 var activation_timer: Timer
-
+# bool to indicate whether the ability can be activated or not
 
 ##############################################################################
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	setup_cooldown_timer()
+	set_cooldown_timer()
 
 
 ##############################################################################
 
 
 # iniitalises and resets the wait time on the activation timer
-func setup_cooldown_timer():
+func set_cooldown_timer():
 	
 	# check timer is valid
 	# if it is valid, run function
@@ -55,17 +55,18 @@ func setup_cooldown_timer():
 func attempt_ability():
 	if GlobalDebug.ability_cooldown_not_met_logging: print("attempting to activate ability ", self.name)
 	# if activation timer isn't set up, ability can't be activated
+	
+	# make sure timer exists
 	if is_timer_setup:
-		# check if timer is running
-		if activation_timer.is_stopped():
-			# if it isn't, run ability
-			if GlobalDebug.ability_cooldown_not_met_logging: print("ability ", self.name, "activated!")
+		# check if ability on cooldown or not by whether the timer is running
+		is_ability_on_cooldown = !activation_timer.is_stopped()
+		if GlobalDebug.ability_cooldown_not_met_logging: print(self.name, " on cooldown? ", is_ability_on_cooldown)
+		# activate ability if not on cooldown
+		if not is_ability_on_cooldown:
+			# and start timer for new cooldown
+			if activation_timer.is_stopped():
+				activation_timer.start()
 			activate_ability()
-			activation_timer.start()
-		else:
-			if GlobalDebug.ability_cooldown_not_met_logging: print("ability ", self.name, " on cooldown!")
-#		.
-		pass
 
 
 # this function is just a placeholder

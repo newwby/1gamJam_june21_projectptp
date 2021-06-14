@@ -16,3 +16,5 @@ var projectile_exit_logging = false
 var projectile_spread_pattern = false
 # debug for the vibrating tween starting and stopping
 var player_vibrating_anim_tween = false
+# debug for if initial velocity hasn't been set correctly
+var weapon_initial_velocity_check = false

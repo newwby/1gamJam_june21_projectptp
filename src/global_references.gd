@@ -35,6 +35,9 @@ const DESC_HEAVY_SHOT =\
 const DESC_VORTEX_SHOT =\
 "Fires shots that stop and orbit the attacker"
 
+const DESC_NONE =\
+"Invalid description string"
+
 # enum for various collision layers, for standardised setting in code
 enum CollisionLayers {
 	PLAYER_BODY,

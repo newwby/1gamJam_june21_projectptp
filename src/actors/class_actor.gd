@@ -8,7 +8,9 @@ var movement_speed = 400
 var velocity: Vector2 = Vector2.ZERO
 # this is the last direction the actor moved and changed facing
 var last_facing = Vector2(0,0)
-
+# check if the actor is moving or not, has to be set on the sub-class
+# i.e. player or enemy
+var is_moving = false
 
 ###############################################################################
 
