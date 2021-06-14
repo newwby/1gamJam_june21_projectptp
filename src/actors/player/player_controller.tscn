@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://src/actors/player/class_player.gd" type="Script" id=1]
 [ext_resource path="res://art/kenneynl_testsprite_dog.png" type="Texture" id=2]
@@ -9,12 +9,35 @@
 
 [sub_resource type="RectangleShape2D" id=1]
 
+[sub_resource type="Gradient" id=2]
+offsets = PoolRealArray( 0, 0.389163 )
+colors = PoolColorArray( 1, 1, 1, 0.196078, 1, 1, 1, 0 )
+
 [node name="Player" type="KinematicBody2D"]
 collision_mask = 253
 script = ExtResource( 1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
+
+[node name="TargetingSpriteHolder" type="Node2D" parent="."]
+rotation = 1.5708
+
+[node name="TargetingSprite" type="Sprite" parent="TargetingSpriteHolder"]
+modulate = Color( 1, 1, 1, 0.196078 )
+show_behind_parent = true
+position = Vector2( -0.280609, -1.1225 )
+scale = Vector2( 2, 1 )
+texture = ExtResource( 6 )
+offset = Vector2( 0, -100 )
+
+[node name="SniperTargetingLine" type="Line2D" parent="TargetingSpriteHolder/TargetingSprite"]
+show_behind_parent = true
+rotation = 1.5708
+points = PoolVector2Array( 0, 0, -1000, 0 )
+width = 5.0
+gradient = SubResource( 2 )
+texture_mode = 2
 
 [node name="SpriteHolder" type="Node2D" parent="."]
 
@@ -32,14 +55,3 @@ texture = ExtResource( 2 )
 [node name="ActiveAbility2" parent="AbilityHolder" instance=ExtResource( 5 )]
 
 [node name="OrbitalProjectileHolder" type="Node2D" parent="."]
-
-[node name="TargetingSpriteHolder" type="Node2D" parent="."]
-rotation = 1.5708
-
-[node name="TargetingSprite" type="Sprite" parent="TargetingSpriteHolder"]
-modulate = Color( 1, 1, 1, 0.196078 )
-show_behind_parent = true
-position = Vector2( -0.280609, -1.1225 )
-scale = Vector2( 2, 1 )
-texture = ExtResource( 6 )
-offset = Vector2( 0, -100 )

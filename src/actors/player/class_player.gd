@@ -7,8 +7,20 @@ var last_facing_not_firing: Vector2 = Vector2.ZERO
 # player sprite is automatically resized according to this value
 var sprite_intended_size = 100
 
+# determine whether the player has immunity to damage from foes or not
+# note: damage is damage to health from foes
+# it does not include self-damage (a separate stat)
+# it does not include any other timer related damage
+# i.e. decrement over time, or ability usage
+var is_damageable_by_foes = true
+
 # determine whether the player is firing
 var is_firing = false
+
+# is the player allowed to rotate their target sprite
+var can_rotate_target_sprites = true
+# are we showing all targeting sprites
+var show_rotate_target_sprites = true
 
 # how fast does the orbital rotation node rotate
 var orbiting_rotation_rate = 3
@@ -20,14 +32,18 @@ var current_mouse_target: Vector2 = Vector2.ZERO
 # direction was the player aiming when they first started holding attack
 var firing_target: Vector2 = Vector2.ZERO
 
+# if sniper weapon we show this line between fire input and projectile spawn
+var show_sniper_line: bool = false
+
 onready var player_sprite = $SpriteHolder/StaticSprite
 onready var sprite_animation_tween = $SpriteHolder/StaticSprite/RockingTween
 
 onready var weapon_ability_node = $AbilityHolder/WeaponAbility
-onready var active_ability_node_1 = $AbilityHolder/ActiveAbility1
-onready var active_ability_node_2 = $AbilityHolder/ActiveAbility2
+onready var active_ability_node_1 = $AbilityHolder/ActiveAbility1 #q
+onready var active_ability_node_2 = $AbilityHolder/ActiveAbility2 #e
 
 onready var target_sprite_rotator = $TargetingSpriteHolder
+onready var target_line_sniper = $TargetingSpriteHolder/TargetingSprite/SniperTargetingLine
 onready var orbit_handler_node = $OrbitalProjectileHolder
 
 ###############################################################################
@@ -37,40 +53,31 @@ onready var orbit_handler_node = $OrbitalProjectileHolder
 func _ready():
 	# adjust the player sprite according to (var sprite_intended_size)
 	setup_sprite_scale()
+	set_ability_nodes()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	get_attack_input()
+	get_ability_input()
 	_process_orbit_handler_rotate(delta)
 	_process_rotate_targeting_sprite(delta)
-
 
 # for orbital and radar projectiles
 func _process_orbit_handler_rotate(_dt):
 	orbit_handler_node.rotation_degrees += orbiting_rotation_rate
 
 
-# working on
+# target sprites point (arrow and sniper target line) point toward mouse pos
 func _process_rotate_targeting_sprite(_dt):
-#	var directional_vector = get_global_mouse_position() - position
-#	var point_angle = directional_vector.angle()
-#	target_sprite_rotator.rotation = (point_angle+90)
-	target_sprite_rotator.look_at(get_global_mouse_position())
-#	target_sprite_rotator.look_at(get_local_mouse_position())
-	target_sprite_rotator.rotation_degrees += 90
-	
-	#target_sprite_rotator.rotation
-#
-#	var offset = -PI * 0.5
-##	var screen_pos = get_viewport().get_camera()(self.global_transform.origin)
-##Call get_viewport().get_mouse_position() for global position and subtract the node position to get the local mouse position.
-#
-#	var mouse_pos = get_viewport().get_mouse_position()
-#	var vector_to = mouse_pos - position
-#
-#	target_sprite_rotator.rotation = angle
-
+	target_line_sniper.visible = show_sniper_line
+	target_sprite_rotator.visible = show_rotate_target_sprites
+	# make sure these are allowed to rotate
+	if can_rotate_target_sprites:
+		# turn targeting sprite to look toward mouse cursor
+		target_sprite_rotator.look_at(get_global_mouse_position())
+		# godot engine problem brute force fix
+		target_sprite_rotator.rotation_degrees += 90
 
 # track any mouse movement as new co-ordinates for mouse position
 func _input(event):
@@ -116,6 +123,13 @@ func setup_sprite_scale():
 	player_sprite.scale = Vector2(sprite_scale_adj,sprite_scale_adj)
 
 
+func set_ability_nodes():
+	active_ability_node_1.set_new_ability(GlobalVariables.AbilityTypes.BLINK)
+	active_ability_node_1.activation_cooldown = 1.0
+	active_ability_node_2.set_new_ability(GlobalVariables.AbilityTypes.TIME_SLOW)
+	active_ability_node_1.activation_cooldown = 2.0
+
+
 ###############################################################################
 
 
@@ -155,6 +169,14 @@ func get_attack_input():
 	elif not Input.is_action_pressed("fire_weapon"):
 		if is_firing:
 			is_firing = false
+
+
+# active ability calls
+func get_ability_input():
+	if Input.is_action_pressed("power_item_1"):
+		active_ability_node_1.attempt_ability()
+	if Input.is_action_pressed("power_item_2"):
+		active_ability_node_2.attempt_ability()
 
 
 ###############################################################################

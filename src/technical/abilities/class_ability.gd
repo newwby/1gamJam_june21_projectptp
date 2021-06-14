@@ -13,7 +13,7 @@ var ai_maximum_range_for_use: float
 # if true ability cannot activate  but is still allowed (unless false above)
 var is_ability_on_cooldown: bool = false
 # determines the length of the cooldown/activation timer wait_time
-var activation_cooldown = 0.2
+var activation_cooldown = 0.2 setget set_activation_cooldown
 # presence of  cooldown timer must be checked before it can be called by methods
 var is_timer_setup = false
 # reference to timer node that controls activation and cooldown
@@ -39,13 +39,19 @@ func set_cooldown_timer():
 	# else debug print
 	if $ActivationCooldown != null:
 		activation_timer = $ActivationCooldown
+		set_activation_cooldown(activation_cooldown)
+		is_timer_setup = true
+	else:
+		if GlobalDebug.validate_node_existence: print("ActivationTimer for WeaponAbility "+ self.name + " not found")
+
+
+func set_activation_cooldown(value):
+	activation_cooldown = value
+	if activation_timer != null:
 		if activation_cooldown <= 0:
 			activation_cooldown = 0.1
 		activation_timer.wait_time = activation_cooldown
 		activation_timer.start()
-		is_timer_setup = true
-	else:
-		if GlobalDebug.validate_node_existence: print("ActivationTimer for WeaponAbility "+ self.name + " not found")
 
 
 ##############################################################################

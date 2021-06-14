@@ -14,3 +14,10 @@ enum ProjectileMovement {
 	ORBIT,
 	RADAR,
 }
+
+
+# active abilities for players
+enum AbilityTypes {
+	BLINK,
+	TIME_SLOW,
+}

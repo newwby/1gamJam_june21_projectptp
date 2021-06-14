@@ -18,3 +18,5 @@ var projectile_spread_pattern = false
 var player_vibrating_anim_tween = false
 # debug for if initial velocity hasn't been set correctly
 var weapon_initial_velocity_check = false
+# debugging for player active abilities
+var player_active_ability_logs = true

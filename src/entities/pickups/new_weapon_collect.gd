@@ -79,7 +79,7 @@ func set_sprite():
 
 func _on_Area_body_entered(body):
 	if not is_collected and body is Player:
-		body.weapon_ability_node.set_weapon_style(chosen_weapon_style)
+		body.weapon_ability_node.set_new_weapon(chosen_weapon_style)
 		body.weapon_ability_node.set_new_cooldown_timer()
 		emit_signal("collected")
 

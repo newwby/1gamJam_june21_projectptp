@@ -30,6 +30,7 @@ enum SpawnPattern {
 # aim type determines how the weapon interprets player aiming
 enum AimType {
 	FREE_AIM, # fire toward current mouse position
+	SNIPER_AIM, # fire toward current sprite_rotation
 	FIXED_ON_HOLD, # fire toward mouse position at time of holding fire button
 }
 
@@ -81,6 +82,7 @@ enum DataType {
 	PROJECTILE_MOVE_PATTERN,
 	PROJECTILE_SPAWN_PATTERN,
 	PROJECTILE_SPAWN_DELAY,
+	USE_SNIPER_AIM_LINE,
 	PROJECTILE_COUNT,
 	PROJECTILE_FLIGHT_SPEED,
 	PROJECTILE_SPEED_INHERIT,
@@ -90,11 +92,16 @@ enum DataType {
 # TODO
 # Add data types for
 
-#	bool	TriggerSecondaryWeapon	# or reference to another weapon?
+#	ref		TriggerSecondaryWeapon	# or reference to another weapon?
+#	enum	TriggerCondition		# on hit, on crit, on timer
+#	array	onHitEffects			# an array containing everything checked on hit, status, triggers etc
 #	bool	TriggerSignal			# or reference to signal?
 #	bool	TriggerStatusEffect		# or status effect class
 #	bool	TriggerStackOnHit		# or stack class
 #	bool	TriggerAoE				# or AoE class
+
+#	Float	BaseCriticalChance
+#	Float	BaseCriticalMultiplier	
 
 #	enum	AoEShape {LINE, WAVE, CONE, NOVA}
 #	enum	AoESpawnType {AT_ATTACKER, AT_TARGET}
@@ -156,6 +163,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_MOVE_PATTERN	: GlobalVariables.ProjectileMovement.DIRECT,
 		DataType.PROJECTILE_SPAWN_PATTERN	: SpawnPattern.SPREAD,
 		DataType.PROJECTILE_SPAWN_DELAY		: 0,
+		DataType.USE_SNIPER_AIM_LINE		: false,
 		DataType.PROJECTILE_COUNT			: 3,
 		DataType.PROJECTILE_FLIGHT_SPEED	: 600,
 		DataType.PROJECTILE_SPEED_INHERIT	: 0.4,
@@ -187,6 +195,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_MOVE_PATTERN	: GlobalVariables.ProjectileMovement.DIRECT,
 		DataType.PROJECTILE_SPAWN_PATTERN	: SpawnPattern.SERIES,
 		DataType.PROJECTILE_SPAWN_DELAY		: 0.075,
+		DataType.USE_SNIPER_AIM_LINE		: false,
 		DataType.PROJECTILE_COUNT			: 3,
 		DataType.PROJECTILE_FLIGHT_SPEED	: 1300,
 		DataType.PROJECTILE_SPEED_INHERIT	: 0.6,
@@ -199,12 +208,12 @@ const STYLE_DATA = {
 		DataType.WEAPON_ICON_SPRITE			: GlobalReferences.sprite_weapon_sniper_shot,
 		DataType.PROJECTILE_SPRITE_TYPE		: GlobalReferences.sprite_projectile_sniper_shot,
 		DataType.PROJECTILE_SPRITE_COLOUR	: Color.forestgreen,
-		DataType.PROJECTILE_SPRITE_ROTATE	: 36,
+		DataType.PROJECTILE_SPRITE_ROTATE	: 32,
 		DataType.PROJECTILE_PARTICLES		: ProjectileParticles.NONE,
 		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
 		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
 		DataType.SHOT_AIM_TYPE				: AimType.FREE_AIM,
-		DataType.SHOT_USE_COOLDOWN			: 2.4,
+		DataType.SHOT_USE_COOLDOWN			: 1.4,
 		DataType.SHOT_STATIONARY_BONUS		: 0.5,
 		DataType.AI_MIN_USE_RANGE			: GlobalVariables.RangeGroup.NEAR,
 		DataType.AI_MAX_USE_RANGE			: GlobalVariables.RangeGroup.DISTANT,
@@ -215,10 +224,11 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_MAX_LIFESPAN	: 8.0,
 		DataType.PROJECTILE_OFFSCREEN_SPAN	: 4.0,
 		DataType.PROJECTILE_MOVE_PATTERN	: GlobalVariables.ProjectileMovement.DIRECT,
-		DataType.PROJECTILE_SPAWN_PATTERN	: SpawnPattern.SNIPER,
-		DataType.PROJECTILE_SPAWN_DELAY		: 0.8,
+		DataType.PROJECTILE_SPAWN_PATTERN	: SpawnPattern.SERIES,
+		DataType.PROJECTILE_SPAWN_DELAY		: 1.6,
+		DataType.USE_SNIPER_AIM_LINE		: true,
 		DataType.PROJECTILE_COUNT			: 1,
-		DataType.PROJECTILE_FLIGHT_SPEED	: 2000,
+		DataType.PROJECTILE_FLIGHT_SPEED	: 2400,
 		DataType.PROJECTILE_SPEED_INHERIT	: 0.4,
 		DataType.PROJECTILE_SHOT_VARIANCE	: 0.01,
 	},
@@ -247,6 +257,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_MOVE_PATTERN	: GlobalVariables.ProjectileMovement.DIRECT,
 		DataType.PROJECTILE_SPAWN_PATTERN	: SpawnPattern.SPREAD,
 		DataType.PROJECTILE_SPAWN_DELAY		: 0,
+		DataType.USE_SNIPER_AIM_LINE		: false,
 		DataType.PROJECTILE_COUNT			: 1,
 		DataType.PROJECTILE_FLIGHT_SPEED	: 1000,
 		DataType.PROJECTILE_SPEED_INHERIT	: 0.6,
@@ -277,6 +288,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_MOVE_PATTERN	: GlobalVariables.ProjectileMovement.DIRECT,
 		DataType.PROJECTILE_SPAWN_PATTERN	: SpawnPattern.SPREAD,
 		DataType.PROJECTILE_SPAWN_DELAY		: 0,
+		DataType.USE_SNIPER_AIM_LINE		: false,
 		DataType.PROJECTILE_COUNT			: 1,
 		DataType.PROJECTILE_FLIGHT_SPEED	: 400,
 		DataType.PROJECTILE_SPEED_INHERIT	: 0.2,
@@ -293,7 +305,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_PARTICLES		: ProjectileParticles.NONE,
 		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
 		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
-		DataType.SHOT_AIM_TYPE				: AimType.FREE_AIM,
+		DataType.SHOT_AIM_TYPE				: AimType.FIXED_ON_HOLD,
 		DataType.SHOT_USE_COOLDOWN			: 0.35,
 		DataType.SHOT_STATIONARY_BONUS		: 0.95,
 		DataType.AI_MIN_USE_RANGE			: GlobalVariables.RangeGroup.MELEE,
@@ -307,6 +319,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_MOVE_PATTERN	: GlobalVariables.ProjectileMovement.ORBIT,
 		DataType.PROJECTILE_SPAWN_PATTERN	: SpawnPattern.SPREAD,
 		DataType.PROJECTILE_SPAWN_DELAY		: 0,
+		DataType.USE_SNIPER_AIM_LINE		: false,
 		DataType.PROJECTILE_COUNT			: 1,
 		DataType.PROJECTILE_FLIGHT_SPEED	: 300,
 		DataType.PROJECTILE_SPEED_INHERIT	: 0.0,
@@ -330,7 +343,7 @@ const STYLE_DATA = {
 		DataType.DESCRIPTION_STRINGREF		: GlobalReferences.DESC_NONE,
 		DataType.WEAPON_ICON_SPRITE			: GlobalReferences.sprite_weapon_vortex_shot,
 		DataType.PROJECTILE_SPRITE_TYPE		: GlobalReferences.sprite_projectile_vortex_shot,
-		DataType.PROJECTILE_SPRITE_COLOUR	: Color.orangered,
+		DataType.PROJECTILE_SPRITE_COLOUR	: Color.bisque,
 		DataType.PROJECTILE_SPRITE_ROTATE	: 12,
 		DataType.PROJECTILE_PARTICLES		: ProjectileParticles.NONE,
 		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
@@ -349,6 +362,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_MOVE_PATTERN	: GlobalVariables.ProjectileMovement.RADAR,
 		DataType.PROJECTILE_SPAWN_PATTERN	: SpawnPattern.SPREAD,
 		DataType.PROJECTILE_SPAWN_DELAY		: 0,
+		DataType.USE_SNIPER_AIM_LINE		: false,
 		DataType.PROJECTILE_COUNT			: 1,
 		DataType.PROJECTILE_FLIGHT_SPEED	: 100,
 		DataType.PROJECTILE_SPEED_INHERIT	: 0.0,
