@@ -161,6 +161,8 @@ func get_movement_input():
 # hold button to fire
 func get_attack_input():
 	if Input.is_action_pressed("fire_weapon"):
+		
+		if GlobalDebug.log_projectile_spawn_steps: ("get_attack_input_Input.is_action_pressed(fire_weapon):")
 		current_mouse_target = -(self.position - get_global_mouse_position())
 		if not is_firing:
 			is_firing = true

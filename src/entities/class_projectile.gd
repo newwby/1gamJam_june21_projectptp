@@ -3,6 +3,8 @@
 class_name Projectile
 extends Area2D
 
+signal projectile_expired()
+
 # constant float for modifying velocity inherited from spawner
 const INHERITED_VELOCITY_MULTIPLIER := 0.5
 
@@ -11,7 +13,7 @@ const INHERITED_VELOCITY_MULTIPLIER := 0.5
 
 var projectile_owner
 
-# coloUr code for modulate. of the sprite
+# colour code for modulate. of the sprite
 # default white
 var projectile_colour_code = Color.white
 
@@ -87,6 +89,7 @@ onready var fading_tween = $FadeTween
 # Called when the node enters the scene tree for the first time.
 # set projectile extents, timer values, range
 func _ready():
+	self.add_to_group("projectiles")
 	set_collision_and_sprite_size()
 	set_projectile_lifespan_timer()
 	set_orbital_initialisation_timer()
@@ -103,7 +106,7 @@ func _process(delta):
 
 
 # simplified movement instructions
-func _process_rotate_self(dt):
+func _process_rotate_self(_dt):
 	for i in projectile_sprite_holder.get_children():
 		i.rotation_degrees += rotation_per_tick
 
@@ -229,7 +232,7 @@ func _on_OrbitInitialisationTimer_timeout():
 
 
 
-func _on_FadeTween_tween_completed(object, key):
+func _on_FadeTween_tween_completed(_object, _key):
 	call_projectile_expiry()
 
 func _on_FadeTween_tween_all_completed():
@@ -242,10 +245,11 @@ func _on_FadeTween_tween_all_completed():
 # begin a tween to fade projectile away rapidly
 func begin_projectile_expiry():
 #	call_projectile_expiry()
-	fading_tween.interpolate_property(self,\
-	 "modulate:a", modulate.a, 0, projectile_expiry_fade_duration,\
-	 Tween.TRANS_LINEAR, Tween.EASE_OUT)
-	fading_tween.start()
+	if fading_tween.is_inside_tree():
+		fading_tween.interpolate_property(self,\
+		 "modulate:a", modulate.a, 0, projectile_expiry_fade_duration,\
+		 Tween.TRANS_LINEAR, Tween.EASE_OUT)
+		fading_tween.start()
 
 
 # whenever you feel ready to delete this safely godot, go for it

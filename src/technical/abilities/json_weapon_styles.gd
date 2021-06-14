@@ -23,7 +23,7 @@ enum Style {
 enum SpawnPattern {
 	SPREAD, # additional projectiles fire from sides, widening spread
 	SERIES, # additional projectiles fire from same point as first
-	SNIPER, # during shot spawn delay spawns a line
+	O, # spawn pattern does not matter, just spawn
 }
 
 
@@ -50,6 +50,13 @@ enum SpawnSurgeEffect {
 	NONE,
 }
 
+# when are sound effects played
+enum AudioStyle {
+	WHILST_HELD,
+	ON_PRIMED,
+	ON_FIRE,
+}
+
 # sound effect played when the weapon/shot is fired
 enum ShotSound {
 	NONE,
@@ -66,6 +73,7 @@ enum DataType {
 	PROJECTILE_SPRITE_COLOUR,
 	PROJECTILE_SPRITE_ROTATE,
 	PROJECTILE_PARTICLES,
+	SHOT_AUDIO_STYLE,
 	SHOT_SOUND_EFFECT,
 	SHOT_SURGE_EFFECT,
 	SHOT_AIM_TYPE,
@@ -147,6 +155,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_SPRITE_COLOUR	: Color.aliceblue,
 		DataType.PROJECTILE_SPRITE_ROTATE	: 12,
 		DataType.PROJECTILE_PARTICLES		: ProjectileParticles.NONE,
+		DataType.SHOT_AUDIO_STYLE			: AudioStyle.ON_FIRE,
 		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
 		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
 		DataType.SHOT_AIM_TYPE				: AimType.FREE_AIM,
@@ -154,7 +163,7 @@ const STYLE_DATA = {
 		DataType.SHOT_STATIONARY_BONUS		: 0.85,
 		DataType.AI_MIN_USE_RANGE			: GlobalVariables.RangeGroup.CLOSE,
 		DataType.AI_MAX_USE_RANGE			: GlobalVariables.RangeGroup.FAR,
-		DataType.BASE_DAMAGE				: 12,
+		DataType.BASE_DAMAGE				: 8,
 		DataType.PROJECTILE_SIZE			: 0.8,
 		DataType.PROJECTILE_MAX_MOVE_TICKS	: 6000,
 		DataType.PROJECTILE_MAX_RANGE		: 600,
@@ -179,6 +188,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_SPRITE_COLOUR	: Color.silver,
 		DataType.PROJECTILE_SPRITE_ROTATE	: 16,
 		DataType.PROJECTILE_PARTICLES		: ProjectileParticles.NONE,
+		DataType.SHOT_AUDIO_STYLE			: AudioStyle.ON_FIRE,
 		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
 		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
 		DataType.SHOT_AIM_TYPE				: AimType.FREE_AIM,
@@ -186,7 +196,7 @@ const STYLE_DATA = {
 		DataType.SHOT_STATIONARY_BONUS		: 0.75,
 		DataType.AI_MIN_USE_RANGE			: GlobalVariables.RangeGroup.CLOSE,
 		DataType.AI_MAX_USE_RANGE			: GlobalVariables.RangeGroup.FAR,
-		DataType.BASE_DAMAGE				: 10,
+		DataType.BASE_DAMAGE				: 15,
 		DataType.PROJECTILE_SIZE			: 1.0,
 		DataType.PROJECTILE_MAX_MOVE_TICKS	: 6000,
 		DataType.PROJECTILE_MAX_RANGE		: 600,
@@ -210,6 +220,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_SPRITE_COLOUR	: Color.forestgreen,
 		DataType.PROJECTILE_SPRITE_ROTATE	: 32,
 		DataType.PROJECTILE_PARTICLES		: ProjectileParticles.NONE,
+		DataType.SHOT_AUDIO_STYLE			: AudioStyle.ON_FIRE,
 		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
 		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
 		DataType.SHOT_AIM_TYPE				: AimType.FREE_AIM,
@@ -217,7 +228,7 @@ const STYLE_DATA = {
 		DataType.SHOT_STATIONARY_BONUS		: 0.5,
 		DataType.AI_MIN_USE_RANGE			: GlobalVariables.RangeGroup.NEAR,
 		DataType.AI_MAX_USE_RANGE			: GlobalVariables.RangeGroup.DISTANT,
-		DataType.BASE_DAMAGE				: 25,
+		DataType.BASE_DAMAGE				: 35,
 		DataType.PROJECTILE_SIZE			: 1.2,
 		DataType.PROJECTILE_MAX_MOVE_TICKS	: 10000,
 		DataType.PROJECTILE_MAX_RANGE		: 800,
@@ -241,10 +252,11 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_SPRITE_COLOUR	: Color.fuchsia,
 		DataType.PROJECTILE_SPRITE_ROTATE	: 18,
 		DataType.PROJECTILE_PARTICLES		: ProjectileParticles.NONE,
+		DataType.SHOT_AUDIO_STYLE			: AudioStyle.WHILST_HELD,
 		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
 		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
 		DataType.SHOT_AIM_TYPE				: AimType.FREE_AIM,
-		DataType.SHOT_USE_COOLDOWN			: 0.15,
+		DataType.SHOT_USE_COOLDOWN			: 0.12,
 		DataType.SHOT_STATIONARY_BONUS		: 0.75,
 		DataType.AI_MIN_USE_RANGE			: GlobalVariables.RangeGroup.CLOSE,
 		DataType.AI_MAX_USE_RANGE			: GlobalVariables.RangeGroup.FAR,
@@ -272,6 +284,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_SPRITE_COLOUR	: Color.firebrick,
 		DataType.PROJECTILE_SPRITE_ROTATE	: 4,
 		DataType.PROJECTILE_PARTICLES		: ProjectileParticles.NONE,
+		DataType.SHOT_AUDIO_STYLE			: AudioStyle.ON_FIRE,
 		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
 		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
 		DataType.SHOT_AIM_TYPE				: AimType.FREE_AIM,
@@ -303,6 +316,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_SPRITE_COLOUR	: Color.orangered,
 		DataType.PROJECTILE_SPRITE_ROTATE	: 12,
 		DataType.PROJECTILE_PARTICLES		: ProjectileParticles.NONE,
+		DataType.SHOT_AUDIO_STYLE			: AudioStyle.WHILST_HELD,
 		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
 		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
 		DataType.SHOT_AIM_TYPE				: AimType.FIXED_ON_HOLD,
@@ -310,7 +324,7 @@ const STYLE_DATA = {
 		DataType.SHOT_STATIONARY_BONUS		: 0.95,
 		DataType.AI_MIN_USE_RANGE			: GlobalVariables.RangeGroup.MELEE,
 		DataType.AI_MAX_USE_RANGE			: GlobalVariables.RangeGroup.NEAR,
-		DataType.BASE_DAMAGE				: 10,
+		DataType.BASE_DAMAGE				: 20,
 		DataType.PROJECTILE_SIZE			: 0.8,
 		DataType.PROJECTILE_MAX_MOVE_TICKS	: 8000,
 		DataType.PROJECTILE_MAX_RANGE		: 400,
@@ -346,6 +360,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_SPRITE_COLOUR	: Color.bisque,
 		DataType.PROJECTILE_SPRITE_ROTATE	: 12,
 		DataType.PROJECTILE_PARTICLES		: ProjectileParticles.NONE,
+		DataType.SHOT_AUDIO_STYLE			: AudioStyle.WHILST_HELD,
 		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
 		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
 		DataType.SHOT_AIM_TYPE				: AimType.FIXED_ON_HOLD,

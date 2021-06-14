@@ -2,6 +2,7 @@ extends Node
 
 # paths to various resources handled by multiple scenes
 const default_projectile = "res://src/entities/projectile.tscn"
+const node_2d_deletion = "res://src/technical/node2d_deletion_handler.gd"
 
 # paths to sprite graphics for collectables
 const sprite_weapon_split_shot = "res://art/icons/lorc-gameicons_striking_arrows.png"

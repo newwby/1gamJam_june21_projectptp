@@ -44,6 +44,8 @@ func blink():
 	owner.set_collision_mask_bit(3, false)
 	owner.set_collision_mask_bit(5, false)
 	owner.set_collision_mask_bit(7, false)
+	# repurpose with this
+	##my_area.set_collision_mask_bit(Layer.WALLS, true)
 	
 	# create a timer and set properties for this function
 	var blink_timer = Timer.new()
@@ -88,5 +90,6 @@ func blink():
 	# reset actor properties modified within this function
 	owner.is_damageable_by_foes = true
 	owner.visible = true
+	owner.modulate.a = 1.0
 	self.remove_child(blink_timer)
 	blink_timer.queue_free()

@@ -59,7 +59,7 @@ func set_activation_cooldown(value):
 
 # check if the ability is valid
 func attempt_ability():
-	if GlobalDebug.ability_cooldown_not_met_logging: print("attempting to activate ability ", self.name)
+	if GlobalDebug.ability_cooldown_not_met_logging: print("checking validty of ability ", self.name)
 	# if activation timer isn't set up, ability can't be activated
 	
 	# make sure timer exists
@@ -78,5 +78,5 @@ func attempt_ability():
 # this function is just a placeholder
 # individual child ability classes will define this function
 func activate_ability():
-	pass
+	if GlobalDebug.ability_cooldown_not_met_logging: print("attempting to activate ability ", self.name)
 
