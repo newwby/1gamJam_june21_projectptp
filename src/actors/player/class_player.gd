@@ -60,7 +60,7 @@ func _process(delta):
 
 # for orbital and radar projectiles
 func _process_orbit_handler_rotate(_dt):
-	orbit_handler_node.rotation_degrees += orbiting_rotation_rate
+	orbit_handler_node.rotation_degrees -= orbiting_rotation_rate
 
 
 # target sprites point (arrow and sniper target line) point toward mouse pos
@@ -122,7 +122,7 @@ func set_ability_nodes():
 	active_ability_node_1.set_new_ability(GlobalVariables.AbilityTypes.BLINK)
 	active_ability_node_1.activation_cooldown = 1.0
 	active_ability_node_2.set_new_ability(GlobalVariables.AbilityTypes.TIME_SLOW)
-	active_ability_node_1.activation_cooldown = 2.0
+	active_ability_node_2.activation_cooldown = 2.0
 
 
 ###############################################################################

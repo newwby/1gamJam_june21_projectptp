@@ -1,3 +1,5 @@
+
+class_name ActiveModifier
 extends Node2D
 
 signal effect_applied
@@ -20,19 +22,19 @@ func _ready():
 
 
 func apply_effect():
-	if GlobalDebug.log_parent_modifier: print("apply_effect")
+	if GlobalDebug.log_parent_modifier_steps: print("apply_effect")
 	# announce we're done
 	emit_signal("effect_applied")
 
 
 func remove_effect():
-	if GlobalDebug.log_parent_modifier: print("remove_effect")
+	if GlobalDebug.log_parent_modifier_steps: print("remove_effect")
 	# announce we're done
 	emit_signal("effect_removed")
 
 
 func _on_ExpiryTimer_timeout():
-	if GlobalDebug.log_parent_modifier: print("_on_ExpiryTimer_timeout")
+	if GlobalDebug.log_parent_modifier_steps: print("_on_ExpiryTimer_timeout")
 	# remove effect before deleting self
 	remove_effect()
 	# make sure we wait until effect is removed

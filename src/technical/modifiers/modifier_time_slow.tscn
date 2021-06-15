@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://src/technical/modifiers/modifier_time_slow.gd" type="Script" id=1]
+
+[node name="ActiveModifier" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="ExpiryTimer" type="Timer" parent="."]
+one_shot = true
+[connection signal="timeout" from="ExpiryTimer" to="." method="_on_ExpiryTimer_timeout"]
