@@ -11,6 +11,7 @@ script = ExtResource( 1 )
 one_shot = true
 
 [node name="BlinkParticles" parent="." instance=ExtResource( 2 )]
+modulate = Color( 0.607843, 0.607843, 1, 0.607843 )
 emitting = false
 amount = 10
 lifetime = 0.25
@@ -21,10 +22,16 @@ initial_velocity = 500.0
 scale_amount = 0.15
 
 [node name="TimeBubbleExpansion" type="TextureRect" parent="."]
-modulate = Color( 1, 1, 1, 0.0980392 )
+visible = false
+modulate = Color( 0.607843, 0.607843, 1, 0.607843 )
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource( 3 )
+expand = true
+stretch_mode = 4
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="BubbleFadeTween" type="Tween" parent="TimeBubbleExpansion"]
+[connection signal="tween_all_completed" from="TimeBubbleExpansion/BubbleFadeTween" to="." method="_on_BubbleFadeTween_tween_all_completed"]

@@ -6,10 +6,21 @@ var current_ability_loadout
 
 # reference a string path held elsewhere (for simpler path changes)
 const MODIFIER_TIME_SLOW_PATH = GlobalReferences.modifier_time_slow
+
+# graphical settings for the time bubble effect
+var time_bubble_sprite_base_scale = Vector2(1.0, 1.0)
+var time_bubble_sprite_base_alpha_value = 0.5
+var time_bubble_sprite_tween_scale_ceiling = Vector2(4.0, 4.0)
+var time_bubble_sprite_tween_alpha_floor = 0.05
+var time_bubble_sprite_tween_duration = 0.15
+
 # resource path of the projectile actors can spawn
 onready var modifier_time_slow_object = preload(MODIFIER_TIME_SLOW_PATH)
 
+	
 onready var blink_particle_effect = $BlinkParticles
+onready var time_bubble_effect_sprite = $TimeBubbleExpansion
+onready var time_bubble_effect_tween = $TimeBubbleExpansion/BubbleFadeTween
 
 ###############################################################################
 
@@ -43,12 +54,30 @@ func set_new_ability(ability_id):
 	current_ability_loadout = ability_id
 
 
-# initial setup of blink particles
+# initial setup of all ability effects
 func set_ability_effects():
+	set_blink_particles()
+	set_time_bubble_sprite()
+
+
+# resets the blink ability particles
+func set_blink_particles():
 	# hide blink particles
 	blink_particle_effect.emitting = false
 	blink_particle_effect.visible = false
-	
+
+# resets the time bubble effect sprite
+func set_time_bubble_sprite():
+	time_bubble_effect_sprite.visible = false
+	time_bubble_effect_sprite.modulate.a = time_bubble_sprite_base_alpha_value
+	time_bubble_effect_sprite.rect_scale = time_bubble_sprite_base_scale
+
+
+###############################################################################
+
+
+func _on_BubbleFadeTween_tween_all_completed():
+	set_time_bubble_sprite()
 
 
 ###############################################################################
@@ -132,18 +161,49 @@ func call_ability_blink():
 
 # function for slowing time
 func call_ability_time_slow():
+	
+	time_slow_bubble_effect()
+	
 	# call actor speed func on all actors active
 	# TODO exclude actor who called this ability
 	var group_to_call = get_tree().get_nodes_in_group("actors")
 	# call	
 	for actor in group_to_call:
-		time_slow_actor_speed(actor)
+		if actor != self.owner:
+			time_slow_actor_speed(actor)
 
 	# call projectile speed func on all projectiles active
 	group_to_call = get_tree().get_nodes_in_group("projectiles")
 	for projectile in group_to_call:
-		time_slow_projectile_speed(projectile)
+		if projectile.projectile_owner != self.owner:
+			time_slow_projectile_speed(projectile)
 	# TODO handle newly created things between start and expiry
+
+
+###############################################################################
+
+
+func time_slow_bubble_effect():
+	time_bubble_effect_sprite.visible = true
+	
+	# scale tween - rapidly expand the sprite
+	time_bubble_effect_tween.interpolate_property( \
+	time_bubble_effect_sprite,"rect_scale", \
+	time_bubble_sprite_base_scale, time_bubble_sprite_tween_scale_ceiling, \
+	time_bubble_sprite_tween_duration, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	
+	# fade out tween - rapidly fade away the sprite
+	time_bubble_effect_tween.interpolate_property( \
+	time_bubble_effect_sprite,"modulate:a", \
+	time_bubble_sprite_base_alpha_value, time_bubble_sprite_tween_alpha_floor, \
+	time_bubble_sprite_tween_duration, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	
+	# start both tweens
+	time_bubble_effect_tween.start()
+	
+#var time_bubble_sprite_tween_scale_ceiling = Vector2(3.0, 3.0)
+#var time_bubble_sprite_tween_alpha_floor = 0.05
+#var time_bubble_sprite_tween_duration = 0.5
 
 
 # function for slowing actor movement speed
