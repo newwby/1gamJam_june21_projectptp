@@ -7,3 +7,4 @@ script = ExtResource( 1 )
 
 [node name="ExpiryTimer" type="Timer" parent="."]
 one_shot = true
+[connection signal="timeout" from="ExpiryTimer" to="." method="_on_ExpiryTimer_timeout"]

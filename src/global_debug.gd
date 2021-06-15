@@ -22,3 +22,5 @@ var weapon_initial_velocity_check = false
 var player_active_ability_logs = false
 # debugging for projectile spawning via console logging
 var log_projectile_spawn_steps = false
+# modifier superclass step logging to console
+var log_parent_modifier = true
