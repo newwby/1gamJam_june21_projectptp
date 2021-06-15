@@ -210,6 +210,7 @@ func activate_ability():
 
 # okay this function works but it interferes with spawning projectiles
 # so TODO make this only run if no projectile has been spawned recently
+# TODO orbital handler is a local onready var when it should be parented, fix
 func cleanup_orbital_node_holders():
 	# as part of its function the orbital weapon pattern creates node2d
 	# technical parents for the purposes of rotation around a central
@@ -220,11 +221,16 @@ func cleanup_orbital_node_holders():
 	GlobalVariables.ProjectileMovement.ORBIT]:
 		# we make sure owner is valid/has the valid node first
 		if owner is Actor:
-			var cleanup_parent = owner.orbit_handler_node
-			for orbit_node in cleanup_parent.get_children():
-				print(orbit_node)
-				if orbit_node.get_child_count() == 0:
-					orbit_node.queue_free()
+			# don't try to cleanup if currently shooting
+			if not owner.is_firing:
+				# everything we're trying to clean up is child of this node
+				var cleanup_parent = owner.orbit_handler_node
+				for orbit_node in cleanup_parent.get_children():
+					# if the node has no children it is either new
+					# (but if we're not firing it shouldn't be new)
+					# or, what we want, it has had a child projectile removed
+					if orbit_node.get_child_count() == 0:
+						orbit_node.queue_free()
 
 
 ################################################################################
@@ -505,7 +511,8 @@ func spawn_new_projectile(spawn_position, spawn_velocity, rotation_alteration):
 		var projectile_parent = new_projectile.projectile_owner.orbit_handler_node
 		var count_children = projectile_parent.get_child_count()
 		var new_parent = Node2D.new()
-		new_parent.rotation_degrees = 45 * count_children
+		var spawn_spacing = weapon.ORBIT_PATTERN_ROTATION_SPACING
+		new_parent.rotation_degrees = spawn_spacing * count_children
 		new_parent.add_child(new_projectile)
 		projectile_parent.add_child(new_parent)
 		# now defunct script attachment to the node2d for cleanup

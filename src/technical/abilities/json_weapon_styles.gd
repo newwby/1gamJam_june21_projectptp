@@ -1,8 +1,12 @@
 
 extends File
 
-# constant are utilised for the 'spread' spawn pattern
+# the increment of projectile spread per pair of shots fired
+# in the spread projectile spawning pattern
 const SPREAD_PATTERN_WIDTH: float = 0.1
+
+# the distance between orbital spawn pattern
+const ORBIT_PATTERN_ROTATION_SPACING: int = 45
 
 # weapon style controls the style data a weapon ability uses
 enum Style {
