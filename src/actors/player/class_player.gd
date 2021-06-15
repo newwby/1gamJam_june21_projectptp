@@ -60,6 +60,8 @@ func _process(delta):
 
 # for orbital and radar projectiles
 func _process_orbit_handler_rotate(_dt):
+	# reversed rotation to fix projectiles spawning and vanishing
+	# so they do so in the 'correct' order
 	orbit_handler_node.rotation_degrees -= orbiting_rotation_rate
 
 
