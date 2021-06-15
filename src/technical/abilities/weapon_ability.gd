@@ -15,7 +15,7 @@ const NODE_2D_DELETION_HANDLER = GlobalReferences.node_2d_deletion
 # has a chance to update)
 const MINIMUM_SHOT_COOLDOWN = 0.1
 
-var base_weapon_style = weapon.Style.RADAR_SWEEP_SHOT
+var base_weapon_style = weapon.Style.FLAMETHROWER
 
 var current_weapon_style
 
@@ -133,8 +133,17 @@ func set_weapon_style(new_weapon_style):
 		# debugging and tesitng only for player
 		# enemy and turret weapon styles
 		
+		# todo fix set_weapon_style
+		# it should be modular/automatic, not a match statement
+		
+		weapon.Style.BASIC_SHOT :
+			ability_data = weapon.STYLE_DATA[weapon.Style.BASIC_SHOT]
+		
 		weapon.Style.RADAR_SWEEP_SHOT :
 			ability_data = weapon.STYLE_DATA[weapon.Style.RADAR_SWEEP_SHOT]
+		
+		weapon.Style.FLAMETHROWER :
+			ability_data = weapon.STYLE_DATA[weapon.Style.FLAMETHROWER]
 	
 	# set the current weapon_style
 	current_weapon_style = ability_data

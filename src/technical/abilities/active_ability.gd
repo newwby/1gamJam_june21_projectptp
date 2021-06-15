@@ -9,17 +9,14 @@ const MODIFIER_TIME_SLOW_PATH = GlobalReferences.modifier_time_slow
 # resource path of the projectile actors can spawn
 onready var modifier_time_slow_object = preload(MODIFIER_TIME_SLOW_PATH)
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
+onready var blink_particle_effect = $BlinkParticles
 
 ###############################################################################
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	set_ability_effects()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -46,6 +43,14 @@ func set_new_ability(ability_id):
 	current_ability_loadout = ability_id
 
 
+# initial setup of blink particles
+func set_ability_effects():
+	# hide blink particles
+	blink_particle_effect.emitting = false
+	blink_particle_effect.visible = false
+	
+
+
 ###############################################################################
 
 
@@ -55,6 +60,15 @@ func call_ability_blink():
 	# get the heading we're going to blink toward
 	var new_velocity =\
 	 get_global_mouse_position() - owner.position
+	print(new_velocity)
+	
+	var particle_direction = new_velocity.normalized()
+	blink_particle_effect.emitting = true
+	blink_particle_effect.visible = true
+	#
+	blink_particle_effect.one_shot = false
+	blink_particle_effect.one_shot = true
+	blink_particle_effect.direction = -particle_direction
 	
 	# disable collision with everything except walls/obstacles
 	owner.set_collision_mask_bit(2, false)
@@ -89,7 +103,7 @@ func call_ability_blink():
 			owner.modulate.a = 1.0
 		
 		# move the actor in tiny steps
-		owner.position += (new_velocity * 0.075)
+		owner.position += (new_velocity.normalized() * (owner.movement_speed)*0.15)
 		# start the timer
 		blink_timer.start()
 		# wait until it is finished
@@ -108,6 +122,7 @@ func call_ability_blink():
 	owner.is_damageable_by_foes = true
 	owner.visible = true
 	owner.modulate.a = 1.0
+	
 	self.remove_child(blink_timer)
 	blink_timer.queue_free()
 
