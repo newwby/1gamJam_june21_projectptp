@@ -144,6 +144,12 @@ func set_weapon_style(new_weapon_style):
 		
 		weapon.Style.FLAMETHROWER :
 			ability_data = weapon.STYLE_DATA[weapon.Style.FLAMETHROWER]
+		
+		weapon.Style.SCYTHE :
+			ability_data = weapon.STYLE_DATA[weapon.Style.SCYTHE]
+		
+		weapon.Style.BOLT_LANCE :
+			ability_data = weapon.STYLE_DATA[weapon.Style.BOLT_LANCE]
 	
 	# set the current weapon_style
 	current_weapon_style = ability_data
@@ -499,12 +505,17 @@ func spawn_new_projectile(spawn_position, spawn_velocity, rotation_alteration):
 	# the newly created projectile
 	var new_projectile = instance_new_projectile()
 
-	new_projectile.position = spawn_position
-	new_projectile.velocity = spawn_velocity
-
 #
 #	# if spread has been applied, affix a sprite change
 	new_projectile.rotation_degrees = rotation_alteration*10
+	
+	# rotate projectile to look in direction it is heading
+	new_projectile.look_at(spawn_velocity)
+	# apply godot engine 90degree fix
+#	new_projectile.rotation_degrees += 90
+
+	new_projectile.position = spawn_position
+	new_projectile.velocity = spawn_velocity
 #
 #	TODO - having problems with projectile rotation toward target, need
 #	to fix that if I ever want to (re)introduce pointed projectiles

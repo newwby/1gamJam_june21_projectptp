@@ -18,9 +18,13 @@ const sprite_weapon_vortex_shot = "res://art/icons/lorc-gameicons_orbital.png"
 const sprite_projectile_split_shot = "res://art/projectile/kenney_simplespace/meteor_squareLarge.png"
 const sprite_projectile_triple_burst_shot = "res://art/projectile/kenney_simplespace/meteor_squareDetailedLarge.png"
 const sprite_projectile_sniper_shot = "res://art/projectile/kenney_simplespace/station_B.png"
-const sprite_projectile_rapid_shot = "res://art/projectile/kenney_simplespace/star_large.png"
+const sprite_projectile_rapid_shot = "res://art/projectile/kenney_simplespace/star_tiny.png"
 const sprite_projectile_heavy_shot = "res://art/projectile/kenney_simplespace/meteor_detailedLarge.png"
 const sprite_projectile_vortex_shot = "res://art/projectile/kenney_simplespace/meteor_large.png"
+const sprite_projectile_smoke = "res://art/projectile/kenney_smokeparticleassets/PNG/Black smoke/blackSmoke00.png"
+const sprite_projectile_fire_cloud = "res://art/projectile/kenney_particlePack_1.1/flame_02.png"
+const sprite_projectile_scythe = "res://art/kenney_particle1.1/twirl_01.png"
+const sprite_projectile_bolt_lance = "res://art/projectile/kenney_particlePack_1.1/trace_05.png"
 
 # string references for descriptions
 # descriptions for weapon types
