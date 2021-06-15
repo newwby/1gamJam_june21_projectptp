@@ -26,3 +26,5 @@ var log_projectile_spawn_steps = false
 var log_parent_modifier_steps = true
 # modifier for time slow step logging to console
 var log_time_slow_modifier_steps = true
+# console logging for enemy detection radii
+var enemy_detection_radii_logs = true

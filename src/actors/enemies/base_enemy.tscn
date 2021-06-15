@@ -42,21 +42,33 @@ texture = ExtResource( 3 )
 visible = false
 
 [node name="Range_Melee" type="Area2D" parent="DetectionRadiiHolder"]
+collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRadiiHolder/Range_Melee"]
 shape = SubResource( 2 )
 
 [node name="Range_Close" type="Area2D" parent="DetectionRadiiHolder"]
+collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRadiiHolder/Range_Close"]
 shape = SubResource( 3 )
 
 [node name="Range_Near" type="Area2D" parent="DetectionRadiiHolder"]
+collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRadiiHolder/Range_Near"]
 shape = SubResource( 4 )
 
 [node name="Range_Far" type="Area2D" parent="DetectionRadiiHolder"]
+collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRadiiHolder/Range_Far"]
 shape = SubResource( 5 )
+[connection signal="body_entered" from="DetectionRadiiHolder/Range_Melee" to="." method="_on_Range_Melee_body_entered"]
+[connection signal="body_exited" from="DetectionRadiiHolder/Range_Melee" to="." method="_on_Range_Melee_body_exited"]
+[connection signal="body_entered" from="DetectionRadiiHolder/Range_Close" to="." method="_on_Range_Close_body_entered"]
+[connection signal="body_exited" from="DetectionRadiiHolder/Range_Close" to="." method="_on_Range_Close_body_exited"]
+[connection signal="body_entered" from="DetectionRadiiHolder/Range_Near" to="." method="_on_Range_Near_body_entered"]
+[connection signal="body_exited" from="DetectionRadiiHolder/Range_Near" to="." method="_on_Range_Near_body_exited"]
+[connection signal="body_entered" from="DetectionRadiiHolder/Range_Far" to="." method="_on_Range_Far_body_entered"]
+[connection signal="body_exited" from="DetectionRadiiHolder/Range_Far" to="." method="_on_Range_Far_body_exited"]
