@@ -53,6 +53,11 @@ _global_script_classes=[ {
 "class": "WeaponAbility",
 "language": "GDScript",
 "path": "res://src/technical/abilities/weapon_ability.gd"
+}, {
+"base": "Actor",
+"class": "enemy",
+"language": "GDScript",
+"path": "res://src/actors/enemies/class_enemy.gd"
 } ]
 _global_script_class_icons={
 "ActiveAbility": "",
@@ -63,7 +68,8 @@ _global_script_class_icons={
 "BaseAbility": "",
 "Player": "",
 "Projectile": "",
-"WeaponAbility": ""
+"WeaponAbility": "",
+"enemy": ""
 }
 
 [application]

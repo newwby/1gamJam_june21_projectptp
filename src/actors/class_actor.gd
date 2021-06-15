@@ -12,6 +12,14 @@ var last_facing = Vector2(0,0)
 # i.e. player or enemy
 var is_moving = false
 
+# does the actor have a targeting sprite
+var has_target_sprite = true
+# is the player allowed to rotate their target sprite
+var can_rotate_target_sprites = true
+# are we showing all targeting sprites
+var show_rotate_target_sprites = true
+
+
 ###############################################################################
 
 

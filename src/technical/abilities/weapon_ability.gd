@@ -298,9 +298,12 @@ func call_spawn_pattern_spread():
 	
 	# while spawning projectiles  e are going to loop a number of times
 	# equal to half the projectiles if even, or half-1 if odd
+	# we are intentionally integer dividing, so please ignore errors
+	#warning-ignore:integer_division
+	#warning-ignore:integer_division
 	var half_projectile_count =\
 	projectile_count / 2 if projectile_count_even\
-	else (projectile_count - 1) / 2
+	else (projectile_count - 1) / 2 
 
 	# on to the actual spawning of projectiles
 	
@@ -372,7 +375,11 @@ func call_spawn_pattern_series():
 	# this is to store the total rotation applied to projectile velocity
 	var spread_adjustment
 	
-	# TODO account for projecitle size in spread
+	# update velocity
+	given_velocity = get_projectile_initial_velocity()
+	# don't change this if not free aim
+	# bandaid to fix sniper retargeting
+	var stored_velocity = given_velocity
 
 	# on to the actual spawning of projectiles
 	
@@ -391,13 +398,11 @@ func call_spawn_pattern_series():
 		
 		# update starting velocity to calculate from if free aiming
 		if current_weapon_style[weapon.DataType.SHOT_AIM_TYPE] == weapon.AimType.FREE_AIM:
-			given_velocity = get_projectile_initial_velocity()
-			
-#			given_velocity = owner.target_sprite_rotator.global_position-owner.global_position
+			stored_velocity = get_projectile_initial_velocity()
 		
 		# get our position for spawn origin
 		get_spawn_origin = owner.position
-		adjusted_velocity = given_velocity.rotated(-spread_adjustment)
+		adjusted_velocity = stored_velocity.rotated(-spread_adjustment)
 		spawn_new_projectile(get_spawn_origin, adjusted_velocity, -spread_adjustment)
 		total_projectiles_spawned += 1
 	owner.show_sniper_line = false
@@ -415,7 +420,7 @@ func end_spawn_pattern():
 ###############################################################################
 
 
-func instance_new_projectile(weapon_style):
+func instance_new_projectile():
 	if GlobalDebug.log_projectile_spawn_steps: ("instance_new_projectile")
 	var new_projectile = projectile_object.instance()
 	
@@ -483,7 +488,7 @@ func spawn_new_projectile(spawn_position, spawn_velocity, rotation_alteration):
 	# call the function to instance a new projectile correctly
 	# it applies all the related weapon style data dict values to
 	# the newly created projectile
-	var new_projectile = instance_new_projectile(current_weapon_style)
+	var new_projectile = instance_new_projectile()
 
 	new_projectile.position = spawn_position
 	new_projectile.velocity = spawn_velocity

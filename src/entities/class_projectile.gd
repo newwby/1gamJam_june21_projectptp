@@ -3,8 +3,6 @@
 class_name Projectile
 extends Area2D
 
-signal projectile_expired()
-
 # constant float for modifying velocity inherited from spawner
 const INHERITED_VELOCITY_MULTIPLIER := 0.5
 

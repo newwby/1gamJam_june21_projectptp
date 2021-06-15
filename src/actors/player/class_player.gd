@@ -17,11 +17,6 @@ var is_damageable_by_foes = true
 # determine whether the player is firing
 var is_firing = false
 
-# is the player allowed to rotate their target sprite
-var can_rotate_target_sprites = true
-# are we showing all targeting sprites
-var show_rotate_target_sprites = true
-
 # how fast does the orbital rotation node rotate
 var orbiting_rotation_rate = 3
 
