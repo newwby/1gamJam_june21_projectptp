@@ -614,3 +614,17 @@ func return_shot_rotation_from_variance():
 #	var total_spread_increment_counter
 #
 #	spawn_new_projectile(get_spawn_origin, given_velocity)
+
+
+
+
+###############################################################################
+
+# unfinished function to compare weapon dps
+func _calculate_weapon_dps():
+	# code to print the entire style data values
+	for wep in weapon.Style.size():
+		for data in weapon.STYLE_DATA[wep]:
+			var wep_data = str(weapon.STYLE_DATA[wep])
+			var wep_value = str(weapon.STYLE_DATA[wep][data])
+			print(wep_data + ": " + wep_value)

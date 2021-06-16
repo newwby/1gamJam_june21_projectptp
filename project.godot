@@ -39,6 +39,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/technical/abilities/class_ability.gd"
 }, {
+"base": "Actor",
+"class": "Enemy",
+"language": "GDScript",
+"path": "res://src/actors/enemies/class_enemy.gd"
+}, {
 "base": "ActiveModifier",
 "class": "ModifierTimeSlow",
 "language": "GDScript",
@@ -58,11 +63,6 @@ _global_script_classes=[ {
 "class": "WeaponAbility",
 "language": "GDScript",
 "path": "res://src/technical/abilities/weapon_ability.gd"
-}, {
-"base": "Actor",
-"class": "enemy",
-"language": "GDScript",
-"path": "res://src/actors/enemies/class_enemy.gd"
 } ]
 _global_script_class_icons={
 "ActiveAbility": "",
@@ -71,11 +71,11 @@ _global_script_class_icons={
 "AnimationTween_SpriteVibrating": "",
 "AnimationTween_Spritevibrating": "",
 "BaseAbility": "",
+"Enemy": "",
 "ModifierTimeSlow": "",
 "Player": "",
 "Projectile": "",
-"WeaponAbility": "",
-"enemy": ""
+"WeaponAbility": ""
 }
 
 [application]

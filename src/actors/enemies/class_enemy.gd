@@ -1,12 +1,31 @@
 
-class_name enemy
+class_name Enemy
 extends Actor
+
+enum State{
+	IDLE,
+	PATROL,
+	HUNT,
+	ATTACK,
+	HURT,
+	DYING
+}
 
 const DETECTION_RADIUS_SIZE = 300
 const MELEE_RADIUS_MULTIPLIER = 1.0
 const CLOSE_RADIUS_MULTIPLIER = 2.0
 const NEAR_RADIUS_MULTIPLIER = 3.0
 const FAR_RADIUS_MULTIPLIER = 4.0
+
+const ENEMY_TYPE_BASE_MOVEMENT_SPEED = 150
+
+var is_active = true
+var can_check_state = true
+
+# the current state the enemy is in
+var current_state
+# states that the enemy was previously in that still need to be resolved
+var state_register = []
 
 # future-proofing variables for enemies with variable detection
 var perception_bonus_flat_size_increase: int = 0
@@ -15,7 +34,22 @@ var perception_bonus_multiplier_close: float = 0.0
 var perception_bonus_multiplier_near: float = 0.0
 var perception_bonus_multiplier_far: float = 0.0
 
-# TODO sort out enemy auto scaling
+
+# get the range range group enum name for discerning detection group names
+var melee_range_string_suffix = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.MELEE]
+var close_range_string_suffix = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.CLOSE]
+var near_range_string_suffix = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.NEAR]
+var far_range_string_suffix = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.FAR]
+var distant_range_string_suffix = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.DISTANT]
+
+# variables for setting detection group names
+var melee_range_group
+var close_range_group
+var near_range_group
+var far_range_group
+var distant_range_group
+
+# TODO sort out enemy sprite auto scaling
 
 var grouping_string = str(self)+"_"
 
@@ -37,13 +71,132 @@ onready var collision_radius_far = $DetectionRadiiHolder/Range_Far/CollisionShap
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	self.add_to_group("enemies")
+	set_enemy_stats()
 	set_collision_radii()
+	set_detection_group_strings()
+	set_initial_state(State.IDLE)
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func _process(delta):
+	if can_check_state:
+		_process_check_state()
+	_process_call_state_behaviour(delta)
+	move_and_slide(velocity.normalized() * movement_speed)
+
+###############################################################################
 
 
+	# this is a call function for state behaviour
+func _process_call_state_behaviour(_dt):
+	# check state and move to that function
+	match current_state:
+	
+		# enemy is idle and doing nothing
+		State.IDLE:
+			# state_idle()
+			pass
+	
+		# enemy is wandering aimlessly or following a patrol route
+		State.PATROL:
+			# state_wander_aimlessly()
+			pass
+	
+		# enemy is hunting a player
+		State.HUNT:
+			# state_hunt()
+			pass
+	
+		# enemy is in range of a target and is initiating an attack
+		State.ATTACK:
+			# state_attack()
+			pass
+	
+		# enemy has been injured and is playing hurt animation/logic
+		State.HURT:
+			# state_hurt()
+			pass
+	
+		# enemy has been injured so much they are dying
+		State.DYING:
+			# state_dying()
+			pass
+
+
+# check whether we can change state
+func _process_check_state():
+	# if enemy is doing nothing and isn't already idle, set to idle
+	if not is_active\
+	 and current_state != State.IDLE\
+	 and state_register.size() == 0:
+		set_new_state(State.IDLE)
+	
+	# TODO re-enable state register, not currently using it
+	# if we have previous states to handle, handle them!
+#	if state_register.size() > 0:
+#		if state_register[0] in State:
+#			current_state = state_register.pop_front()
+
+	# if no target look for one
+	var potential_targets = []
+	var nodes_at_far_range = get_tree().get_nodes_in_group(far_range_group)
+	
+	# check if player is visible
+	
+	# scan all valid targets
+	for i in nodes_at_far_range:
+		if i is Player:
+			potential_targets.append(i)
+	
+# func GlobalFunc.GetNearestInArray():
+	# clear these variables
+	var closest_target = null
+	var closest_target_distance = null
+	# check who is the closest valid target
+	if potential_targets.size() > 0:
+		for i in potential_targets:
+			var get_distance = position.distance_to(i.position)
+			# if haven't set
+			if closest_target_distance == null:
+				closest_target_distance = get_distance
+				closest_target = i
+			elif get_distance < closest_target_distance:
+				closest_target_distance = get_distance
+				closest_target = i
+	
+	if closest_target != null:
+		velocity = -(position - closest_target.position)
+
+###############################################################################
+
+
+func set_enemy_stats():
+	movement_speed = ENEMY_TYPE_BASE_MOVEMENT_SPEED
+
+
+# set the first state and clear the state register
+func set_initial_state(starting_state):
+	state_register = []
+	current_state = starting_state
+
+
+# change our state
+func set_new_state(new_state):
+	state_register.append(current_state)
+	current_state = new_state
+
+
+# we have to set the strings for finding detection node groups
+func set_detection_group_strings():
+	# set the group strings
+	melee_range_group = grouping_string + melee_range_string_suffix
+	close_range_group = grouping_string + close_range_string_suffix
+	near_range_group = grouping_string + near_range_string_suffix
+	far_range_group = grouping_string + far_range_string_suffix
+	distant_range_group = grouping_string + distant_range_string_suffix
+
+# collision radii are set in code as they may be changeable
+# by specific enemy subclasses
 # must set the collision extents for each detection radius
 func set_collision_radii():
 	# each of these variables consist of a static constant that does
@@ -167,6 +320,7 @@ func add_to_detection_group(range_group, body):
 		var range_string = GlobalVariables.RangeGroup.keys()[range_group]
 		var full_range_string = grouping_string+range_string
 		if GlobalDebug.enemy_detection_radii_logs: print("detection group " + full_range_string + " entered by " + body.name)
+		# add body to the group denoted by radii and enemy id
 		body.add_to_group(full_range_string)
 
 
@@ -177,16 +331,20 @@ func remove_from_detection_group(range_group, body):
 		var range_string = GlobalVariables.RangeGroup.keys()[range_group]
 		var full_range_string = grouping_string+range_string
 		if GlobalDebug.enemy_detection_radii_logs: print("detection group " + full_range_string + " entered by " + body.name)
-		body.remove_from_group(full_range_string)
+		
+		# To avoid debugger error "!data.grouped.has(p_identifier)"
+		# we include a check to see if body is in group
+		if body.is_in_group(full_range_string):
+			body.remove_from_group(full_range_string)
 
 
 func call_detection_group():
-	# unfinished code for calling detection groups (TODO finish)
-	var melee_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.MELEE]
-	var close_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.CLOSE]
-	var near_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.NEAR]
-	var far_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.FAR]
-	var distant_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.DISTANT]
+#	# unfinished code for calling detection groups (TODO finish)
+#	var melee_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.MELEE]
+#	var close_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.CLOSE]
+#	var near_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.NEAR]
+#	var far_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.FAR]
+#	var distant_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.DISTANT]
 	
 	var group_to_call = grouping_string # + pick any string above
 	#get_tree().get_nodes_in_group(group_to_call)
