@@ -57,6 +57,7 @@ func _process(delta):
 	get_ability_input()
 	_process_orbit_handler_rotate(delta)
 	_process_rotate_targeting_sprite(delta)
+	process_check_tween(delta)
 
 # for orbital and radar projectiles
 func _process_orbit_handler_rotate(_dt):
@@ -91,6 +92,13 @@ func process_handle_movement(_dt):
 	velocity = Vector2(0,0)
 	velocity = get_movement_input() * movement_speed
 	var _collided_with = move_and_slide(velocity)
+
+
+func process_check_tween(_dt):
+	if is_moving:
+		sprite_animation_tween.playback_speed = 2.0
+	elif not is_moving:
+		sprite_animation_tween.playback_speed = 0.5
 
 
 ###############################################################################

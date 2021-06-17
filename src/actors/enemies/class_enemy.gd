@@ -139,7 +139,7 @@ func _process_check_state():
 
 	# if no target look for one
 	var potential_targets = []
-	var nodes_at_far_range = get_tree().get_nodes_in_group(far_range_group)
+	var nodes_at_far_range = get_tree().get_nodes_in_group(close_range_group)
 	
 	# check if player is visible
 	
