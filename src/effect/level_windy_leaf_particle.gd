@@ -17,6 +17,11 @@ var green_hue_fluctuation = 0.1
 var base_red_hue = 0.8
 var red_hue_fluctuation = 0.2
 
+# what is the leaf scale set to initially - always 1:1 aspect ratio
+var base_scale_setting = 0.3
+# add or subtract up to this  from the base_scale_setting
+var scale_modification_max_variance = 0.1
+
 # what direction does the leaf head
 var velocity = Vector2.ZERO
 # how fast does the leaf drift
@@ -46,6 +51,7 @@ func _ready():
 	set_random_rotation_and_offset()
 	set_sprite_offset()
 	set_sprite_colour()
+	set_sprite_scale()
 	set_failsafe_deletion_timer()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -104,6 +110,19 @@ func set_sprite_colour_set_green_or_red_hue(is_green):
 	GlobalFuncs.ReturnRandomRange(hue_random_floor, hue_random_ceiling)
 	# return the randomised hue
 	return randomised_hue
+
+
+func set_sprite_scale():
+	# apply the scale variance to the base scale
+	# calculate a minimum (floor) and maximum (celing) value
+	var random_scale_floor = base_scale_setting-scale_modification_max_variance
+	var random_scale_ceiling = base_scale_setting+scale_modification_max_variance
+	# calculate a new scale value for the leaf from the above
+	# generate random between floor and ceiling
+	var effective_scale_mod =\
+	 GlobalFuncs.ReturnRandomRange(random_scale_floor, random_scale_ceiling)
+	# and set sprite scale to that
+	scale = Vector2(effective_scale_mod, effective_scale_mod)
 
 
 func set_failsafe_deletion_timer():

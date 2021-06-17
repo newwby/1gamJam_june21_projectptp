@@ -15,7 +15,7 @@ var is_collected = false
 var is_setup = false
 
 onready var pickup_graphic = $Sprite
-
+onready var pickup_shadow = $Sprite/ShadowSprite
 
 #######################################################################
 
@@ -72,6 +72,7 @@ func set_weapon_to_collect():
 
 func set_sprite():
 	pickup_graphic.texture = load(sprite_path)
+	pickup_shadow.texture = load(sprite_path)
 	pickup_graphic.scale = Vector2(sprite_scale_bound, sprite_scale_bound)
 
 
