@@ -1,9 +1,34 @@
 extends Node
 
+# move to global variables, predates global var
+# enum for various collision layers, for standardised setting in code
+enum CollisionLayers {
+	PLAYER_BODY,
+	PLAYER_ENTITY,
+	ENEMY_BODY,
+	ENEMY_ENTITY,
+	OBSTACLE,
+	GROUND_EFFECT,
+	ROOM_WALL,
+	COLLECTABLE,
+}
+
+###############################################################################
+
 # paths to various resources handled by multiple scenes
+# the default weapon projectile modified by weapon style data
 const default_projectile = "res://src/entities/projectile.tscn"
+# node that handles deletion of node2d instances created by orbital
+# projectile spawn pattern (now defunct, handled elsewhere)
 const node_2d_deletion = "res://src/technical/node2d_deletion_handler.gd"
+# technical modifiers
+# technical modifier for time slow ability
 const modifier_time_slow = "res://src/technical/modifiers/modifier_time_slow.tscn"
+# graphical effects
+# particle that travels across the screen at a rotating offset
+const windy_leaf_particle = "res://src/effect/level_windy_leaf_particle.tscn"
+
+###############################################################################
 
 # paths to sprite graphics for collectables
 const sprite_weapon_split_shot = "res://art/icons/lorc-gameicons_striking_arrows.png"
@@ -26,6 +51,8 @@ const sprite_projectile_fire_cloud = "res://art/projectile/kenney_particlePack_1
 const sprite_projectile_scythe = "res://art/kenney_particle1.1/twirl_01.png"
 const sprite_projectile_bolt_lance = "res://art/projectile/kenney_particlePack_1.1/trace_05.png"
 
+###############################################################################
+
 # string references for descriptions
 # descriptions for weapon types
 const DESC_SPLIT_SHOT =\
@@ -44,14 +71,4 @@ const DESC_VORTEX_SHOT =\
 const DESC_NONE =\
 "Invalid description string"
 
-# enum for various collision layers, for standardised setting in code
-enum CollisionLayers {
-	PLAYER_BODY,
-	PLAYER_ENTITY,
-	ENEMY_BODY,
-	ENEMY_ENTITY,
-	OBSTACLE,
-	GROUND_EFFECT,
-	ROOM_WALL,
-	COLLECTABLE,
-}
+###############################################################################

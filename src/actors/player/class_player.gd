@@ -30,6 +30,10 @@ var firing_target: Vector2 = Vector2.ZERO
 # if sniper weapon we show this line between fire input and projectile spawn
 var show_sniper_line: bool = false
 
+# different settings for animation tween playback speed
+var moving_anim_tween_playback_rate = 2.0
+var static_anim_tween_playback_rate = 0.5
+
 onready var player_sprite = $SpriteHolder/StaticSprite
 onready var sprite_animation_tween = $SpriteHolder/StaticSprite/RockingTween
 
@@ -53,11 +57,13 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	# check for player key input
 	get_attack_input()
 	get_ability_input()
+	# handle per tick functions
 	_process_orbit_handler_rotate(delta)
 	_process_rotate_targeting_sprite(delta)
-	process_check_tween(delta)
+	_process_tween_speed(delta)
 
 # for orbital and radar projectiles
 func _process_orbit_handler_rotate(_dt):
@@ -94,11 +100,18 @@ func process_handle_movement(_dt):
 	var _collided_with = move_and_slide(velocity)
 
 
-func process_check_tween(_dt):
-	if is_moving:
-		sprite_animation_tween.playback_speed = 2.0
-	elif not is_moving:
-		sprite_animation_tween.playback_speed = 0.5
+# control the speed of the animation based on whether the player is moving
+func _process_tween_speed(_dt):
+	# if player is currently moving
+	if is_moving and \
+	 sprite_animation_tween.playback_speed != moving_anim_tween_playback_rate:
+		# rock much faster, create illusion of walking
+		sprite_animation_tween.playback_speed = moving_anim_tween_playback_rate
+	# if player is not currently moving
+	elif not is_moving and \
+	 sprite_animation_tween.playback_speed != static_anim_tween_playback_rate:
+		# rock much slower, create illusion of idle/stationary anim
+		sprite_animation_tween.playback_speed = static_anim_tween_playback_rate
 
 
 ###############################################################################
