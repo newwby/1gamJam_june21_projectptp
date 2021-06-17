@@ -45,6 +45,9 @@ onready var target_sprite_rotator = $TargetingSpriteHolder
 onready var target_line_sniper = $TargetingSpriteHolder/TargetingSprite/SniperTargetingLine
 onready var orbit_handler_node = $OrbitalProjectileHolder
 
+onready var left_eye_sprite = $SpriteHolder/StaticSprite/EyeSprite_Left
+onready var right_eye_sprite = $SpriteHolder/StaticSprite/EyeSprite_Right
+
 ###############################################################################
 
 
@@ -63,6 +66,7 @@ func _process(delta):
 	# handle per tick functions
 	_process_orbit_handler_rotate(delta)
 	_process_rotate_targeting_sprite(delta)
+	_process_rotate_sprite_eyes(delta)
 	_process_tween_speed(delta)
 
 # for orbital and radar projectiles
@@ -88,6 +92,13 @@ func _input(event):
 	# Mouse in viewport coordinates.
 	if event is InputEventMouseMotion:
 		current_mouse_position = event.position
+
+
+# eyes turn to face the mouse cursor
+func _process_rotate_sprite_eyes(_dt):
+	# make sprite eyes look at mouse cursor
+	for eye in [left_eye_sprite, right_eye_sprite]:
+		eye.look_at(get_global_mouse_position())
 
 
 ###############################################################################

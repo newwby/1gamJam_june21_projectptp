@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://src/actors/player/class_player.gd" type="Script" id=1]
 [ext_resource path="res://art/kenneynl_testsprite_dog.png" type="Texture" id=2]
@@ -6,6 +6,8 @@
 [ext_resource path="res://src/technical/abilities/weapon_ability.tscn" type="PackedScene" id=4]
 [ext_resource path="res://src/technical/abilities/active_ability.tscn" type="PackedScene" id=5]
 [ext_resource path="res://art/projectile/kenney_simplespace/ship_D.png" type="Texture" id=6]
+[ext_resource path="res://art/shrek_pup_dog_sprite.png" type="Texture" id=7]
+[ext_resource path="res://art/shrek_pup_eye_sprite.png" type="Texture" id=8]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -42,21 +44,29 @@ texture_mode = 2
 [node name="SpriteHolder" type="Node2D" parent="."]
 
 [node name="StaticSprite" type="Sprite" parent="SpriteHolder"]
-texture = ExtResource( 2 )
+texture = ExtResource( 7 )
 
 [node name="RockingTween" parent="SpriteHolder/StaticSprite" instance=ExtResource( 3 )]
 anim_duration = 0.75
 anim_max_angle = 3
 
-[node name="StaticSpriteShadow" type="Sprite" parent="SpriteHolder/StaticSprite"]
+[node name="StaticSpriteShadowOutline" type="Sprite" parent="SpriteHolder/StaticSprite"]
 modulate = Color( 0, 0, 0, 0.215686 )
 texture = ExtResource( 2 )
 offset = Vector2( 4, 5 )
 
-[node name="StaticSpriteShadow2" type="Sprite" parent="."]
+[node name="EyeSprite_Left" type="Sprite" parent="SpriteHolder/StaticSprite"]
+position = Vector2( -33.5, 5.5 )
+texture = ExtResource( 8 )
+
+[node name="EyeSprite_Right" type="Sprite" parent="SpriteHolder/StaticSprite"]
+position = Vector2( 33.5, 5.5 )
+texture = ExtResource( 8 )
+
+[node name="StaticSpriteShadowUnder" type="Sprite" parent="."]
 modulate = Color( 0, 0, 0, 0.215686 )
 show_behind_parent = true
-position = Vector2( 0, 60 )
+position = Vector2( -5, 60 )
 scale = Vector2( 0.8, 0.1 )
 texture = ExtResource( 2 )
 offset = Vector2( 4, 5 )
