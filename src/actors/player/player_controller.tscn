@@ -46,7 +46,20 @@ texture = ExtResource( 2 )
 
 [node name="RockingTween" parent="SpriteHolder/StaticSprite" instance=ExtResource( 3 )]
 anim_duration = 0.75
-anim_max_angle = 5
+anim_max_angle = 3
+
+[node name="StaticSpriteShadow" type="Sprite" parent="SpriteHolder/StaticSprite"]
+modulate = Color( 0, 0, 0, 0.215686 )
+texture = ExtResource( 2 )
+offset = Vector2( 4, 5 )
+
+[node name="StaticSpriteShadow2" type="Sprite" parent="."]
+modulate = Color( 0, 0, 0, 0.215686 )
+show_behind_parent = true
+position = Vector2( 0, 60 )
+scale = Vector2( 0.8, 0.1 )
+texture = ExtResource( 2 )
+offset = Vector2( 4, 5 )
 
 [node name="AbilityHolder" type="Node2D" parent="."]
 

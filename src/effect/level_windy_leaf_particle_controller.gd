@@ -5,6 +5,8 @@ const LEAF_PATH = GlobalReferences.windy_leaf_particle
 
 # how fast are new leaves spawned
 var spawn_delay = 1.0
+# where do leaves start
+var leaf_spawn_position = Vector2(-200,-200)
 # leaf movement direction override for spawning
 var leaf_direction = Vector2(0.5, 0.5)
 var velocity_range = 0.5
@@ -44,6 +46,7 @@ func set_spawn_rate_of_leaves():
 
 func spawn_new_leaf():
 	var new_leaf = leaf_object.instance()
+	new_leaf.position = leaf_spawn_position
 	new_leaf.velocity = set_velocity_variance()
 	self.add_child(new_leaf)
 
