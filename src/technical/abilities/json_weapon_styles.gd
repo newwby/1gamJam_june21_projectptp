@@ -3,7 +3,7 @@ extends File
 
 # the increment of projectile spread per pair of shots fired
 # in the spread projectile spawning pattern
-const SPREAD_PATTERN_WIDTH: float = 0.1
+const SPREAD_PATTERN_WIDTH: float = 0.15
 
 # the distance between orbital spawn pattern
 const ORBIT_PATTERN_ROTATION_SPACING: int = 45
@@ -167,8 +167,8 @@ const STYLE_DATA = {
 		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
 		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
 		DataType.SHOT_AIM_TYPE				: AimType.FREE_AIM,
-		DataType.SHOT_USE_COOLDOWN			: 0.5,
-		DataType.SHOT_STATIONARY_BONUS		: 0.85,
+		DataType.SHOT_USE_COOLDOWN			: 0.6,
+		DataType.SHOT_STATIONARY_BONUS		: 0.95,
 		DataType.AI_MIN_USE_RANGE			: GlobalVariables.RangeGroup.CLOSE,
 		DataType.AI_MAX_USE_RANGE			: GlobalVariables.RangeGroup.FAR,
 		DataType.BASE_DAMAGE				: 8,
@@ -181,7 +181,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_SPAWN_PATTERN	: SpawnPattern.SPREAD,
 		DataType.PROJECTILE_SPAWN_DELAY		: 0,
 		DataType.USE_SNIPER_AIM_LINE		: false,
-		DataType.PROJECTILE_COUNT			: 3,
+		DataType.PROJECTILE_COUNT			: 4,
 		DataType.PROJECTILE_FLIGHT_SPEED	: 600,
 		DataType.PROJECTILE_SPEED_INHERIT	: 0.4,
 		DataType.PROJECTILE_SHOT_VARIANCE	: 0.01,
@@ -200,8 +200,8 @@ const STYLE_DATA = {
 		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
 		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
 		DataType.SHOT_AIM_TYPE				: AimType.FREE_AIM,
-		DataType.SHOT_USE_COOLDOWN			: 1.2,
-		DataType.SHOT_STATIONARY_BONUS		: 0.75,
+		DataType.SHOT_USE_COOLDOWN			: 1.4,
+		DataType.SHOT_STATIONARY_BONUS		: 0.85,
 		DataType.AI_MIN_USE_RANGE			: GlobalVariables.RangeGroup.CLOSE,
 		DataType.AI_MAX_USE_RANGE			: GlobalVariables.RangeGroup.FAR,
 		DataType.BASE_DAMAGE				: 15,
@@ -244,7 +244,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_OFFSCREEN_SPAN	: 4.0,
 		DataType.PROJECTILE_MOVE_PATTERN	: GlobalVariables.ProjectileMovement.DIRECT,
 		DataType.PROJECTILE_SPAWN_PATTERN	: SpawnPattern.SERIES,
-		DataType.PROJECTILE_SPAWN_DELAY		: 1.6,
+		DataType.PROJECTILE_SPAWN_DELAY		: 1.2,
 		DataType.USE_SNIPER_AIM_LINE		: true,
 		DataType.PROJECTILE_COUNT			: 1,
 		DataType.PROJECTILE_FLIGHT_SPEED	: 2400,
@@ -264,12 +264,12 @@ const STYLE_DATA = {
 		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
 		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
 		DataType.SHOT_AIM_TYPE				: AimType.FREE_AIM,
-		DataType.SHOT_USE_COOLDOWN			: 0.12,
-		DataType.SHOT_STATIONARY_BONUS		: 0.75,
+		DataType.SHOT_USE_COOLDOWN			: 0.2,
+		DataType.SHOT_STATIONARY_BONUS		: 0.85,
 		DataType.AI_MIN_USE_RANGE			: GlobalVariables.RangeGroup.CLOSE,
 		DataType.AI_MAX_USE_RANGE			: GlobalVariables.RangeGroup.FAR,
 		DataType.BASE_DAMAGE				: 4,
-		DataType.PROJECTILE_SIZE			: 1.5,
+		DataType.PROJECTILE_SIZE			: 2.0,
 		DataType.PROJECTILE_MAX_MOVE_TICKS	: 6000,
 		DataType.PROJECTILE_MAX_RANGE		: 600,
 		DataType.PROJECTILE_MAX_LIFESPAN	: 4.0,
@@ -280,8 +280,8 @@ const STYLE_DATA = {
 		DataType.USE_SNIPER_AIM_LINE		: false,
 		DataType.PROJECTILE_COUNT			: 1,
 		DataType.PROJECTILE_FLIGHT_SPEED	: 1000,
-		DataType.PROJECTILE_SPEED_INHERIT	: 0.6,
-		DataType.PROJECTILE_SHOT_VARIANCE	: 0.15,
+		DataType.PROJECTILE_SPEED_INHERIT	: 0.4,
+		DataType.PROJECTILE_SHOT_VARIANCE	: 0.25,
 	},
 	
 	Style.HEAVY_SHOT : {
@@ -296,8 +296,8 @@ const STYLE_DATA = {
 		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
 		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
 		DataType.SHOT_AIM_TYPE				: AimType.FREE_AIM,
-		DataType.SHOT_USE_COOLDOWN			: 1.0,
-		DataType.SHOT_STATIONARY_BONUS		: 0.85,
+		DataType.SHOT_USE_COOLDOWN			: 1.2,
+		DataType.SHOT_STATIONARY_BONUS		: 1.00,#0.85,
 		DataType.AI_MIN_USE_RANGE			: GlobalVariables.RangeGroup.MELEE,
 		DataType.AI_MAX_USE_RANGE			: GlobalVariables.RangeGroup.NEAR,
 		DataType.BASE_DAMAGE				: 40,
@@ -328,7 +328,7 @@ const STYLE_DATA = {
 		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
 		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
 		DataType.SHOT_AIM_TYPE				: AimType.FIXED_ON_HOLD,
-		DataType.SHOT_USE_COOLDOWN			: 0.35,
+		DataType.SHOT_USE_COOLDOWN			: 0.75,
 		DataType.SHOT_STATIONARY_BONUS		: 0.95,
 		DataType.AI_MIN_USE_RANGE			: GlobalVariables.RangeGroup.MELEE,
 		DataType.AI_MAX_USE_RANGE			: GlobalVariables.RangeGroup.NEAR,

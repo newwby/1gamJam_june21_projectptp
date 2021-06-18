@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://src/entities/pickups/new_weapon_collect.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/actors/player/player_controller.tscn" type="PackedScene" id=2]
@@ -8,7 +8,6 @@
 [ext_resource path="res://src/world/prototype_level.tscn" type="PackedScene" id=6]
 [ext_resource path="res://src/interface/GameCamera2D.gd" type="Script" id=7]
 [ext_resource path="res://src/interface/GameCamera2D.tscn" type="PackedScene" id=8]
-[ext_resource path="res://src/interface/ui_player_hud.tscn" type="PackedScene" id=9]
 
 [node name="GameEnvironment" type="Node2D"]
 script = ExtResource( 3 )
@@ -49,7 +48,3 @@ position = Vector2( 1165.68, 800.096 )
 [node name="GameCamera2D" parent="." instance=ExtResource( 8 )]
 current = true
 script = ExtResource( 7 )
-
-[node name="UICanvasLayer" type="CanvasLayer" parent="GameCamera2D"]
-
-[node name="PlayerHUD" parent="GameCamera2D/UICanvasLayer" instance=ExtResource( 9 )]

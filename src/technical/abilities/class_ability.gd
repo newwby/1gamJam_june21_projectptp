@@ -2,6 +2,15 @@
 class_name BaseAbility
 extends Node2D
 
+signal updated_cooldown(ability_node, ability_type, new_value, new_cooldown)
+
+enum AbilityType{
+	WEAPON,
+	ACTIVE,
+}
+
+var my_ability_type
+
 # if false disable this ability from functioning entirely
 # this is DIFFERENT to a cooldown
 var is_ability_enabled: bool = true
@@ -51,6 +60,8 @@ func set_activation_cooldown(value):
 		if activation_cooldown <= 0:
 			activation_cooldown = 0.1
 		activation_timer.wait_time = activation_cooldown
+		if my_ability_type != null:
+			emit_signal("updated_cooldown", self, my_ability_type, activation_cooldown, activation_cooldown)
 		activation_timer.start()
 
 
@@ -78,5 +89,7 @@ func attempt_ability():
 # this function is just a placeholder
 # individual child ability classes will define this function
 func activate_ability():
+	if my_ability_type != null:
+		emit_signal("updated_cooldown", self, my_ability_type, 0, null)
 	if GlobalDebug.ability_cooldown_not_met_logging: print("attempting to activate ability ", self.name)
 

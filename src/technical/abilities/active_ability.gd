@@ -27,6 +27,7 @@ onready var time_bubble_effect_tween = $TimeBubbleExpansion/BubbleFadeTween
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	set_ability_type()
 	set_ability_effects()
 
 
@@ -40,6 +41,7 @@ func _ready():
 
 # active ability
 func activate_ability():
+	.activate_ability()
 	if GlobalDebug.player_active_ability_logs: print(name, " (ability) is activated!")
 	if current_ability_loadout == GlobalVariables.AbilityTypes.BLINK:
 		call_ability_blink()
@@ -48,6 +50,10 @@ func activate_ability():
 
 
 ###############################################################################
+
+
+func set_ability_type():
+	my_ability_type = AbilityType.ACTIVE
 
 
 func set_new_ability(ability_id):
@@ -89,7 +95,6 @@ func call_ability_blink():
 	# get the heading we're going to blink toward
 	var new_velocity =\
 	 get_global_mouse_position() - owner.position
-	print(new_velocity)
 	
 	var particle_direction = new_velocity.normalized()
 	blink_particle_effect.emitting = true

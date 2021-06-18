@@ -198,6 +198,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="WeaponSegmentTimer" type="Timer" parent="CooldownRadialHolder/WeaponCooldownRadial"]
+autostart = true
+
 [node name="Ability1CooldownRadial" type="TextureProgress" parent="CooldownRadialHolder"]
 margin_left = 115.0
 margin_top = 25.0
@@ -211,6 +214,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Ability1SegmentTimer" type="Timer" parent="CooldownRadialHolder/Ability1CooldownRadial"]
+autostart = true
+
 [node name="Ability2CooldownRadial" type="TextureProgress" parent="CooldownRadialHolder"]
 margin_left = 205.0
 margin_top = 25.0
@@ -223,6 +229,9 @@ fill_mode = 4
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Ability2SegmentTimer" type="Timer" parent="CooldownRadialHolder/Ability2CooldownRadial"]
+autostart = true
 
 [node name="ClockLabel" type="Label" parent="."]
 margin_left = 1489.23
@@ -238,4 +247,7 @@ __meta__ = {
 }
 
 [node name="GameTimer_Seconds" type="Timer" parent="."]
+[connection signal="timeout" from="CooldownRadialHolder/WeaponCooldownRadial/WeaponSegmentTimer" to="." method="_on_WeaponSegmentTimer_timeout"]
+[connection signal="timeout" from="CooldownRadialHolder/Ability1CooldownRadial/Ability1SegmentTimer" to="." method="_on_Ability1SegmentTimer_timeout"]
+[connection signal="timeout" from="CooldownRadialHolder/Ability2CooldownRadial/Ability2SegmentTimer" to="." method="_on_Ability2SegmentTimer_timeout"]
 [connection signal="timeout" from="GameTimer_Seconds" to="." method="_on_GameTimer_Seconds_timeout"]

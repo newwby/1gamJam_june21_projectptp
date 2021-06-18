@@ -23,8 +23,10 @@ var player_active_ability_logs = false
 # debugging for projectile spawning via console logging
 var log_projectile_spawn_steps = false
 # modifier superclass step logging to console
-var log_parent_modifier_steps = true
+var log_parent_modifier_steps = false
 # modifier for time slow step logging to console
-var log_time_slow_modifier_steps = true
+var log_time_slow_modifier_steps = false
 # console logging for enemy detection radii
-var enemy_detection_radii_logs = true
+var enemy_detection_radii_logs = false
+# console logging for ability cooldown update calls
+var ability_cooldown_call_logs = false

@@ -25,9 +25,15 @@ var chosen_difficulty = GameDifficulty.NORMAL
 var current_game_time_minute = 0
 var current_game_time_second = 0
 
+var current_weapon_cooldown_ui_graphic
+
 onready var weapon_cooldown = $CooldownRadialHolder/WeaponCooldownRadial
 onready var ability1_cooldown = $CooldownRadialHolder/Ability1CooldownRadial
 onready var ability2_cooldown = $CooldownRadialHolder/Ability2CooldownRadial
+
+onready var weapon_cooldown_segment_timer = $CooldownRadialHolder/WeaponCooldownRadial/WeaponSegmentTimer
+onready var ability1_cooldown_segment_timer = $CooldownRadialHolder/Ability1CooldownRadial/Ability1SegmentTimer
+onready var ability2_cooldown_segment_timer = $CooldownRadialHolder/Ability2CooldownRadial/Ability2SegmentTimer
 
 onready var decor_strip = $CooldownRadialHolder/CooldownDecorStripe
 
@@ -79,9 +85,9 @@ func set_game_timer():
 
 
 func set_cooldown_texture_positions_and_dimensions():
-	scale_and_center_radial(weapon_sprite, weapon_cooldown)
-	scale_and_center_radial(ability1_sprite, ability1_cooldown)
-	scale_and_center_radial(ability2_sprite, ability2_cooldown)
+	set_scale_and_center_radial(weapon_sprite, weapon_cooldown)
+	set_scale_and_center_radial(ability1_sprite, ability1_cooldown)
+	set_scale_and_center_radial(ability2_sprite, ability2_cooldown)
 	# account for scale adjustment when getting rect size
 	var half_rect_y = (weapon_cooldown.rect_size.y * weapon_cooldown.rect_scale.y) / 8
 	# set decor strip to be positioned with radial cooldown timers
@@ -90,7 +96,7 @@ func set_cooldown_texture_positions_and_dimensions():
 
 
 # changes scale and position of the cooldown radial
-func scale_and_center_radial(sprite_anchor, cooldown_radial):
+func set_scale_and_center_radial(sprite_anchor, cooldown_radial):
 	# set scale of radial, textures are too large by default
 	cooldown_radial.rect_scale = base_cooldown_texture_scale
 	# adjust for set scale
@@ -102,8 +108,78 @@ func scale_and_center_radial(sprite_anchor, cooldown_radial):
 
 ###############################################################################
 
-func update_cooldown(cooldown_to_update, value_to_pass):
-	pass
+
+func _on_GameTimer_Seconds_timeout():
+	if is_time_passing:
+		update_time()
+
+
+###############################################################################
+
+
+
+
+func update_cooldown(ability_type, enum_id, new_value, new_max):
+	if ability_type == BaseAbility.AbilityType.WEAPON:
+		ui_modify_cooldown(weapon_cooldown, weapon_cooldown_segment_timer, new_value, new_max)
+		if enum_id != current_weapon_cooldown_ui_graphic:
+			current_weapon_cooldown_ui_graphic = enum_id
+			update_ui_weapon_cooldown_graphic(enum_id)
+	elif ability_type == BaseAbility.AbilityType.ACTIVE:
+		if enum_id == 0:
+			ui_modify_cooldown(ability1_cooldown, ability1_cooldown_segment_timer, new_value, new_max)
+			#blink
+		elif enum_id == 1:
+			ui_modify_cooldown(ability2_cooldown, ability2_cooldown_segment_timer, new_value, new_max)
+			#time slow
+
+
+func ui_modify_cooldown(cooldown_node, cooldown_segment_timer, new_value, new_max):
+	# defunct so discard atm
+	var _discard = new_max
+	# set value of radial progress node on ui
+	cooldown_node.value = new_value
+	if new_max != null:
+		cooldown_node.max_value = 32
+		var segment_of_max = new_max/32
+		reset_timer(cooldown_segment_timer, segment_of_max)
+
+
+func update_ui_weapon_cooldown_graphic(enum_id):
+	var sprite_path_prog
+	var sprite_path_under
+	# temporary needs fixing as this will break if anything below
+	# is changed even slightly
+	# very rough implementation
+	# TODO FIX THIS
+	match enum_id:
+		0:
+			sprite_path_prog = GlobalReferences.sprite_weapon_split_shot
+			sprite_path_under = GlobalReferences.sprite_weapon_split_shot_greyscale
+		1:
+			sprite_path_prog = GlobalReferences.sprite_weapon_triple_burst_shot
+			sprite_path_under = GlobalReferences.sprite_weapon_triple_burst_shot_greyscale
+		2:
+			sprite_path_prog = GlobalReferences.sprite_weapon_sniper_shot
+			sprite_path_under = GlobalReferences.sprite_weapon_sniper_shot_greyscale
+		3:
+			sprite_path_prog = GlobalReferences.sprite_weapon_rapid_shot
+			sprite_path_under = GlobalReferences.sprite_weapon_rapid_shot_greyscale
+		4:
+			sprite_path_prog = GlobalReferences.sprite_weapon_heavy_shot
+			sprite_path_under = GlobalReferences.sprite_weapon_heavy_shot_greyscale
+		5:
+			sprite_path_prog = GlobalReferences.sprite_weapon_vortex_shot
+			sprite_path_under = GlobalReferences.sprite_weapon_vortex_shot_greyscale
+			
+	weapon_cooldown.texture_under = load(sprite_path_under)
+	weapon_cooldown.texture_progress = load(sprite_path_prog)
+
+
+func reset_timer(timer_to_set, new_wait_time):
+	timer_to_set.stop()
+	timer_to_set.wait_time = new_wait_time
+	timer_to_set.start()
 
 
 func update_time():
@@ -112,11 +188,23 @@ func update_time():
 		current_game_time_second = 59
 		current_game_time_minute -= 1
 	
+	# append 0 to single digit seconds
+	var seconds_string = str(current_game_time_second)\
+	 if current_game_time_second >= 10\
+	 else "0"+str(current_game_time_second)
+	
 	game_time_label.text =\
-	 str(current_game_time_minute) + ":" + str(current_game_time_second)
+	 str(current_game_time_minute) + ":" + str(seconds_string)
 
 
-func _on_GameTimer_Seconds_timeout():
-	if is_time_passing:
-		update_time()
 
+func _on_WeaponSegmentTimer_timeout():
+	weapon_cooldown.value += 1
+
+
+func _on_Ability1SegmentTimer_timeout():
+	ability1_cooldown.value += 1
+
+
+func _on_Ability2SegmentTimer_timeout():
+	ability2_cooldown.value += 1

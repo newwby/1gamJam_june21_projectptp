@@ -16,7 +16,7 @@ const NODE_2D_DELETION_HANDLER = GlobalReferences.node_2d_deletion
 const MINIMUM_SHOT_COOLDOWN = 0.1
 
 var base_weapon_style = weapon.Style.FLAMETHROWER
-
+var selected_weapon_style
 var current_weapon_style
 
 # damage dealt by a single instance of the attack
@@ -92,6 +92,7 @@ onready var minimum_cooldown_timer = $MinimumShotCooldown
 #
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	set_ability_type()
 	set_new_weapon(base_weapon_style)
 	set_new_cooldown_timer()
 	set_minimum_cooldown_timer()
@@ -104,9 +105,18 @@ func _process(_delta):
 ################################################################################
 
 
+func set_ability_type():
+	my_ability_type = AbilityType.WEAPON
+
+
 func set_new_weapon(passed_weapon):
 	set_weapon_style(passed_weapon)
 	set_weapon_dependent_owner_variables()
+#	set_new_cooldown_timer()
+#	defunct comment line x3
+#	is not called here because the relevant code
+#	is included in set_activation_cooldown, the setter function for
+#	activation_cooldown which IS set by the set_new_cooldown_timer()
 
 
 # everything the weapon node needs to know about handling projectiles
@@ -152,6 +162,7 @@ func set_weapon_style(new_weapon_style):
 			ability_data = weapon.STYLE_DATA[weapon.Style.BOLT_LANCE]
 	
 	# set the current weapon_style
+	selected_weapon_style = new_weapon_style
 	current_weapon_style = ability_data
 #
 #
@@ -219,6 +230,7 @@ func attempt_ability():
 
 # activation function for weapon fire
 func activate_ability():
+	.activate_ability()
 	if GlobalDebug.log_projectile_spawn_steps: ("activate_ability")
 	call_projectile_spawn_pattern_function()
 

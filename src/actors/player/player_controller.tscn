@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://src/actors/player/class_player.gd" type="Script" id=1]
 [ext_resource path="res://art/kenneynl_testsprite_dog.png" type="Texture" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://art/projectile/kenney_simplespace/ship_D.png" type="Texture" id=6]
 [ext_resource path="res://art/shrek_pup_dog_sprite.png" type="Texture" id=7]
 [ext_resource path="res://art/shrek_pup_eye_sprite.png" type="Texture" id=8]
+[ext_resource path="res://src/interface/ui_player_hud.tscn" type="PackedScene" id=9]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -80,3 +81,10 @@ offset = Vector2( 4, 5 )
 [node name="ActiveAbility2" parent="AbilityHolder" instance=ExtResource( 5 )]
 
 [node name="OrbitalProjectileHolder" type="Node2D" parent="."]
+
+[node name="UICanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="PlayerHUD" parent="UICanvasLayer" instance=ExtResource( 9 )]
+[connection signal="updated_cooldown" from="AbilityHolder/WeaponAbility" to="." method="_on_WeaponAbility_updated_cooldown"]
+[connection signal="updated_cooldown" from="AbilityHolder/ActiveAbility1" to="." method="_on_ActiveAbility1_updated_cooldown"]
+[connection signal="updated_cooldown" from="AbilityHolder/ActiveAbility2" to="." method="_on_ActiveAbility2_updated_cooldown"]

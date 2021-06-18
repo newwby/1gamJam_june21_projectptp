@@ -48,6 +48,8 @@ onready var orbit_handler_node = $OrbitalProjectileHolder
 onready var left_eye_sprite = $SpriteHolder/StaticSprite/EyeSprite_Left
 onready var right_eye_sprite = $SpriteHolder/StaticSprite/EyeSprite_Right
 
+onready var player_HUD = $UICanvasLayer/PlayerHUD
+
 ###############################################################################
 
 
@@ -211,3 +213,44 @@ func get_ability_input():
 
 
 ###############################################################################
+
+
+# player is a signal switchboard between ability nodes and HUD/UI
+func handle_ability_cooldown_signal(ability_node, ability_type, new_value, new_cooldown):
+	
+	# need to pass to the UI
+	# enum ID for weapon style or ability type
+	# ability type so we know what to use enum id for
+	# new value
+	# new cooldown
+#	func update_cooldown(ability_type, enum_id, new_value, new_max):
+	
+	var ability_enum_id
+	if ability_type == BaseAbility.AbilityType.ACTIVE:
+		ability_enum_id = ability_node.current_ability_loadout
+		if GlobalDebug.ability_cooldown_call_logs: print("ability is enum id ", weapon_ability_node.selected_weapon_style)
+	elif ability_type == BaseAbility.AbilityType.WEAPON:
+		if weapon_ability_node != null:
+			if GlobalDebug.ability_cooldown_call_logs: print("wep is enum id ", weapon_ability_node.selected_weapon_style)
+			ability_enum_id = weapon_ability_node.selected_weapon_style
+	
+	# pass relevant info to the HUD
+	if player_HUD != null:
+		player_HUD.update_cooldown(\
+		ability_type, ability_enum_id, new_value, new_cooldown)
+
+
+func _on_WeaponAbility_updated_cooldown(ability_node, ability_type, new_value, new_cooldown):
+	if GlobalDebug.ability_cooldown_call_logs: print("signal from wep", ", ability_node=", ability_node, ", ability_type=", ability_type, ", new_value=", new_value, ", new_cooldown=", new_cooldown)
+	handle_ability_cooldown_signal(ability_node, ability_type, new_value, new_cooldown)
+
+
+func _on_ActiveAbility1_updated_cooldown(ability_node, ability_type, new_value, new_cooldown):
+	if GlobalDebug.ability_cooldown_call_logs: print("signal from ab1", ", ability_node=", ability_node, ", ability_type=", ability_type, ", new_value=", new_value, ", new_cooldown=", new_cooldown)
+	handle_ability_cooldown_signal(ability_node, ability_type, new_value, new_cooldown)
+
+
+func _on_ActiveAbility2_updated_cooldown(ability_node, ability_type, new_value, new_cooldown):
+	if GlobalDebug.ability_cooldown_call_logs: print("signal from ab2", ", ability_node=", ability_node, ", ability_type=", ability_type, ", new_value=", new_value, ", new_cooldown=", new_cooldown)
+	handle_ability_cooldown_signal(ability_node, ability_type, new_value, new_cooldown)
+
