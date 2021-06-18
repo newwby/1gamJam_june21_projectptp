@@ -155,8 +155,8 @@ func set_weapon_style(new_weapon_style):
 		weapon.Style.FLAMETHROWER :
 			ability_data = weapon.STYLE_DATA[weapon.Style.FLAMETHROWER]
 		
-		weapon.Style.SCYTHE :
-			ability_data = weapon.STYLE_DATA[weapon.Style.SCYTHE]
+		weapon.Style.WIND_SCYTHE :
+			ability_data = weapon.STYLE_DATA[weapon.Style.WIND_SCYTHE]
 		
 		weapon.Style.BOLT_LANCE :
 			ability_data = weapon.STYLE_DATA[weapon.Style.BOLT_LANCE]

@@ -37,6 +37,8 @@ const sprite_weapon_sniper_shot = "res://art/icons/lorc-gameicons_sniper.png"
 const sprite_weapon_rapid_shot = "res://art/icons/lorc-gameicons_missile_swarm.png"
 const sprite_weapon_heavy_shot = "res://art/icons/lorc-gameicons_comet_spark.png"
 const sprite_weapon_vortex_shot = "res://art/icons/lorc-gameicons_orbital.png"
+const sprite_weapon_wind_scythe = "res://art/icons/lorc-gameicons_whirlpool_shuriken.png"
+const sprite_weapon_bolt_lance = "res://art/icons/lorc-gameicons_lightning_frequency.png"
 
 # paths to greyscale sprite graphics for ui cooldown radial
 const sprite_weapon_split_shot_greyscale = "res://art/icons/lorc-gameicons_striking_arrows_greyscale.png"
@@ -45,6 +47,8 @@ const sprite_weapon_sniper_shot_greyscale = "res://art/icons/lorc-gameicons_snip
 const sprite_weapon_rapid_shot_greyscale = "res://art/icons/lorc-gameicons_missile_swarm_greyscale.png"
 const sprite_weapon_heavy_shot_greyscale = "res://art/icons/lorc-gameicons_comet_spark_greyscale.png"
 const sprite_weapon_vortex_shot_greyscale = "res://art/icons/lorc-gameicons_orbital_greyscale.png"
+const sprite_weapon_wind_scythe_greyscale = "res://art/icons/lorc-gameicons_whirlpool_shuriken_greyscale.png"
+const sprite_weapon_bolt_lance_greyscale = "res://art/icons/lorc-gameicons_lightning_frequency_greyscale.png"
 
 #TODO add weapon collectable and projectile graphics to weapon style data
 # paths to projectile graphics

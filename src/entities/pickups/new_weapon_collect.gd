@@ -51,6 +51,10 @@ func set_by_key():
 				chosen_weapon_style = weapon.Style.HEAVY_SHOT
 			5:
 				chosen_weapon_style = weapon.Style.VORTEX_SHOT
+			6:
+				chosen_weapon_style = weapon.Style.WIND_SCYTHE
+			7:
+				chosen_weapon_style = weapon.Style.BOLT_LANCE
 
 
 func set_weapon_to_collect():
@@ -68,6 +72,10 @@ func set_weapon_to_collect():
 			sprite_path = GlobalReferences.sprite_weapon_heavy_shot
 		weapon.Style.VORTEX_SHOT:
 			sprite_path = GlobalReferences.sprite_weapon_vortex_shot
+		weapon.Style.WIND_SCYTHE:
+			sprite_path = GlobalReferences.sprite_weapon_wind_scythe
+		weapon.Style.BOLT_LANCE:
+			sprite_path = GlobalReferences.sprite_weapon_bolt_lance
 
 
 func set_sprite():

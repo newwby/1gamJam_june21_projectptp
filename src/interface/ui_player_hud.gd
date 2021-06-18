@@ -171,9 +171,17 @@ func update_ui_weapon_cooldown_graphic(enum_id):
 		5:
 			sprite_path_prog = GlobalReferences.sprite_weapon_vortex_shot
 			sprite_path_under = GlobalReferences.sprite_weapon_vortex_shot_greyscale
-			
-	weapon_cooldown.texture_under = load(sprite_path_under)
-	weapon_cooldown.texture_progress = load(sprite_path_prog)
+		6:
+			sprite_path_prog = GlobalReferences.sprite_weapon_wind_scythe
+			sprite_path_under = GlobalReferences.sprite_weapon_wind_scythe_greyscale
+		7:
+			sprite_path_prog = GlobalReferences.sprite_weapon_bolt_lance
+			sprite_path_under = GlobalReferences.sprite_weapon_bolt_lance_greyscale
+	
+	if sprite_path_under != null:
+		weapon_cooldown.texture_under = load(sprite_path_under)
+	if sprite_path_prog != null:
+		weapon_cooldown.texture_progress = load(sprite_path_prog)
 
 
 func reset_timer(timer_to_set, new_wait_time):

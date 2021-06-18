@@ -18,24 +18,28 @@ script = ExtResource( 3 )
 position = Vector2( 893.165, 333.016 )
 
 [node name="NewWeaponPickup2" parent="." instance=ExtResource( 1 )]
-position = Vector2( 1228.79, 362.982 )
+position = Vector2( 1456.53, 273.084 )
 weapon_style_index = 1
 
 [node name="NewWeaponPickup3" parent="." instance=ExtResource( 1 )]
-position = Vector2( 401.72, 581.735 )
+position = Vector2( 1010.03, 111.267 )
 weapon_style_index = 2
 
 [node name="NewWeaponPickup4" parent="." instance=ExtResource( 1 )]
-position = Vector2( 881.178, 698.603 )
-weapon_style_index = 3
+position = Vector2( 575.523, 195.172 )
+weapon_style_index = 6
 
 [node name="NewWeaponPickup5" parent="." instance=ExtResource( 1 )]
-position = Vector2( 1297.71, 590.724 )
+position = Vector2( 1054.98, 473.856 )
 weapon_style_index = 4
 
 [node name="NewWeaponPickup6" parent="." instance=ExtResource( 1 )]
-position = Vector2( 416.703, 219.144 )
+position = Vector2( 461.652, 506.819 )
 weapon_style_index = 5
+
+[node name="NewWeaponPickup7" parent="." instance=ExtResource( 1 )]
+position = Vector2( 135.021, 698.602 )
+weapon_style_index = 7
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 152.827, 209.763 )

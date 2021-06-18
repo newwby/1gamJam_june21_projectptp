@@ -18,7 +18,7 @@ var is_damageable_by_foes = true
 var is_firing = false
 
 # how fast does the orbital rotation node rotate
-var orbiting_rotation_rate = 3
+var orbiting_rotation_rate = 5
 
 # where is the player aiming
 var current_mouse_position: Vector2 = Vector2.ZERO

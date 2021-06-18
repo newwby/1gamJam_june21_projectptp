@@ -62,6 +62,9 @@ var projectile_movement_behaviour
 # projectile graphic/sprite texture path (initialised in code)
 var projectile_sprite_path
 
+var base_orbit_distance_from_player = 300
+# disabled, used to be used for weird big planet esque orbit chaos
+var orbit_variance_multiplier = 0
 # if orbiting behaviour this establishes timer wait time before it begins
 # TODO remove?
 var time_before_orbit = 0.001
@@ -257,7 +260,15 @@ func call_projectile_expiry():
 
 func start_projectile_orbit():
 	var get_active_projectiles = get_parent().get_child_count()
-	position = Vector2(0, 150*get_active_projectiles)
+	
+	# vary the orbit
+	var orbit_distance_floor =\
+	 base_orbit_distance_from_player * (1-orbit_variance_multiplier)
+	var orbit_distance_ceiling =\
+	 base_orbit_distance_from_player * (1+orbit_variance_multiplier)
+	var orbit_distance = GlobalFuncs.ReturnRandomRange(orbit_distance_floor, orbit_distance_ceiling)
+	
+	position = Vector2(0, orbit_distance*get_active_projectiles)
 #	rotation_degrees = 45*get_active_projectiles
 	velocity = Vector2.ZERO
 	is_projectile_movement_allowed = false
