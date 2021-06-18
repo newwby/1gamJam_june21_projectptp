@@ -26,29 +26,40 @@ position = Vector2( 1010.03, 111.267 )
 weapon_style_index = 2
 
 [node name="NewWeaponPickup4" parent="." instance=ExtResource( 1 )]
-position = Vector2( 575.523, 195.172 )
+position = Vector2( -302.373, 60.6283 )
 weapon_style_index = 6
 
 [node name="NewWeaponPickup5" parent="." instance=ExtResource( 1 )]
-position = Vector2( 1054.98, 473.856 )
+position = Vector2( -463.675, 204.769 )
 weapon_style_index = 4
 
 [node name="NewWeaponPickup6" parent="." instance=ExtResource( 1 )]
-position = Vector2( 461.652, 506.819 )
+position = Vector2( -663.467, 424.411 )
 weapon_style_index = 5
 
 [node name="NewWeaponPickup7" parent="." instance=ExtResource( 1 )]
-position = Vector2( 135.021, 698.602 )
+position = Vector2( -500.696, -14.478 )
 weapon_style_index = 7
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
-position = Vector2( 152.827, 209.763 )
+position = Vector2( -1003.15, 93.258 )
 
 [node name="Enemy" parent="." instance=ExtResource( 4 )]
 position = Vector2( 1165.68, 800.096 )
 
 [node name="LeafSpriteController" parent="." instance=ExtResource( 5 )]
+leaf_spawn_position = Vector2( -500, -500 )
 
 [node name="GameCamera2D" parent="." instance=ExtResource( 8 )]
 current = true
 script = ExtResource( 7 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+modulate = Color( 1, 1, 1, 0.0588235 )
+margin_left = 473.465
+margin_top = 494.441
+margin_right = 628.465
+margin_bottom = 649.441
+__meta__ = {
+"_edit_use_anchors_": false
+}

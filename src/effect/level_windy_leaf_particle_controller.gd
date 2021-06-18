@@ -3,10 +3,12 @@ extends Timer
 # reference a string path held elsewhere (for simpler path changes)
 const LEAF_PATH = GlobalReferences.windy_leaf_particle
 
+export var leaf_spawn_position = Vector2(-200,-200)
+
 # how fast are new leaves spawned
 var spawn_delay = 1.0
 # where do leaves start
-var leaf_spawn_position = Vector2(-200,-200)
+
 # leaf movement direction override for spawning
 var leaf_direction = Vector2(0.5, 0.5)
 var velocity_range = 0.5
