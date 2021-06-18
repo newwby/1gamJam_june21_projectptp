@@ -15,37 +15,37 @@ script = ExtResource( 3 )
 [node name="TileMap" parent="." instance=ExtResource( 6 )]
 
 [node name="NewWeaponPickup" parent="." instance=ExtResource( 1 )]
-position = Vector2( 893.165, 333.016 )
+position = Vector2( 6518.92, 1158.46 )
 
 [node name="NewWeaponPickup2" parent="." instance=ExtResource( 1 )]
-position = Vector2( 1456.53, 273.084 )
+position = Vector2( 7082.28, 1098.53 )
 weapon_style_index = 1
 
 [node name="NewWeaponPickup3" parent="." instance=ExtResource( 1 )]
-position = Vector2( 1010.03, 111.267 )
+position = Vector2( 6635.78, 936.715 )
 weapon_style_index = 2
 
 [node name="NewWeaponPickup4" parent="." instance=ExtResource( 1 )]
-position = Vector2( -302.373, 60.6283 )
+position = Vector2( 7444.15, 1324.2 )
 weapon_style_index = 6
 
 [node name="NewWeaponPickup5" parent="." instance=ExtResource( 1 )]
-position = Vector2( -463.675, 204.769 )
+position = Vector2( 7282.84, 1468.34 )
 weapon_style_index = 4
 
 [node name="NewWeaponPickup6" parent="." instance=ExtResource( 1 )]
-position = Vector2( -663.467, 424.411 )
+position = Vector2( 7083.05, 1687.98 )
 weapon_style_index = 5
 
 [node name="NewWeaponPickup7" parent="." instance=ExtResource( 1 )]
-position = Vector2( -500.696, -14.478 )
+position = Vector2( 7245.82, 1249.09 )
 weapon_style_index = 7
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
-position = Vector2( -1003.15, 93.258 )
+position = Vector2( 6743.37, 1356.83 )
 
 [node name="Enemy" parent="." instance=ExtResource( 4 )]
-position = Vector2( 1165.68, 800.096 )
+position = Vector2( 8912.2, 2063.67 )
 
 [node name="LeafSpriteController" parent="." instance=ExtResource( 5 )]
 leaf_spawn_position = Vector2( -500, -500 )
@@ -56,10 +56,10 @@ script = ExtResource( 7 )
 
 [node name="ColorRect" type="ColorRect" parent="."]
 modulate = Color( 1, 1, 1, 0.0588235 )
-margin_left = 473.465
-margin_top = 494.441
-margin_right = 628.465
-margin_bottom = 649.441
+margin_left = 8219.98
+margin_top = 1758.01
+margin_right = 8374.98
+margin_bottom = 1913.01
 __meta__ = {
 "_edit_use_anchors_": false
 }

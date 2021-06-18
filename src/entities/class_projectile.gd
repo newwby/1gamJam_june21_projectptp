@@ -62,6 +62,9 @@ var projectile_movement_behaviour
 # projectile graphic/sprite texture path (initialised in code)
 var projectile_sprite_path
 
+# enum for weapon.particle
+var projectile_particle_id
+
 var base_orbit_distance_from_player = 300
 # disabled, used to be used for weird big planet esque orbit chaos
 var orbit_variance_multiplier = 0
@@ -75,10 +78,14 @@ onready var orbit_init_timer = $OrbitInitialisationTimer
 onready var projectile_sprite_holder = $SpriteHolder
 # sprite handler replaced with simple sprite
 onready var simple_sprite = $SpriteHolder/ProjectileSprite
+onready var simple_sprite_undershadow = $SpriteHolder/ProjectileSprite/ProjectileSpriteShadow
 
 # nodes in the projectile
 onready var projectile_collision = $ProjectileCollision
 onready var projectile_life_timer = $ProjectileLifespan
+
+onready var orbital_particles = $ProjectileParticlesOrbital
+onready var heavy_particles = $ProjectileParticlesHeavy
 
 # tween for projectile expiry/fading
 onready var fading_tween = $FadeTween
@@ -93,6 +100,7 @@ func _ready():
 	self.add_to_group("projectiles")
 	set_collision_and_sprite_size()
 	set_projectile_lifespan_timer()
+	set_particle_effects()
 	set_orbital_initialisation_timer()
 	set_maximum_projectile_range()
 
@@ -108,8 +116,9 @@ func _process(delta):
 
 # simplified movement instructions
 func _process_rotate_self(_dt):
-	for i in projectile_sprite_holder.get_children():
-		i.rotation_degrees += rotation_per_tick
+	self.rotation_degrees += rotation_per_tick
+#	for i in projectile_sprite_holder.get_children():
+#		i.rotation_degrees += rotation_per_tick
 
 
 # simplified movement instructions
@@ -142,11 +151,14 @@ func set_projectile_scale():
 	# if the projectile is size modified, also modify the collision area
 	simple_sprite.scale =\
 	 Vector2(projectile_set_size, projectile_set_size)
+	simple_sprite_undershadow.scale =\
+	 Vector2(projectile_set_size, projectile_set_size)
 	projectile_collision.shape.radius =\
 	 projectile_collision_base_radius * projectile_set_size
 	# set sprite
 	if projectile_sprite_path != null:
 		simple_sprite.texture = load(projectile_sprite_path)
+		simple_sprite_undershadow.texture = load(projectile_sprite_path)
 	simple_sprite.modulate = projectile_colour_code
 
 
@@ -155,6 +167,24 @@ func set_projectile_scale():
 func set_projectile_lifespan_timer():
 	projectile_life_timer.wait_time = projectile_lifespan
 	projectile_life_timer.start()
+
+
+# if using certain weapon sets enable particles else disable
+func set_particle_effects():
+	# set default
+	orbital_particles.visible = false
+	orbital_particles.emitting = false
+	heavy_particles.visible = false
+	heavy_particles.emitting = false
+		
+	# orbital weapon particles
+	if projectile_particle_id == 1:
+		orbital_particles.visible = true
+		orbital_particles.emitting = true
+	# heavy shot weapon particles
+	elif projectile_particle_id == 2:
+		heavy_particles.visible = true
+		heavy_particles.emitting = true
 
 
 # initialise the timer for handling orbit and orbit-related projectile movement

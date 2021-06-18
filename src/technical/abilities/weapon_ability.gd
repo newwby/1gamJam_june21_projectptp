@@ -504,6 +504,10 @@ func instance_new_projectile():
 	new_projectile.projectile_movement_behaviour =\
 	 current_weapon_style[weapon.DataType.PROJECTILE_MOVE_PATTERN]
 
+	# set particles for projectile, if any
+	new_projectile.projectile_particle_id =\
+	 current_weapon_style[weapon.DataType.PROJECTILE_PARTICLES]
+
 	# return the instanced projectile
 	return new_projectile
 

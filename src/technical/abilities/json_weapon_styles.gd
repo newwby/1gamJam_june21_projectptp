@@ -51,6 +51,8 @@ enum ProjectileSprite {
 # projectile sprite is the particle effect applied to the projectile
 enum ProjectileParticles {
 	NONE,
+	ORBITAL,
+	HEAVY_SHOT,
 }
 
 # spawn surge effect is an effect that plays when the shot is fired
@@ -291,7 +293,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_SPRITE_TYPE		: GlobalReferences.sprite_projectile_heavy_shot,
 		DataType.PROJECTILE_SPRITE_COLOUR	: Color.firebrick,
 		DataType.PROJECTILE_SPRITE_ROTATE	: 4,
-		DataType.PROJECTILE_PARTICLES		: ProjectileParticles.NONE,
+		DataType.PROJECTILE_PARTICLES		: ProjectileParticles.HEAVY_SHOT,
 		DataType.SHOT_AUDIO_STYLE			: AudioStyle.ON_FIRE,
 		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
 		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
@@ -301,7 +303,7 @@ const STYLE_DATA = {
 		DataType.AI_MIN_USE_RANGE			: GlobalVariables.RangeGroup.MELEE,
 		DataType.AI_MAX_USE_RANGE			: GlobalVariables.RangeGroup.NEAR,
 		DataType.BASE_DAMAGE				: 40,
-		DataType.PROJECTILE_SIZE			: 2.5,
+		DataType.PROJECTILE_SIZE			: 1.5,
 		DataType.PROJECTILE_MAX_MOVE_TICKS	: 6000,
 		DataType.PROJECTILE_MAX_RANGE		: 600,
 		DataType.PROJECTILE_MAX_LIFESPAN	: 4.0,
@@ -323,7 +325,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_SPRITE_TYPE		: GlobalReferences.sprite_projectile_vortex_shot,
 		DataType.PROJECTILE_SPRITE_COLOUR	: Color.orangered,
 		DataType.PROJECTILE_SPRITE_ROTATE	: 12,
-		DataType.PROJECTILE_PARTICLES		: ProjectileParticles.NONE,
+		DataType.PROJECTILE_PARTICLES		: ProjectileParticles.ORBITAL,
 		DataType.SHOT_AUDIO_STYLE			: AudioStyle.WHILST_HELD,
 		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
 		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
@@ -397,7 +399,7 @@ const STYLE_DATA = {
 		DataType.AI_MIN_USE_RANGE			: GlobalVariables.RangeGroup.MELEE,
 		DataType.AI_MAX_USE_RANGE			: GlobalVariables.RangeGroup.MELEE,
 		DataType.BASE_DAMAGE				: 40,
-		DataType.PROJECTILE_SIZE			: 2.0,
+		DataType.PROJECTILE_SIZE			: 1.75,
 		DataType.PROJECTILE_MAX_MOVE_TICKS	: 2000,
 		DataType.PROJECTILE_MAX_RANGE		: 100,
 		DataType.PROJECTILE_MAX_LIFESPAN	: 0.05,

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://src/entities/class_projectile.gd" type="Script" id=1]
 [ext_resource path="res://art/projectile/kenney_particlePack_1.1/circle_05.png" type="Texture" id=2]
@@ -6,37 +6,49 @@
 [ext_resource path="res://art/projectile/kenney_particlePack_1.1/circle_02.png" type="Texture" id=4]
 [ext_resource path="res://art/projectile/kenney_simplespace/star_large.png" type="Texture" id=5]
 [ext_resource path="res://art/projectile/kenney_simplespace/meteor_squareLarge.png" type="Texture" id=6]
+[ext_resource path="res://art/projectile/kenney_particlePack_1.1/fire_02.png" type="Texture" id=7]
+[ext_resource path="res://art/projectile/kenney_particlePack_1.1/fire_01.png" type="Texture" id=8]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 28.0
 
 [sub_resource type="SpriteFrames" id=2]
 animations = [ {
-"frames": [ ExtResource( 6 ) ],
-"loop": true,
-"name": "sniper_shot",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 3 ), ExtResource( 4 ) ],
 "loop": true,
 "name": "test_magical",
 "speed": 8.0
+}, {
+"frames": [ ExtResource( 6 ) ],
+"loop": true,
+"name": "sniper_shot",
+"speed": 5.0
 } ]
 
 [sub_resource type="SpriteFrames" id=3]
 animations = [ {
-"frames": [  ],
-"loop": true,
-"name": "sniper_shot",
-"speed": 6.0
-}, {
 "frames": [ ExtResource( 2 ) ],
 "loop": true,
 "name": "test_magical",
 "speed": 5.0
+}, {
+"frames": [  ],
+"loop": true,
+"name": "sniper_shot",
+"speed": 6.0
 } ]
 
+[sub_resource type="AnimatedTexture" id=4]
+flags = 4
+frames = 2
+fps = 6.0
+frame_0/texture = ExtResource( 8 )
+frame_1/texture = ExtResource( 7 )
+frame_1/delay_sec = 0.0
+
 [node name="Projectile" type="Area2D"]
+z_index = 4000
+z_as_relative = false
 script = ExtResource( 1 )
 
 [node name="ProjectileCollision" type="CollisionShape2D" parent="."]
@@ -61,12 +73,61 @@ animation = "sniper_shot"
 playing = true
 
 [node name="ProjectileSprite" type="Sprite" parent="SpriteHolder"]
+z_index = 4000
+z_as_relative = false
+texture = ExtResource( 5 )
+
+[node name="ProjectileSpriteShadow" type="Sprite" parent="SpriteHolder/ProjectileSprite"]
+modulate = Color( 0, 0, 0, 0.294118 )
+z_index = 4000
+z_as_relative = false
 texture = ExtResource( 5 )
 
 [node name="OrbitInitialisationTimer" type="Timer" parent="."]
 one_shot = true
 
 [node name="FadeTween" type="Tween" parent="."]
+
+[node name="ProjectileParticlesOrbital" type="CPUParticles2D" parent="."]
+visible = false
+position = Vector2( -1.52737e-05, 0 )
+scale = Vector2( 0.05, 0.05 )
+emitting = false
+amount = 3
+explosiveness = 1.0
+fixed_fps = 15
+texture = ExtResource( 2 )
+emission_shape = 1
+emission_sphere_radius = 15.0
+flag_align_y = true
+spread = 15.0
+gravity = Vector2( 0, 15 )
+angular_velocity = 15.0
+angular_velocity_random = 1.0
+orbit_velocity = 4.0
+orbit_velocity_random = 1.0
+linear_accel = 25.0
+linear_accel_random = 1.0
+radial_accel = 100.0
+radial_accel_random = 1.0
+tangential_accel = 100.0
+tangential_accel_random = 1.0
+angle = 15.0
+scale_amount_random = 1.0
+
+[node name="ProjectileParticlesHeavy" type="CPUParticles2D" parent="."]
+modulate = Color( 1, 0.294118, 0, 0.294118 )
+position = Vector2( -0.198425, 0.198425 )
+scale = Vector2( 0.15, 0.15 )
+amount = 16
+explosiveness = 0.5
+texture = SubResource( 4 )
+emission_shape = 1
+emission_sphere_radius = 128.0
+direction = Vector2( 0, 0 )
+spread = 75.0
+gravity = Vector2( 0, -150 )
+linear_accel = 35.0
 [connection signal="timeout" from="ProjectileLifespan" to="." method="_on_ProjectileLifespan_timeout"]
 [connection signal="screen_exited" from="ProjectileVisibilityNotifier" to="." method="_on_ProjectileVisibilityNotifier_screen_exited"]
 [connection signal="timeout" from="OrbitInitialisationTimer" to="." method="_on_OrbitInitialisationTimer_timeout"]
