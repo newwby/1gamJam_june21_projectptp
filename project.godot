@@ -96,6 +96,7 @@ GlobalFuncs="*res://src/global_funcs.gd"
 window/size/width=1680
 window/size/height=1024
 window/size/resizable=false
+mouse_cursor/custom_image="res://art/icons/crosshairpack_kenney/crosshair184.png"
 
 [input]
 
