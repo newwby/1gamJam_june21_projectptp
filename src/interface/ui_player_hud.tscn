@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://src/interface/ui_player_hud.gd" type="Script" id=1]
 [ext_resource path="res://art/icons/lorc-gameicons_sniper_greyscale.png" type="Texture" id=2]
@@ -9,6 +9,11 @@
 [ext_resource path="res://art/icons/lorc-gameicons_time_slow.png" type="Texture" id=7]
 [ext_resource path="res://art/icons/lorc-gameicons_time_slow_greyscale.png" type="Texture" id=8]
 [ext_resource path="res://art/icons/lorc-gameicons_blink_dash.png" type="Texture" id=9]
+[ext_resource path="res://fonts/kenney_fontpackage/Fonts/Kenney Blocks.ttf" type="DynamicFontData" id=10]
+
+[sub_resource type="DynamicFont" id=1]
+size = 36
+font_data = ExtResource( 10 )
 
 [node name="PlayerHUD" type="Control"]
 anchor_right = 1.0
@@ -218,3 +223,19 @@ fill_mode = 4
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="ClockLabel" type="Label" parent="."]
+margin_left = 1489.23
+margin_top = 9.24994
+margin_right = 1621.23
+margin_bottom = 81.2499
+custom_fonts/font = SubResource( 1 )
+text = "20:00"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GameTimer_Seconds" type="Timer" parent="."]
+[connection signal="timeout" from="GameTimer_Seconds" to="." method="_on_GameTimer_Seconds_timeout"]
