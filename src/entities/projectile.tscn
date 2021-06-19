@@ -90,44 +90,32 @@ one_shot = true
 
 [node name="ProjectileParticlesOrbital" type="CPUParticles2D" parent="."]
 visible = false
-position = Vector2( -1.52737e-05, 0 )
 scale = Vector2( 0.05, 0.05 )
 emitting = false
-amount = 3
-explosiveness = 1.0
-fixed_fps = 15
+amount = 4
+lifetime = 0.25
+local_coords = false
 texture = ExtResource( 2 )
-emission_shape = 1
-emission_sphere_radius = 15.0
-flag_align_y = true
 spread = 15.0
-gravity = Vector2( 0, 15 )
-angular_velocity = 15.0
-angular_velocity_random = 1.0
-orbit_velocity = 4.0
-orbit_velocity_random = 1.0
-linear_accel = 25.0
-linear_accel_random = 1.0
-radial_accel = 100.0
-radial_accel_random = 1.0
-tangential_accel = 100.0
-tangential_accel_random = 1.0
-angle = 15.0
-scale_amount_random = 1.0
+gravity = Vector2( 0, 0 )
+scale_amount = 0.05
 
 [node name="ProjectileParticlesHeavy" type="CPUParticles2D" parent="."]
+visible = false
 modulate = Color( 1, 0.294118, 0, 0.294118 )
 position = Vector2( -0.198425, 0.198425 )
-scale = Vector2( 0.15, 0.15 )
-amount = 16
-explosiveness = 0.5
+scale = Vector2( 0.05, 0.05 )
+amount = 1
+lifetime = 0.15
+local_coords = false
+draw_order = 1
 texture = SubResource( 4 )
-emission_shape = 1
-emission_sphere_radius = 128.0
+flag_align_y = true
 direction = Vector2( 0, 0 )
 spread = 75.0
-gravity = Vector2( 0, -150 )
-linear_accel = 35.0
+gravity = Vector2( 0, 0 )
+radial_accel = 45.0
+scale_amount = 0.5
 [connection signal="timeout" from="ProjectileLifespan" to="." method="_on_ProjectileLifespan_timeout"]
 [connection signal="screen_exited" from="ProjectileVisibilityNotifier" to="." method="_on_ProjectileVisibilityNotifier_screen_exited"]
 [connection signal="timeout" from="OrbitInitialisationTimer" to="." method="_on_OrbitInitialisationTimer_timeout"]
