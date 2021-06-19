@@ -148,8 +148,7 @@ enum DataType {
 # implement enum/array for on-contact actions
 # e.g. status effects and triggering other abilities
 #
-# implement velocity inheritance multiplier on weapon type
-# (const INHERITED_VELOCITY_MULTIPLIER)
+# implement spawn location for weapons
 
 ###############################################################################
 
@@ -497,7 +496,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_SPRITE_TYPE		: GlobalReferences.sprite_projectile_fire_cloud,
 		DataType.PROJECTILE_SPRITE_COLOUR	: Color.orangered,
 		DataType.PROJECTILE_SPRITE_ROTATE	: 0,
-		DataType.PROJECTILE_PARTICLES		: ProjectileParticles.NONE,
+		DataType.PROJECTILE_PARTICLES		: ProjectileParticles.HEAVY_SHOT,
 		DataType.SHOT_AUDIO_STYLE			: AudioStyle.WHILST_HELD,
 		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
 		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
@@ -517,8 +516,8 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_SPAWN_DELAY		: 0.01,
 		DataType.USE_SNIPER_AIM_LINE		: false,
 		DataType.PROJECTILE_COUNT			: 10,
-		DataType.PROJECTILE_FLIGHT_SPEED	: 750,
+		DataType.PROJECTILE_FLIGHT_SPEED	: 900,
 		DataType.PROJECTILE_SPEED_INHERIT	: 0.0,
-		DataType.PROJECTILE_SHOT_VARIANCE	: 0.5,
+		DataType.PROJECTILE_SHOT_VARIANCE	: 0.3,
 	},
 }

@@ -4,66 +4,57 @@ extends Actor
 
 enum State{
 	IDLE,
-	PATROL,
+	WANDER,
+	SEARCH,
 	HUNT,
 	ATTACK,
 	HURT,
 	DYING
 }
 
-const DETECTION_RADIUS_SIZE = 300
-const MELEE_RADIUS_MULTIPLIER = 1.0
-const CLOSE_RADIUS_MULTIPLIER = 2.0
-const NEAR_RADIUS_MULTIPLIER = 3.0
-const FAR_RADIUS_MULTIPLIER = 4.0
-
 const ENEMY_TYPE_BASE_MOVEMENT_SPEED = 150
+
+# if in these states ignore rechecking of states
+var action_state_override = [\
+	State.ATTACK,\
+	State.HURT,\
+	State.DYING,]
 
 var is_active = true
 var can_check_state = true
+
+# the current actor the enemy is hunting
+var current_target
+# last known location of the target if lost sight of them
+var target_last_known_location
 
 # the current state the enemy is in
 var current_state
 # states that the enemy was previously in that still need to be resolved
 var state_register = []
 
-# future-proofing variables for enemies with variable detection
-var perception_bonus_flat_size_increase: int = 0
-var perception_bonus_multiplier_melee: float = 0.0
-var perception_bonus_multiplier_close: float = 0.0
-var perception_bonus_multiplier_near: float = 0.0
-var perception_bonus_multiplier_far: float = 0.0
+var wander_to_position
+var wandering_distance_minimum
+var wandering_distance_maximum
+var wandering_timer_minimum
+var wandering_timer_maximum
+var distance_to_wandering_position_to_complete
 
+onready var wandering_timer = $StateComponentHolder/WanderingRepeatTImer
 
-# get the range range group enum name for discerning detection group names
-var melee_range_string_suffix = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.MELEE]
-var close_range_string_suffix = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.CLOSE]
-var near_range_string_suffix = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.NEAR]
-var far_range_string_suffix = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.FAR]
-var distant_range_string_suffix = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.DISTANT]
+# stat AGGRESSION --
+	# how long does damage cause them to keep active (minimum)
+		# 10x float for timer
+	# how close do they move to target
+		# float multiply close distance border
+	# how long do they take to lose attention once off screen
+		# 5x float for timer
 
-# variables for setting detection group names
-var melee_range_group
-var close_range_group
-var near_range_group
-var far_range_group
-var distant_range_group
+# stat REACTION_SPEED --
+	# how long additional time on top of weapon cooldown?
+	# initial cooldown multiplied by float of reaction speed
 
-# TODO sort out enemy sprite auto scaling
-
-var grouping_string = str(self)+"_"
-
-# variables holding references to the detection radii nodes
-onready var detection_radius_melee = $DetectionRadiiHolder/Range_Melee
-onready var detection_radius_close = $DetectionRadiiHolder/Range_Close
-onready var detection_radius_near = $DetectionRadiiHolder/Range_Near
-onready var detection_radius_far = $DetectionRadiiHolder/Range_Far
-
-# variables holding references to the collision shapes for detection nodes
-onready var collision_radius_melee = $DetectionRadiiHolder/Range_Melee/CollisionShape2D
-onready var collision_radius_close = $DetectionRadiiHolder/Range_Close/CollisionShape2D
-onready var collision_radius_near = $DetectionRadiiHolder/Range_Near/CollisionShape2D
-onready var collision_radius_far = $DetectionRadiiHolder/Range_Far/CollisionShape2D
+onready var detection_scan = $DetectionRadiiHandler
 
 ###############################################################################
 
@@ -72,8 +63,6 @@ onready var collision_radius_far = $DetectionRadiiHolder/Range_Far/CollisionShap
 func _ready():
 	self.add_to_group("enemies")
 	set_enemy_stats()
-	set_collision_radii()
-	set_detection_group_strings()
 	set_initial_state(State.IDLE)
 
 
@@ -92,80 +81,43 @@ func _process_call_state_behaviour(_dt):
 	# check state and move to that function
 	match current_state:
 	
-		# enemy is idle and doing nothing
-		State.IDLE:
+		# enemy is ambling around aimlessly
+		State.WANDER:
 			# state_idle()
 			pass
 	
-		# enemy is wandering aimlessly or following a patrol route
-		State.PATROL:
-			# state_wander_aimlessly()
-			pass
+		# enemy is moving toward last position they saw foe
+		State.SEARCH:
+			state_searching_move_toward_target_last_known_position()
 	
-		# enemy is hunting a player
+		# enemy is actively chasing a player/can see a player
 		State.HUNT:
-			# state_hunt()
-			pass
+			state_hunting_move_and_track_target()
 	
 		# enemy is in range of a target and is initiating an attack
 		State.ATTACK:
-			# state_attack()
-			pass
+			state_attack_activate_weapon()
 	
 		# enemy has been injured and is playing hurt animation/logic
 		State.HURT:
-			# state_hurt()
-			pass
+			state_hurt_enemy_is_damaged()
 	
 		# enemy has been injured so much they are dying
 		State.DYING:
-			# state_dying()
-			pass
+			state_dying_enemy_begins_to_die()
 
 
 # check whether we can change state
 func _process_check_state():
 	# if enemy is doing nothing and isn't already idle, set to idle
+	# TODO modify this to account for offscreen/idle check
 	if not is_active\
 	 and current_state != State.IDLE\
 	 and state_register.size() == 0:
 		set_new_state(State.IDLE)
 	
-	# TODO re-enable state register, not currently using it
-	# if we have previous states to handle, handle them!
-#	if state_register.size() > 0:
-#		if state_register[0] in State:
-#			current_state = state_register.pop_front()
+	recheck_state()
 
-	# if no target look for one
-	var potential_targets = []
-	var nodes_at_far_range = get_tree().get_nodes_in_group(close_range_group)
-	
-	# check if player is visible
-	
-	# scan all valid targets
-	for i in nodes_at_far_range:
-		if i is Player:
-			potential_targets.append(i)
-	
-# func GlobalFunc.GetNearestInArray():
-	# clear these variables
-	var closest_target = null
-	var closest_target_distance = null
-	# check who is the closest valid target
-	if potential_targets.size() > 0:
-		for i in potential_targets:
-			var get_distance = position.distance_to(i.position)
-			# if haven't set
-			if closest_target_distance == null:
-				closest_target_distance = get_distance
-				closest_target = i
-			elif get_distance < closest_target_distance:
-				closest_target_distance = get_distance
-				closest_target = i
-	
-	if closest_target != null:
-		velocity = -(position - closest_target.position)
 
 ###############################################################################
 
@@ -184,168 +136,346 @@ func set_initial_state(starting_state):
 func set_new_state(new_state):
 	state_register.append(current_state)
 	current_state = new_state
-
-
-# we have to set the strings for finding detection node groups
-func set_detection_group_strings():
-	# set the group strings
-	melee_range_group = grouping_string + melee_range_string_suffix
-	close_range_group = grouping_string + close_range_string_suffix
-	near_range_group = grouping_string + near_range_string_suffix
-	far_range_group = grouping_string + far_range_string_suffix
-	distant_range_group = grouping_string + distant_range_string_suffix
-
-# collision radii are set in code as they may be changeable
-# by specific enemy subclasses
-# must set the collision extents for each detection radius
-func set_collision_radii():
-	# each of these variables consist of a static constant that does
-	# not change with each enemy sub class, and a bonus (or penalty)
-	# that can be applied as an additional modifier, allowing for
-	# enemies that are more or less perceptive of the player
-	
-	# by default an enemy detection radius only scans the player
-	# body mask, for actors in the player layer
-	
-	# the flat detection radius
-	var base_perception_radius =\
-	 DETECTION_RADIUS_SIZE+perception_bonus_flat_size_increase
-	# the multiplier for the melee range (closest to self)
-	var melee_range_multiplier =\
-	 MELEE_RADIUS_MULTIPLIER + perception_bonus_multiplier_melee
-	# the multiplier for the close range (second closest to self)
-	var close_range_multiplier =\
-	 CLOSE_RADIUS_MULTIPLIER + perception_bonus_multiplier_close
-	# the multiplier for the near range (second furthest from self)
-	var near_range_multiplier =\
-	 NEAR_RADIUS_MULTIPLIER + perception_bonus_multiplier_near
-	# the multiplier for the far range (furthest from self)
-	var far_range_multiplier =\
-	 FAR_RADIUS_MULTIPLIER + perception_bonus_multiplier_far
-	
-	# now we set the collision extents for the collision shape
-	# (circle shape) of each detection radius
-	# set the melee range
-	collision_radius_melee.shape.radius =\
-	 base_perception_radius*melee_range_multiplier
-	# set the close range
-	collision_radius_close.shape.radius =\
-	 base_perception_radius*close_range_multiplier
-	# set the near range
-	collision_radius_near.shape.radius =\
-	 base_perception_radius*near_range_multiplier
-	# set the far range
-	collision_radius_far.shape.radius =\
-	 base_perception_radius*far_range_multiplier
-	
-	# not listed here, as it does not have a detection radius, is
-	# the 'distant' range, which is for any actor not in a range group
-	# which has been detected before (i.e. the detector has some prior
-	# knowledge of them)
-	# the distant range is handled by the 'far' dection group
-	# actors that have never been encountered are in the technical
-	# 'undetected' detection group, and should not be interacted with
-	# barring specific code exemptions
+	print("new state is ", State.keys()[new_state])
 
 
 ###############################################################################
 
 
-# handling when a body moves in to the melee detection radius
-func _on_Range_Melee_body_entered(body):
-	add_to_detection_group(GlobalVariables.RangeGroup.MELEE, body)
+# when not already in an active
+func recheck_state():
+	
+	# IF ACTIVE STATE
+	# OVERRIDE ALL STATES
+	# if attacking, hurt or dying, ignore state checking
+	# if cannot check state, ignore state checking
+	if current_state in action_state_override\
+	 or not can_check_state:
+		# return void/null
+		return
+	
+	# IDLE STATE
+	# if not active, override everything
+	elif not is_active\
+	 and current_state != State.IDLE:
+		set_new_state(State.IDLE)
+	
+	# ATTACK STATE
+	# do we have a target, are we able to fire?
+	# set state attack if not already
+	elif current_target != null and check_if_weapon_can_fire()\
+	 and current_state != State.ATTACK:
+		set_new_state(State.ATTACK)
+	
+	# HUNT STATE
+	# if not do we have a target currently?
+	# set hunting state if not already
+	elif current_target != null\
+	 and current_state != State.HUNT:
+		set_new_state(State.HUNT)
+
+	# SEARCH STATE
+	# if we don't have a target
+	# but we do have a target last known location
+	# set searching state if not already
+	elif current_target == null\
+	 and target_last_known_location != null\
+	 and current_state != State.SEARCH:
+		set_new_state(State.SEARCH)
+	
+	# WANDERING STATE
+	# if no target, or last known location
+	# set wandering state if not already
+	elif current_target == null\
+	 and target_last_known_location == null\
+	 and is_active\
+	 and current_state != State.WANDER:
+		set_new_state(State.WANDER)
+	
+	# if no target
+	# look for a target
+	elif current_target == null:
+		look_for_targets()
+	
+	# Create state checking node?
+	# Move detection logic to detection handler node?
+	# Use signals to pass info to enemy to handle behaviour
+	
+	
+	# If can't see nearby target, is there someone further away?
+		# Check far group, if we find a target
+			# Store target position and move toward target position
+			# Every tick/process
+				# Check if we can attack
+				# Check if we see anyone
+	
+	# If hurt, change state and append state register
+		# Check if dead
+			# Stop all other processing
+			# Process dead
+		# If not dead
+			# Process hurt
+			# Check state
+
+###############################################################################
 
 
-# handling when a body moves out of the melee detection radius
-func _on_Range_Melee_body_exited(body):
-	remove_from_detection_group(GlobalVariables.RangeGroup.MELEE, body)
+# WANDERING STATE
+# get random location nearby and move there
+func state_wandering_move_to_random_nearby_location():
+	# TODO move variablse out of this scope
+	# TODO if within variable range
+		# randomise within range then start wander pause timer
+#	# if wander pause timer running no more wandering
+#	var wander_to_position
+#	var wandering_distance_minimum
+#	var wandering_distance_maximum
+#	var wandering_timer_minimum
+#	var wandering_timer_maximum
+#	var distance_to_wandering_position_to_complete
+#
+#	var wandering_timer = Timer.new()
+	
+	# if wandering position set, wander until close
+	if wander_to_position != null:
+		if check_if_near_wandering_position():
+			wander_to_position = null
+			start_and_randomise_wandering_timer()
+	
+	# check if no current wandering but can start
+	elif wandering_timer.is_stopped() and\
+	 wander_to_position == null:
+		# set a new wandering position
+		wander_to_position = get_nearby_location(\
+		GlobalFuncs.ReturnRandomRange(\
+		wandering_distance_minimum, wandering_distance_maximum))
 
 
-# handling when a body moves in to the close detection radius
-func _on_Range_Close_body_entered(body):
-	add_to_detection_group(GlobalVariables.RangeGroup.CLOSE, body)
+# SEARCHING STATE
+# move toward target's last known position
+# check if we reached it, if so empty the last known location
+func state_searching_move_toward_target_last_known_position():
+	move_toward_given_position(target_last_known_location)
+	check_distance_to_target_last_known_location()
 
 
-# handling when a body moves out of the close detection radius
-func _on_Range_Close_body_exited(body):
-	remove_from_detection_group(GlobalVariables.RangeGroup.CLOSE, body)
+# HUNTING STATE
+# move toward target, keep looking at target, try to fire
+func state_hunting_move_and_track_target():
+	# If not firing - Do we have a target?
+	# Move toward target
+	# Every tick/process
+		# Check if we can attack
+		# Update our target position
+	if current_target != null:
+		move_toward_given_position(current_target.position)
+		check_if_can_still_see_target(current_target)
+		check_if_weapon_can_fire()
+	else:
+		recheck_state()
 
 
-# handling when a body moves in to the near detection radius
-func _on_Range_Near_body_entered(body):
-	add_to_detection_group(GlobalVariables.RangeGroup.NEAR, body)
+# ATTACK STATE
+# get the target, create target line, delay according to reaction, fire, 
+func state_attack_activate_weapon():
+	var weapon_target = acquire_weapon_target()
+				# Prep to fire at that target
+					# Anticipate/pause
+					# Create target line
+					# Timer delay before firing
+					# Fire shot/trigger weapon
+					# Recover/pause
+					# Set attack cooldown timer
+					# GOTO CHECK STATE
 
 
-# handling when a body moves out of the near detection radius
-func _on_Range_Near_body_exited(body):
-	remove_from_detection_group(GlobalVariables.RangeGroup.NEAR, body)
+# HURT STATE
+# interrupts behaviour and starts damaged/aggression timer
+func state_hurt_enemy_is_damaged():
+	handle_enemy_taking_damage()
 
 
-# handling when a body moves in to the far detection radius
-# if inside the far detection radius then
-# the body can not also be in the distant detection radius
-func _on_Range_Far_body_entered(body):
-	add_to_detection_group(GlobalVariables.RangeGroup.FAR, body)
-	remove_from_detection_group(GlobalVariables.RangeGroup.DISTANT, body)
-
-
-# handling when a body moves out of the far detection radius
-# if outside of the far detection radius then
-# the body is in the distant detection radius
-func _on_Range_Far_body_exited(body):
-	remove_from_detection_group(GlobalVariables.RangeGroup.FAR, body)
-	add_to_detection_group(GlobalVariables.RangeGroup.DISTANT, body)
-
-
-# TODO
-# include code for an enemy damaged by a player automatically
-# adding that player to their distant detection radii if not already in it
+# DYING STATE
+# stop everything else, end the enemy
+func state_dying_enemy_begins_to_die():
+	handle_enemy_dying()
 
 
 ###############################################################################
 
 
-# NOTE: How do these detection radii work, and why do they exist?
-# Bodies are logged to enemy_specific node groups when moving in and out
-# of preset distances to the enemy
-# these node groups can then be called and checked for ai programming
-# i.e. 'is there a valid target for this ability within a close range,
-# if so perform ability, else meander pointlessly'
-# it allows for modular and straightforward AI programming
-
-# a physics body (actor or entity) has moved into the detection radius of
-# this enemy, and must be recorded as being within that range
-func add_to_detection_group(range_group, body):
-	if body != self:
-		var range_string = GlobalVariables.RangeGroup.keys()[range_group]
-		var full_range_string = grouping_string+range_string
-		if GlobalDebug.enemy_detection_radii_logs: print("detection group " + full_range_string + " entered by " + body.name)
-		# add body to the group denoted by radii and enemy id
-		body.add_to_group(full_range_string)
+func check_if_weapon_can_fire():
+	# if weapon not on cooldown (including reaction fire adjustment)
+	# and enemy is within allowed range_groups of target
+	if check_if_weapon_not_on_cooldown()\
+	and check_if_weapon_is_in_range():
+		return true
+	else:
+		return false
 
 
-# a physics body (actor or entity) has moved out of the detection radius of
-# this enemy, and must be recorded as no longer being within that range
-func remove_from_detection_group(range_group, body):
-	if body != self:
-		var range_string = GlobalVariables.RangeGroup.keys()[range_group]
-		var full_range_string = grouping_string+range_string
-		if GlobalDebug.enemy_detection_radii_logs: print("detection group " + full_range_string + " entered by " + body.name)
-		
-		# To avoid debugger error "!data.grouped.has(p_identifier)"
-		# we include a check to see if body is in group
-		if body.is_in_group(full_range_string):
-			body.remove_from_group(full_range_string)
+# get weapon cooldown timer, multiply with reaction speed
+func check_if_weapon_not_on_cooldown():
+	# Check weapon timer (multiply base attack by enemy reaction speed)
+	# return true false
+	pass
 
 
-func call_detection_group():
-#	# unfinished code for calling detection groups (TODO finish)
-#	var melee_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.MELEE]
-#	var close_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.CLOSE]
-#	var near_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.NEAR]
-#	var far_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.FAR]
-#	var distant_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.DISTANT]
+func check_if_weapon_is_in_range():
+	# return true false
+	pass
+		# Check weapon range condition
+			# Get weapon range minmum and maximum
+			# Get range groups for minimum, maximum, and all inbetween
+			# Build a combined range group
+			# Don't duplicate (check if node in group)
+			# If it isn't empty, we can attack!
+
+
+# scan to see if there's anything in near range or closer
+func check_if_foe_at_near_range():
+	pass
+
+
+# scan to see if there's anything in far range or closer
+func check_if_foe_at_far_range():
+	pass
+
+
+# checks to see if target is at near range
+func check_if_can_still_see_target(check_target):
+	pass
+
+
+func check_if_target_in_range_group(check_target, range_group):
+	# change this to build array of targets in range_group (range_string) then check
+#	if check_target in range_group:
+	pass
+
+
+# if nearby target last known location empty the last known location
+func check_distance_to_target_last_known_location():
+	pass
+
+
+func check_if_near_wandering_position():
+	if position.distance_to(wander_to_position) <\
+	 distance_to_wandering_position_to_complete:
+		return true
+	else:
+		return false
+
+
+###############################################################################
+
+
+# identify all players in a range detection group
+func get_players_in_range_group(range_group_to_scan):
+	var potential_targets = []
+	# scan all valid targets
+	for i in range_group_to_scan:
+		if i is Player:
+			potential_targets.append(i)
+	# return the group of nodes if not empty
+	if potential_targets.size() > 0:
+		return potential_targets
+
+# get the nearest in a generated group of nodes
+func get_closest_in_group_of_targets(potential_targets):
+	# clear these variables
+	var closest_target = null
+	var closest_target_distance = null
 	
-	var group_to_call = grouping_string # + pick any string above
-	#get_tree().get_nodes_in_group(group_to_call)
-#	get_tree().call_group(group_to_call, do_this_method_test_example)
+	# check who is the closest valid target
+	# is there are least one potential target?
+	if potential_targets != null:
+		if potential_targets.size() > 0:
+			# loop through
+			for i in potential_targets:
+				# how far away are they
+				var get_distance = position.distance_to(i.position)
+				# if haven't set ctd, set it
+				if closest_target_distance == null:
+					closest_target_distance = get_distance
+					closest_target = i
+				# if ctd has been set, is the new target closer?
+				# if they are, they are now the closest target
+				elif get_distance < closest_target_distance:
+					closest_target_distance = get_distance
+					closest_target = i
+	
+	# return the nearest target
+	if closest_target != null:
+		return closest_target
+
+
+func get_nearest_player_in_range_group(range_group_to_scan):
+	# set null variables
+	var target_list
+	var closest_target
+	# target list is a list of valid players
+	target_list = get_players_in_range_group(range_group_to_scan)
+	# closest target is the nearest in the list
+	closest_target = get_closest_in_group_of_targets(target_list)
+	# return the closest target
+	return closest_target
+
+
+###############################################################################
+
+
+###############################################################################
+
+
+func acquire_weapon_target():
+	pass
+	# Figure out who is closest enemy
+
+
+func move_toward_given_position(target_position):
+	velocity = -(position - target_position)
+
+
+# enemy has moved offscreen during non-idle state
+# begin timer to force switch to idle state
+func offscreen_start_attention_loss_timer():
+	pass
+
+
+# attention loss timer has expired
+func offscreen_has_lost_attention():
+	pass
+
+
+# if damaged by target enemy didn't see, engage hunting state
+# maintain hunting state whilst aggression timer is engaged
+func damaged_by_unseen_target():
+	pass
+
+
+func start_and_randomise_wandering_timer():
+#	wandering_timer.wait_time = random_value
+	pass
+
+func get_nearby_location(distance_from_self):
+	# return position
+	return Vector2.ZERO
+
+
+	# we set current_target if fulfilling condition
+func look_for_targets():
+		check_if_foe_at_near_range()
+
+
+# actual function for hurt state
+func handle_enemy_taking_damage():
+	pass
+
+
+# actual function for dying state
+func handle_enemy_dying():
+	pass
+
+
+###############################################################################
+

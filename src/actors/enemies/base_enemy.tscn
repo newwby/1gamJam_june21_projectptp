@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://src/technical/abilities/weapon_ability.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/actors/enemies/class_enemy.gd" type="Script" id=2]
 [ext_resource path="res://art/kenney_world_sprites/kenney_animalpackredux/PNG/Square (outline)/snake.png" type="Texture" id=3]
+[ext_resource path="res://src/actors/enemies/base_enemy_detection.gd" type="Script" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 50, 50 )
@@ -38,37 +39,42 @@ texture = ExtResource( 3 )
 
 [node name="OffscreenNotifier" type="VisibilityNotifier2D" parent="."]
 
-[node name="DetectionRadiiHolder" type="Node2D" parent="."]
-visible = false
+[node name="StateComponentHolder" type="Node2D" parent="."]
 
-[node name="Range_Melee" type="Area2D" parent="DetectionRadiiHolder"]
+[node name="WanderingRepeatTImer" type="Timer" parent="StateComponentHolder"]
+
+[node name="DetectionRadiiHandler" type="Node2D" parent="."]
+visible = false
+script = ExtResource( 4 )
+
+[node name="Range_Melee" type="Area2D" parent="DetectionRadiiHandler"]
 collision_layer = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRadiiHolder/Range_Melee"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRadiiHandler/Range_Melee"]
 shape = SubResource( 2 )
 
-[node name="Range_Close" type="Area2D" parent="DetectionRadiiHolder"]
+[node name="Range_Close" type="Area2D" parent="DetectionRadiiHandler"]
 collision_layer = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRadiiHolder/Range_Close"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRadiiHandler/Range_Close"]
 shape = SubResource( 3 )
 
-[node name="Range_Near" type="Area2D" parent="DetectionRadiiHolder"]
+[node name="Range_Near" type="Area2D" parent="DetectionRadiiHandler"]
 collision_layer = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRadiiHolder/Range_Near"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRadiiHandler/Range_Near"]
 shape = SubResource( 4 )
 
-[node name="Range_Far" type="Area2D" parent="DetectionRadiiHolder"]
+[node name="Range_Far" type="Area2D" parent="DetectionRadiiHandler"]
 collision_layer = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRadiiHolder/Range_Far"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRadiiHandler/Range_Far"]
 shape = SubResource( 5 )
-[connection signal="body_entered" from="DetectionRadiiHolder/Range_Melee" to="." method="_on_Range_Melee_body_entered"]
-[connection signal="body_exited" from="DetectionRadiiHolder/Range_Melee" to="." method="_on_Range_Melee_body_exited"]
-[connection signal="body_entered" from="DetectionRadiiHolder/Range_Close" to="." method="_on_Range_Close_body_entered"]
-[connection signal="body_exited" from="DetectionRadiiHolder/Range_Close" to="." method="_on_Range_Close_body_exited"]
-[connection signal="body_entered" from="DetectionRadiiHolder/Range_Near" to="." method="_on_Range_Near_body_entered"]
-[connection signal="body_exited" from="DetectionRadiiHolder/Range_Near" to="." method="_on_Range_Near_body_exited"]
-[connection signal="body_entered" from="DetectionRadiiHolder/Range_Far" to="." method="_on_Range_Far_body_entered"]
-[connection signal="body_exited" from="DetectionRadiiHolder/Range_Far" to="." method="_on_Range_Far_body_exited"]
+[connection signal="body_entered" from="DetectionRadiiHandler/Range_Melee" to="DetectionRadiiHandler" method="_on_Range_Melee_body_entered"]
+[connection signal="body_exited" from="DetectionRadiiHandler/Range_Melee" to="DetectionRadiiHandler" method="_on_Range_Melee_body_exited"]
+[connection signal="body_entered" from="DetectionRadiiHandler/Range_Close" to="DetectionRadiiHandler" method="_on_Range_Close_body_entered"]
+[connection signal="body_exited" from="DetectionRadiiHandler/Range_Close" to="DetectionRadiiHandler" method="_on_Range_Close_body_exited"]
+[connection signal="body_entered" from="DetectionRadiiHandler/Range_Near" to="DetectionRadiiHandler" method="_on_Range_Near_body_entered"]
+[connection signal="body_exited" from="DetectionRadiiHandler/Range_Near" to="DetectionRadiiHandler" method="_on_Range_Near_body_exited"]
+[connection signal="body_entered" from="DetectionRadiiHandler/Range_Far" to="DetectionRadiiHandler" method="_on_Range_Far_body_entered"]
+[connection signal="body_exited" from="DetectionRadiiHandler/Range_Far" to="DetectionRadiiHandler" method="_on_Range_Far_body_exited"]
