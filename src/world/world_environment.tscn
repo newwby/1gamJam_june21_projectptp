@@ -42,7 +42,7 @@ position = Vector2( 7245.82, 1249.09 )
 weapon_style_index = 7
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
-position = Vector2( 6743.37, 1356.83 )
+position = Vector2( 7783.37, 2060.83 )
 
 [node name="Enemy" parent="." instance=ExtResource( 4 )]
 position = Vector2( 8912.2, 2063.67 )

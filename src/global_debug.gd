@@ -27,6 +27,8 @@ var log_parent_modifier_steps = false
 # modifier for time slow step logging to console
 var log_time_slow_modifier_steps = false
 # console logging for enemy detection radii
-var enemy_detection_radii_logs = true
+var enemy_detection_radii_logs = false
 # console logging for ability cooldown update calls
 var ability_cooldown_call_logs = false
+# console logging for enemy state behaviour
+var enemy_state_logs = true
