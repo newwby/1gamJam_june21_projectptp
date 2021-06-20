@@ -188,7 +188,6 @@ func _on_Range_Far_body_exited(body):
 func add_to_detection_group(range_group, body):
 	# make sure we're not detecting the enemy or any non-actor
 	if body != self and body != owner and body is Actor:
-		update_detection_change(body)
 		var range_string = GlobalVariables.RangeGroup.keys()[range_group]
 		var full_range_string = grouping_string+range_string
 		if GlobalDebug.enemy_detection_radii_logs: print("detection group " + full_range_string + " entered by " + body.name)
@@ -201,7 +200,6 @@ func add_to_detection_group(range_group, body):
 func remove_from_detection_group(range_group, body):
 	# make sure we're not detecting the enemy or any non-actor
 	if body != self and body != owner and body is Actor:
-		update_detection_change(body)
 		var range_string = GlobalVariables.RangeGroup.keys()[range_group]
 		var full_range_string = grouping_string+range_string
 		if GlobalDebug.enemy_detection_radii_logs: print("detection group " + full_range_string + " entered by " + body.name)
@@ -210,11 +208,6 @@ func remove_from_detection_group(range_group, body):
 		# we include a check to see if body is in group
 		if body.is_in_group(full_range_string):
 			body.remove_from_group(full_range_string)
-
-
-func update_detection_change(body):
-	emit_signal("body_changed_detection_radius", body)
-
 
 func call_detection_group():
 #	# unfinished code for calling detection groups (TODO finish)

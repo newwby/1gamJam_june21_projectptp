@@ -1,6 +1,5 @@
+extends Node2D
 
-class_name StateHunting, "res://art/shrek_pup_eye_sprite.png"
-extends StateParent
 
 # Declare member variables here. Examples:
 # var a = 2

@@ -1,7 +1,6 @@
 
-class_name State_Idle, "res://art/shrek_pup_eye_sprite.png"
-extends State
-
+class_name StateIdle, "res://art/shrek_pup_eye_sprite.png"
+extends StateParent
 
 # Declare member variables here. Examples:
 # var a = 2

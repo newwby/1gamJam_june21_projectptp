@@ -71,81 +71,17 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	_process_check_state()
-	_process_call_state_behaviour(delta)
+#	_process_check_state()
+#	_process_call_state_behaviour(delta)
 	move_and_slide(velocity.normalized() * movement_speed)
 
 
 ###############################################################################
 
 
-	# this is a call function for state behaviour
-func _process_call_state_behaviour(_dt):
-	# check state and move to that function
-	match current_state:
-	
-		# enemy isn't active
-		State.IDLE:
-			state_node_idle._state_action()
-	
-		# enemy is ambling around aimlessly
-		State.ROAMING:
-			state_node_roaming._state_action()
-	
-		# enemy is moving toward last position they saw foe
-		State.SEARCH:
-			state_node_searching._state_action()
-	
-		# enemy is actively chasing a player/can see a player
-		State.HUNT:
-			# need to add logic to check if can still see player
-			
-			state_node_hunting._state_action(self, current_target)
-
-		# enemy is in range of a target and is initiating an attack
-		State.ATTACK:
-			state_node_attack._state_action()
-	
-		# enemy has been injured and is playing hurt animation/logic
-		State.HURT:
-			state_node_hurt._state_action()
-	
-		# enemy has been injured so much they are dying
-		State.DYING:
-			state_node_dying._state_action()
-	
-		# enemy has been injured so much they are dying
-		State.SCANNING:
-			state_node_scanning.scan_for_player(\
-			get_tree().get_nodes_in_group(detection_scan.near_range_group))
-
-
-# check whether we can change state
-func _process_check_state():
-	# if state register not empty we get state from there
-	if state_register.size() > 0:
-		check_state_register()
-	# if not start checking state conditions
-	else:
-		recheck_state()
 
 
 ###############################################################################
-
-
-# this function is for returning a state stored in the state register
-# if we check state for something to do and state register is not
-# empty then we pull the last state from the state register
-func check_state_register():
-	pass
-	
-	# defunct/old logic for state_register
-	# TODO modify this to account for offscreen/idle check << ???
-	# if enemy is doing nothing and isn't already idle, set to idle
-#	if not is_active\
-#	 and current_state != State.IDLE\
-#	 and state_register.size() == 0:
-#		set_new_state(State.IDLE)
 
 
 # when looking for a state check individual state node requirements
@@ -227,68 +163,75 @@ func set_new_state(new_state):
 ###############################################################################
 
 
-func check_if_weapon_can_fire():
-	# if weapon not on cooldown (including reaction fire adjustment)
-	# and enemy is within allowed range_groups of target
-	if check_if_weapon_not_on_cooldown()\
-	and check_if_weapon_is_in_range():
-		return true
-	else:
-		return false
 
-
-# get weapon cooldown timer, multiply with reaction speed
-func check_if_weapon_not_on_cooldown():
-	# Check weapon timer (multiply base attack by enemy reaction speed)
-	# return true false
-	pass
-
-
-func check_if_weapon_is_in_range():
-	# return true false
-	pass
-		# Check weapon range condition
-			# Get weapon range minmum and maximum
-			# Get range groups for minimum, maximum, and all inbetween
-			# Build a combined range group
-			# Don't duplicate (check if node in group)
-			# If it isn't empty, we can attack!
 
 
 ###############################################################################
+#
+##DEFUNCT
+## this function is for returning a state stored in the state register
+## if we check state for something to do and state register is not
+## empty then we pull the last state from the state register
+#func check_state_register():
+#	pass
+#
+#	# defunct/old logic for state_register
+#	# TODO modify this to account for offscreen/idle check << ???
+#	# if enemy is doing nothing and isn't already idle, set to idle
+##	if not is_active\
+##	 and current_state != State.IDLE\
+##	 and state_register.size() == 0:
+##		set_new_state(State.IDLE)
 
 
-func _on_State_Scanning_found_target(new_target):
-	current_target = new_target
-	recheck_state()
 
+## defunct
+#	# this is a call function for state behaviour
+#func _process_call_state_behaviour(_dt):
+#	# check state and move to that function
+#	match current_state:
+#
+#		# enemy isn't active
+#		State.IDLE:
+#			state_node_idle._state_action()
+#
+#		# enemy is ambling around aimlessly
+#		State.ROAMING:
+#			state_node_roaming._state_action()
+#
+#		# enemy is moving toward last position they saw foe
+#		State.SEARCH:
+#			state_node_searching._state_action()
+#
+#		# enemy is actively chasing a player/can see a player
+#		State.HUNT:
+#			# need to add logic to check if can still see player
+#
+#			state_node_hunting._state_action(self, current_target)
+#
+#		# enemy is in range of a target and is initiating an attack
+#		State.ATTACK:
+#			state_node_attack._state_action()
+#
+#		# enemy has been injured and is playing hurt animation/logic
+#		State.HURT:
+#			state_node_hurt._state_action()
+#
+#		# enemy has been injured so much they are dying
+#		State.DYING:
+#			state_node_dying._state_action()
+#
+#		# enemy has been injured so much they are dying
+#		State.SCANNING:
+#			state_node_scanning.scan_for_player(\
+#			get_tree().get_nodes_in_group(detection_scan.near_range_group))
 
-func _on_State_Hunting_update_velocity(velocity_arg):
-	update_velocity_from_state(velocity_arg)
-
-
-func update_velocity_from_state(velocity_arg):
-	velocity = velocity_arg
-
-
-# if current target check if they are still detected
-func _on_DetectionRadiiHandler_body_changed_detection_radius(body):
-	if check_if_body_is_current_target(body):
-		check_if_current_target_still_valid()
-		print("checked if valid")
-
-
-func check_if_body_is_current_target(body):
-	if body == current_target:
-		return true
-	else:
-		return false
-
-
-func check_if_current_target_still_valid():
-	var range_group_near
-	range_group_near =\
-	get_tree().get_nodes_in_group(detection_scan.near_range_group)
-	
-	if not current_target in range_group_near:
-		current_target = null
+## defunct
+## check whether we can change state
+#func _process_check_state():
+#	# if state register not empty we get state from there
+##	if state_register.size() > 0:
+##		check_state_register()
+#	# if not start checking state conditions
+##	else:
+#	recheck_state()
