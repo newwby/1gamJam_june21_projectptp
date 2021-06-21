@@ -6,15 +6,10 @@ const ENEMY_TYPE_BASE_MOVEMENT_SPEED = 150
 
 var is_active = true
 
-# the current actor the enemy is hunting
-var current_target
-# last known location of the target if lost sight of them
-var target_last_known_location
-
-# the current state the enemy is in
-var current_state
-# states that the enemy was previously in that still need to be resolved
-var state_register = []
+# stat PERCEPTION --
+	# multiplies the initial detection radii
+	# multiplies the additional size of additional detection radii
+	# can be negative
 
 # stat AGGRESSION --
 	# how long does damage cause them to keep active (minimum)
@@ -22,6 +17,8 @@ var state_register = []
 	# how close do they move to target
 		# float multiply close distance border
 	# how long do they take to lose attention once off screen
+		# 10x float for timer
+	# how long do they pursue during second stage searching
 		# 5x float for timer
 
 # stat REACTION_SPEED --
@@ -29,7 +26,7 @@ var state_register = []
 	# initial cooldown multiplied by float of reaction speed
 
 onready var detection_scan = $DetectionRadiiHandler
-
+onready var state_manager = $StateManager
 
 ###############################################################################
 
@@ -46,11 +43,7 @@ func _process(delta):
 #	_process_check_state()
 #	_process_call_state_behaviour(delta)
 	move_and_slide(velocity.normalized() * movement_speed)
-
-
-###############################################################################
-
-
+#	detection_scan.player
 
 
 ###############################################################################
@@ -60,31 +53,24 @@ func set_enemy_stats():
 	movement_speed = ENEMY_TYPE_BASE_MOVEMENT_SPEED
 
 
-# set the first state and clear the state register
-func set_initial_state(starting_state):
-	state_register = []
-	current_state = starting_state
+###############################################################################
 
 
-# change our state
-func set_new_state(new_state):
-	state_register.append(current_state)
-	current_state = new_state
-#	if GlobalDebug.enemy_state_logs: print("new state is ", State.keys()[new_state])
+func move_toward_given_position(self_position, target_position):
+#	var velocity = Vector2.ZERO
+	velocity = -(self_position - target_position)
 
+
+func on_update_velocity_with_current_target_position():
+	move_toward_given_position(self.position, detection_scan.current_target.position)
 
 
 ###############################################################################
 
+###############################################################################
 
 ###############################################################################
 
-
-
-
-
-###############################################################################
-#
 ##DEFUNCT
 ## this function is for returning a state stored in the state register
 ## if we check state for something to do and state register is not

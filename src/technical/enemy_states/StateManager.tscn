@@ -36,3 +36,4 @@ script = ExtResource( 5 )
 
 [node name="State_Scanning" type="Node2D" parent="."]
 script = ExtResource( 9 )
+[connection signal="check_behaviour" from="." to="." method="_on_check_behaviour"]

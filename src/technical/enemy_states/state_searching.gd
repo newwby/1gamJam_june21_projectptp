@@ -24,13 +24,18 @@ func set_state_priority():
 #
 #
 ################################################################################
-#
-## placeholder function to be derived by child classes
-## returns false without any superseding child class function
+##
+### placeholder function to be derived by child classes
+### returns false without any superseding child class function
 #func check_state_condition():
+#	if is_active:
+#		if enemy_parent_node.current_target == null:
+#			return true
 #	return false
-#
-#
-## placeholder function to be derived by child classes
+##
+##
+### placeholder function to be derived by child classes
 #func state_action():
-#	pass
+#	var detector = enemy_parent_node.detection_scan
+#	enemy_parent_node.current_target =\
+#	 detector.get_closest_player_in_near_group()

@@ -9,6 +9,8 @@
 class_name StateManager
 extends Node2D
 
+signal check_behaviour
+
 # list of potential states for the enemy
 enum State{
 	IDLE,
@@ -23,6 +25,8 @@ enum State{
 
 # what is the int id for the current active state
 var current_state
+# if no other state can be found, ignore condition and set this state
+var default_state
 # is the state manager allowed to check for state processing
 var can_check_state_process = true
 # is the state manager allowed to change states?
@@ -54,11 +58,15 @@ onready var state_node_scanning = $State_Scanning
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	set_state_lists()
-	set_new_state(State.IDLE)
-
+#	set_new_state(State.IDLE)
+#	emit_signal("check_behaviour")
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func _process(delta):
+	if current_state == null:
+		emit_signal("check_behaviour")
+	else:
+		call_active_state_node_action()
 
 
 ###############################################################################
@@ -113,11 +121,12 @@ func set_state_priority_list():
 		var state_node_call = get(state_call_dict[state_to_check])
 		var current_state_priority = state_node_call.state_priority
 		state_priority_dict[state_to_check] = current_state_priority
-
+# print detail
 
 ###############################################################################
 
 
+# call with State.STATENAME to get true/false on whether state can activate
 func call_state_condition_check(state_identifier):
 	# check the condition and return the same return
 	var state_check =\
@@ -125,6 +134,7 @@ func call_state_condition_check(state_identifier):
 	return state_check
 
 
+# call this if a state can activate
 # gets the state_action() function from the current state's node
 func call_active_state_node_action():
 	if current_state != null:
@@ -132,6 +142,37 @@ func call_active_state_node_action():
 
 
 ###############################################################################
+
+
+# if need to check for a state change, check here
+func _on_check_behaviour():
+	check_if_can_change_state()
+
+
+func on_clear_state():
+	current_state = null
+
+
+###############################################################################
+
+func check_if_can_change_state():
+	var new_state_found = null
+	# check states in order of priority
+	for state_to_check_condition in state_priority_dict:
+		var current_state_condition = State.keys()[state_to_check_condition]
+		if GlobalDebug.enemy_state_logs: print("checking State.", current_state_condition)
+		if call_state_condition_check(state_to_check_condition):
+			if GlobalDebug.enemy_state_logs: print("condition for State.", current_state_condition, " met!")
+			new_state_found = state_to_check_condition
+			break
+		else:
+			if GlobalDebug.enemy_state_logs: print("condition not met for State.", current_state_condition)
+	# was a state found?
+	if new_state_found != null:
+		if GlobalDebug.enemy_state_logs: print("changing to State.", State.keys()[new_state_found])
+		current_state = new_state_found
+	else:
+		if GlobalDebug.enemy_state_logs: print("no change in state")
 
 
 # this function sorts a dictionary by value int order
@@ -230,5 +271,6 @@ func sort_dictionary_by_int_value(given_dict):
 #	# Move detection logic to detection handler node?
 #	# Use signals to pass info to enemy to handle behaviour
 
-
-###############################################################################
+# for getting state manager and enemy from base states
+#	print(name, " owner is ", owner.name)
+#	print(name, " owner of my owner ", owner.name, " is ", owner.owner.name

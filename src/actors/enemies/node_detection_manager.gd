@@ -1,7 +1,13 @@
 
+class_name DetectionManager
 extends Node2D
 
 signal body_changed_detection_radius(body)
+
+# the current actor the enemy is hunting
+var current_target
+# last known location of the target if lost sight of them
+var target_last_known_location
 
 # variables for setting detection group names
 var melee_range_group
@@ -220,3 +226,65 @@ func call_detection_group():
 	var group_to_call = grouping_string # + pick any string above
 	#get_tree().get_nodes_in_group(group_to_call)
 #	get_tree().call_group(group_to_call, do_this_method_test_example)
+
+###############################################################################
+
+# identify all players in a range detection group
+func get_players_in_range_group(range_group_to_scan):
+	var potential_targets = []
+	# scan all valid targets
+	for i in range_group_to_scan:
+		if i is Player:
+			potential_targets.append(i)
+	# return the group of nodes if not empty
+	if potential_targets.size() > 0:
+		return potential_targets
+
+# get the nearest in a generated group of nodes
+func get_closest_in_group_of_targets(potential_targets):
+	# clear these variables
+	var closest_target = null
+	var closest_target_distance = null
+	
+	# check who is the closest valid target
+	# is there are least one potential target?
+	if potential_targets != null:
+		if potential_targets.size() > 0:
+			# loop through
+			for i in potential_targets:
+				# how far away are they
+				var get_distance = position.distance_to(i.position)
+				# if haven't set ctd, set it
+				if closest_target_distance == null:
+					closest_target_distance = get_distance
+					closest_target = i
+				# if ctd has been set, is the new target closer?
+				# if they are, they are now the closest target
+				elif get_distance < closest_target_distance:
+					closest_target_distance = get_distance
+					closest_target = i
+	
+	# return the nearest target
+	if closest_target != null:
+		return closest_target
+
+
+func get_nearest_player_in_range_group(range_group_to_scan):
+	
+	# set null variables
+	var target_list
+	var closest_target
+	# target list is a list of valid players
+	target_list = get_players_in_range_group(range_group_to_scan)
+	
+	# closest target is the nearest in the list
+	closest_target = get_closest_in_group_of_targets(target_list)
+	
+	# return the closest target
+	return closest_target
+
+
+func get_closest_player_in_near_group():
+	var closest_player = get_nearest_player_in_range_group(get_tree().get_nodes_in_group(near_range_group))
+	if closest_player != null:
+		return closest_player
