@@ -84,7 +84,12 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/technical/enemy_states/state_idle.gd"
 }, {
-"base": "Reference",
+"base": "Node2D",
+"class": "StateManager",
+"language": "GDScript",
+"path": "res://src/technical/enemy_states/node_state_manager.gd"
+}, {
+"base": "Node2D",
 "class": "StateParent",
 "language": "GDScript",
 "path": "res://src/technical/enemy_states/class_state.gd"
@@ -93,6 +98,11 @@ _global_script_classes=[ {
 "class": "StateRoaming",
 "language": "GDScript",
 "path": "res://src/technical/enemy_states/state_roaming.gd"
+}, {
+"base": "StateParent",
+"class": "StateScanning",
+"language": "GDScript",
+"path": "res://src/technical/enemy_states/state_scanning.gd"
 }, {
 "base": "StateParent",
 "class": "StateSearching",
@@ -120,8 +130,10 @@ _global_script_class_icons={
 "StateHunting": "res://art/shrek_pup_eye_sprite.png",
 "StateHurt": "res://art/shrek_pup_eye_sprite.png",
 "StateIdle": "res://art/shrek_pup_eye_sprite.png",
-"StateParent": "",
+"StateManager": "",
+"StateParent": "res://art/shrek_pup_eye_sprite.png",
 "StateRoaming": "res://art/shrek_pup_eye_sprite.png",
+"StateScanning": "res://art/shrek_pup_eye_sprite.png",
 "StateSearching": "res://art/shrek_pup_eye_sprite.png",
 "WeaponAbility": ""
 }

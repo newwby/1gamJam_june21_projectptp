@@ -2,27 +2,9 @@
 class_name Enemy
 extends Actor
 
-enum State{
-	IDLE,
-	ROAMING,
-	SEARCH,
-	HUNT,
-	ATTACK,
-	HURT,
-	DYING,
-	SCANNING,
-}
-
 const ENEMY_TYPE_BASE_MOVEMENT_SPEED = 150
 
-# if in these states ignore rechecking of states
-var action_state_override = [\
-	State.ATTACK,\
-	State.HURT,\
-	State.DYING,]
-
 var is_active = true
-var can_check_state = true
 
 # the current actor the enemy is hunting
 var current_target
@@ -48,16 +30,6 @@ var state_register = []
 
 onready var detection_scan = $DetectionRadiiHandler
 
-# individual nodes for state handling
-# state logic is partitioned amongst these node scripts
-onready var state_node_idle = $StateHandler/State_Idle
-onready var state_node_roaming = $StateHandler/State_Roaming
-onready var state_node_searching = $StateHandler/State_Searching
-onready var state_node_hunting = $StateHandler/State_Hunting
-onready var state_node_attack = $StateHandler/State_Attack
-onready var state_node_hurt = $StateHandler/State_Hurt
-onready var state_node_dying = $StateHandler/State_Dying
-onready var state_node_scanning = $StateHandler/State_Scanning
 
 ###############################################################################
 
@@ -66,7 +38,7 @@ onready var state_node_scanning = $StateHandler/State_Scanning
 func _ready():
 	self.add_to_group("enemies")
 	set_enemy_stats()
-	set_initial_state(State.IDLE)
+#	set_initial_state(State.IDLE)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -79,62 +51,6 @@ func _process(delta):
 ###############################################################################
 
 
-
-
-###############################################################################
-
-
-# when looking for a state check individual state node requirements
-# check logic and set state if conditions are met
-func recheck_state():
-	
-	# CANNOT CHECK STATE
-	# if cannot check state, ignore state checking
-	# this will be set false if current state is an action state
-	if not can_check_state:
-		# return void/null
-		return
-	
-	# IDLE STATE
-	# if not active, override everything
-	elif state_node_idle._state_check(current_target, target_last_known_location, current_state):
-		set_new_state(State.IDLE)
-	
-	# ATTACK STATE
-	# do we have a target, are we able to fire?
-	# set state attack if not already
-	elif state_node_attack._state_check(current_target, target_last_known_location, current_state):
-		set_new_state(State.ATTACK)
-	
-	# HUNT STATE
-	# if not do we have a target currently?
-	# set hunting state if not already
-	elif state_node_hunting._state_check(current_target, target_last_known_location, current_state):
-		set_new_state(State.HUNT)
-
-	# SEARCH STATE
-	# if we don't have a target
-	# but we do have a target last known location
-	# set searching state if not already
-	elif state_node_searching._state_check(current_target, target_last_known_location, current_state):
-		set_new_state(State.SEARCH)
-	
-	# ROAMING STATE
-	# if no target, or last known location
-	# set roaming state if not already
-	elif state_node_roaming._state_check(current_target, target_last_known_location, current_state):
-		set_new_state(State.ROAMING)
-	
-	# if no target
-	# look for a target
-	# this is the default logic on nothing being in the state register
-	# and no condition for another state being met
-	elif current_target == null:
-		set_new_state(State.SCANNING)
-	
-	# Create state checking node?
-	# Move detection logic to detection handler node?
-	# Use signals to pass info to enemy to handle behaviour
 
 
 ###############################################################################
@@ -154,7 +70,8 @@ func set_initial_state(starting_state):
 func set_new_state(new_state):
 	state_register.append(current_state)
 	current_state = new_state
-	if GlobalDebug.enemy_state_logs: print("new state is ", State.keys()[new_state])
+#	if GlobalDebug.enemy_state_logs: print("new state is ", State.keys()[new_state])
+
 
 
 ###############################################################################

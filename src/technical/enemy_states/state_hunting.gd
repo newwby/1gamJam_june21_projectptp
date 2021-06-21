@@ -15,3 +15,22 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
+
+###############################################################################
+
+# set the state priority
+func set_state_priority():
+	state_priority = 40
+#
+#
+################################################################################
+#
+## placeholder function to be derived by child classes
+## returns false without any superseding child class function
+#func check_state_condition():
+#	return false
+#
+#
+## placeholder function to be derived by child classes
+#func state_action():
+#	pass

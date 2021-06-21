@@ -1,5 +1,5 @@
 
-class_name StateDying, "res://art/shrek_pup_eye_sprite.png"
+class_name StateScanning, "res://art/shrek_pup_eye_sprite.png"
 extends StateParent
 
 # Declare member variables here. Examples:
@@ -20,8 +20,7 @@ func _ready():
 
 # set the state priority
 func set_state_priority():
-	state_priority = 100
-#
+	state_priority = 0
 #
 ################################################################################
 #
