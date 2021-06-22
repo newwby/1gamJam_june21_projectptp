@@ -6,10 +6,11 @@
 # how they move
 # etc
 
-class_name StateManager
+class_name StateManager, "res://art/shrek_pup_eye_sprite.png"
 extends Node2D
 
-signal check_behaviour
+# TODO conflict with class_state check_state signal, fix one or the other
+signal check_state
 
 # list of potential states for the enemy
 enum State{
@@ -64,7 +65,7 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if current_state == null:
-		emit_signal("check_behaviour")
+		emit_signal("check_state")
 	else:
 		call_active_state_node_action()
 
@@ -145,11 +146,11 @@ func call_active_state_node_action():
 
 
 # if need to check for a state change, check here
-func _on_check_behaviour():
+func _on_check_state():
 	check_if_can_change_state()
 
 
-func on_clear_state():
+func _on_clear_state():
 	current_state = null
 
 
@@ -169,7 +170,11 @@ func check_if_can_change_state():
 			if GlobalDebug.enemy_state_logs: print("condition not met for State.", current_state_condition)
 	# was a state found?
 	if new_state_found != null:
-		if GlobalDebug.enemy_state_logs: print("changing to State.", State.keys()[new_state_found])
+		# debug string generation
+		var old_state = " from State."+str(State.keys()[current_state]) if current_state != null else ""
+		# debug string
+		if GlobalDebug.enemy_state_logs: print("changing to State.", State.keys()[new_state_found], old_state)
+		# change current state var to new state
 		current_state = new_state_found
 	else:
 		if GlobalDebug.enemy_state_logs: print("no change in state")

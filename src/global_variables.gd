@@ -6,7 +6,6 @@ enum RangeGroup {
 	NEAR,
 	FAR,
 	DISTANT,
-	UNDETECTED,
 }
 
 # movement behaviour determines how a projectile behaves once spawned

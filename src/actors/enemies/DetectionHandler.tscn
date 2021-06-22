@@ -1,0 +1,51 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://src/actors/enemies/node_detection_manager.gd" type="Script" id=1]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 300.0
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 600.0
+
+[sub_resource type="CircleShape2D" id=3]
+radius = 900.0
+
+[sub_resource type="CircleShape2D" id=4]
+radius = 1200.0
+
+[node name="DetectionRadiiHandler" type="Node2D"]
+visible = false
+script = ExtResource( 1 )
+
+[node name="Range_Melee" type="Area2D" parent="."]
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Range_Melee"]
+shape = SubResource( 1 )
+
+[node name="Range_Close" type="Area2D" parent="."]
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Range_Close"]
+shape = SubResource( 2 )
+
+[node name="Range_Near" type="Area2D" parent="."]
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Range_Near"]
+shape = SubResource( 3 )
+
+[node name="Range_Far" type="Area2D" parent="."]
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Range_Far"]
+shape = SubResource( 4 )
+[connection signal="body_entered" from="Range_Melee" to="." method="_on_Range_Melee_body_entered"]
+[connection signal="body_exited" from="Range_Melee" to="." method="_on_Range_Melee_body_exited"]
+[connection signal="body_entered" from="Range_Close" to="." method="_on_Range_Close_body_entered"]
+[connection signal="body_exited" from="Range_Close" to="." method="_on_Range_Close_body_exited"]
+[connection signal="body_entered" from="Range_Near" to="." method="_on_Range_Near_body_entered"]
+[connection signal="body_exited" from="Range_Near" to="." method="_on_Range_Near_body_exited"]
+[connection signal="body_entered" from="Range_Far" to="." method="_on_Range_Far_body_entered"]
+[connection signal="body_exited" from="Range_Far" to="." method="_on_Range_Far_body_exited"]

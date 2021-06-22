@@ -2,7 +2,9 @@
 class_name StateHunting, "res://art/shrek_pup_eye_sprite.png"
 extends StateParent
 
-signal update_current_velocity
+# defunct signals
+#signal update_current_velocity
+#signal is_current_target_visible
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -19,10 +21,13 @@ func _ready():
 func set_state_priority():
 	state_priority = 40
 
-func set_state_signals():
-	self.connect("update_current_velocity", enemy_parent_node, "on_update_velocity_with_current_target_position")
-	.set_state_signals()
-#	enemy_parent_node.connect("update_current_velocity", self, on_update_velocity_with_current_target_position)
+#func set_state_signals():
+	# defunct signal connections
+	# we should not be putting state behaviour in the enemy parent node
+#	self.connect("update_current_velocity", enemy_parent_node, "on_update_velocity_with_current_target_position")
+#	self.connect("is_current_target_visible", enemy_parent_node, "on_is_current_target_visible")
+#	# set state signals should call parent class method
+#	.set_state_signals()
 
 
 #
@@ -42,12 +47,58 @@ func check_state_condition():
 #
 ## placeholder function to be derived by child classes
 func state_action():
-	emit_signal("update_current_velocity")
-	# need to update last known position
-	# need to check if lost track of player
-	emit_signal("clear_state")
-	# update current velocity to current target if they're not too close
+	if is_active:
+	#	emit_signal("update_current_velocity")
+		track_and_move_toward_target()
+		# need to update last known position
+		# need to check if lost track of player
+		
+#		emit_signal("clear_state")
+		# update current velocity to current target if they're not too close
 
+
+
+# this function moves the enemy parent toward the current target
+# without other logic will move on that heading forever
+# if called repeatedly will chase the player perfectly
+func track_and_move_toward_target():
+	if is_active:
+		
+		# if not set, set the detection manager
+		# TODO figure out why this is being called before state is set
+		if detection_manager == null:
+			detection_manager = enemy_parent_node.detection_scan
+		
+		# get current_target of the detection manager
+		var current_target = detection_manager.current_target
+		# if we can see the target, update positon
+		if check_target_is_visible(current_target):
+			# get enemy parent node's position
+			var self_pos = enemy_parent_node.position
+			# get current target of enemy parent's detection manager
+			# then get the position of that target
+			var target_pos = current_target.position
+			# sets last known position - this is in case the target is lost suddenly
+			detection_manager.target_last_known_location = target_pos
+			# calls the enemy parent node's function for moving
+			enemy_parent_node.move_toward_given_position(self_pos, target_pos)
+		# if we can't see target,
+		else:
+			# clear current target of detection manager
+			detection_manager.current_target = null
+			# need to check for new state
+			emit_signal("check_state")
+
+
+# check if we can still see the target
+func check_target_is_visible(target):
+	# get group of nodes in near range
+	var near_group =\
+	 detection_manager.call_range_group(GlobalVariables.RangeGroup.NEAR)
+	# check if current target is in that group
+	var can_see_target =\
+	 detection_manager.is_actor_in_range_group(target, near_group)
+	return can_see_target
 
 ################################################################################
 

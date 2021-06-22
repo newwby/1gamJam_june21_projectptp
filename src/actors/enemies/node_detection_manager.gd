@@ -1,5 +1,5 @@
 
-class_name DetectionManager
+class_name DetectionManager, "res://art/projectile/kenney_particlePack_1.1/circle_03.png"
 extends Node2D
 
 signal body_changed_detection_radius(body)
@@ -9,6 +9,8 @@ var current_target
 # last known location of the target if lost sight of them
 var target_last_known_location
 
+var range_group_call_dict = {}
+
 # variables for setting detection group names
 var melee_range_group
 var close_range_group
@@ -16,7 +18,7 @@ var near_range_group
 var far_range_group
 var distant_range_group
 
-const DETECTION_RADIUS_SIZE = 300
+const DETECTION_RADIUS_SIZE = 200
 const MELEE_RADIUS_MULTIPLIER = 1.0
 const CLOSE_RADIUS_MULTIPLIER = 2.0
 const NEAR_RADIUS_MULTIPLIER = 3.0
@@ -57,7 +59,8 @@ onready var collision_radius_far = $Range_Far/CollisionShape2D
 func _ready():
 	set_collision_radii()
 	set_detection_group_strings()
-
+	set_group_call_dict()
+#	print(call_range_group(GlobalVariables.RangeGroup.NEAR))
 
 ###############################################################################
 
@@ -122,6 +125,31 @@ func set_collision_radii():
 	# actors that have never been encountered are in the technical
 	# 'undetected' detection group, and should not be interacted with
 	# barring specific code exemptions
+
+
+# sets up the call dict
+# the call dict allows the function ''
+# said function allows a GlobalVariables.RangeGroup constant to be passed
+# and calls then returns the relevant range group
+func set_group_call_dict():
+	var base_group_string = "_range_group"
+	var prefix_group_string
+	for id in GlobalVariables.RangeGroup.keys():
+		prefix_group_string = ""
+		prefix_group_string = id.to_lower()
+		var full_call_string = prefix_group_string+base_group_string
+		var enum_id = GlobalVariables.RangeGroup[id]
+		range_group_call_dict[enum_id] = full_call_string
+
+
+# pass a GlobalVariables.RangeGroup constant
+# get back list of nodes in said range group
+func call_range_group(range_id):
+#	print(range_id)
+#	if range_id in GlobalVariables.RangeGroup.keys():
+	var range_var_string = range_group_call_dict[range_id]
+#		print(range_var_string)
+	return get_tree().get_nodes_in_group(get(range_var_string))
 
 
 ###############################################################################
@@ -214,21 +242,22 @@ func remove_from_detection_group(range_group, body):
 		# we include a check to see if body is in group
 		if body.is_in_group(full_range_string):
 			body.remove_from_group(full_range_string)
-
-func call_detection_group():
-#	# unfinished code for calling detection groups (TODO finish)
-#	var melee_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.MELEE]
-#	var close_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.CLOSE]
-#	var near_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.NEAR]
-#	var far_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.FAR]
-#	var distant_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.DISTANT]
-	
-	var group_to_call = grouping_string # + pick any string above
-	#get_tree().get_nodes_in_group(group_to_call)
-#	get_tree().call_group(group_to_call, do_this_method_test_example)
+#
+#func call_detection_group():
+##	# unfinished code for calling detection groups (TODO finish)
+##	var melee_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.MELEE]
+##	var close_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.CLOSE]
+##	var near_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.NEAR]
+##	var far_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.FAR]
+##	var distant_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.DISTANT]
+#
+#	var group_to_call = grouping_string # + pick any string above
+#	#get_tree().get_nodes_in_group(group_to_call)
+##	get_tree().call_group(group_to_call, do_this_method_test_example)
 
 ###############################################################################
 
+# TODO review this code
 # identify all players in a range detection group
 func get_players_in_range_group(range_group_to_scan):
 	var potential_targets = []
@@ -269,6 +298,7 @@ func get_closest_in_group_of_targets(potential_targets):
 		return closest_target
 
 
+# TODO review this code
 func get_nearest_player_in_range_group(range_group_to_scan):
 	
 	# set null variables
@@ -284,7 +314,30 @@ func get_nearest_player_in_range_group(range_group_to_scan):
 	return closest_target
 
 
+# TODO change to use call dict
 func get_closest_player_in_near_group():
 	var closest_player = get_nearest_player_in_range_group(get_tree().get_nodes_in_group(near_range_group))
 	if closest_player != null:
 		return closest_player
+
+
+# pass this function a GlobalVariables.RangeGroup constant or range group or 
+# (pass call dict a GlobalVariables.RangeGroup constant to get range group)
+# and a target (any actor i.e. player or enemy)
+func is_actor_in_range_group(target, range_group):
+	# validate passed arguments, log error if incorrect arguments passed
+	# validate target arg and range_group arg
+	if target is Actor and range_group in GlobalVariables.RangeGroup\
+	or target is Actor and range_group is Array:
+		# if range_group was passed a GV.RangeGroup constant, create array
+		# note: if passed array we're trusting the calling function to pass
+		# an array with nodes in, else this will return false
+		if range_group in GlobalVariables.RangeGroup:
+			# set range_group var as the array of nodes in said range group
+			# using the group call dict
+			range_group = call_range_group(range_group)
+		# validated range_group arg successfully, carry on
+		# return the bool statement of whether target is in the array
+		return target in range_group
+	else:
+		if GlobalDebug.enemy_detection_func_logs: print("function [is_actor_in_range_group] exception")

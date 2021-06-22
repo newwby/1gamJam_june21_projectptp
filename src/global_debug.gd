@@ -32,3 +32,5 @@ var enemy_detection_radii_logs = false
 var ability_cooldown_call_logs = false
 # console logging for enemy state behaviour
 var enemy_state_logs = true
+# console logging for enemy dectection functions
+var enemy_detection_func_logs = true

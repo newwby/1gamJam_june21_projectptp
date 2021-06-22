@@ -5,7 +5,7 @@ extends Node2D
 signal clear_state
 signal check_state
 
-var is_active = true
+var is_active = false
 
 # action states interrupt other states (except action states)
 # and remember their previous state via the state register
@@ -28,7 +28,8 @@ var state_manager_node# = owner
 # states are for controlling enemy nodes and without editing base logic,
 # (as mentioned above), you should not use a state or state manager
 var enemy_parent_node# = owner.owner
-
+# the detection manager of the enemy parent node is also called frequently
+var detection_manager# = owner.owner.detection_scan
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -53,10 +54,14 @@ func set_state_manager_and_enemy_self():
 	# as mentioned in foreword, if these two variables can't be set
 	# correctly, the state will disable itself to prevent exceptions
 	
+	var set_state_manager = false
+	var set_enemy_parent = false
+	
 	# check if we can set state manager
 	if owner != null and owner is StateManager:
 		state_manager_node = owner
 		if GlobalDebug.enemy_state_logs: print(self, " correctly set state manager as ", state_manager_node)
+		set_state_manager = true
 	else:
 		if GlobalDebug.enemy_state_logs: print(self, " - error in setting state manager")
 		is_active = false
@@ -65,18 +70,26 @@ func set_state_manager_and_enemy_self():
 	# check if we can set enemy parent
 	if owner.owner != null and owner.owner is Enemy:
 		enemy_parent_node = owner.owner
+		# also get detection manager of enemy parent node
+		detection_manager = enemy_parent_node.detection_scan
 		if GlobalDebug.enemy_state_logs: print(self, " correctly set parent enemy node as ", enemy_parent_node)
+		set_enemy_parent = true
 	else:
 		if GlobalDebug.enemy_state_logs: print(self, " - error in setting enemy self")
 		is_active = false
 		if GlobalDebug.enemy_state_logs: print(self, " node disabled")
+	
+	# only declare active if both were set
+	if set_state_manager and set_enemy_parent:
+		is_active = true
+		if GlobalDebug.enemy_state_logs: print(self, " has been correctly set, state node ", name, " enabled")
 
 
 # placeholder function to be derived by child classes
 func set_state_signals():
 	# default signal connection
-	self.connect("clear_state", state_manager_node, "on_clear_state")
-	self.connect("check_state", state_manager_node, "_on_check_behaviour")
+	self.connect("clear_state", state_manager_node, "_on_clear_state")
+	self.connect("check_state", state_manager_node, "_on_check_state")
 
 ###############################################################################
 

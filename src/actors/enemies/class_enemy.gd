@@ -25,7 +25,7 @@ var is_active = true
 	# how long additional time on top of weapon cooldown?
 	# initial cooldown multiplied by float of reaction speed
 
-onready var detection_scan = $DetectionRadiiHandler
+onready var detection_scan = $DetectionHandler
 onready var state_manager = $StateManager
 
 ###############################################################################
@@ -59,11 +59,6 @@ func set_enemy_stats():
 func move_toward_given_position(self_position, target_position):
 #	var velocity = Vector2.ZERO
 	velocity = -(self_position - target_position)
-
-
-func on_update_velocity_with_current_target_position():
-	move_toward_given_position(self.position, detection_scan.current_target.position)
-
 
 ###############################################################################
 
