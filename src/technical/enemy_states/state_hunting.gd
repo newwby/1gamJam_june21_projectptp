@@ -69,25 +69,35 @@ func track_and_move_toward_target():
 		if detection_manager == null:
 			detection_manager = enemy_parent_node.detection_scan
 		
-		# get current_target of the detection manager
-		var current_target = detection_manager.current_target
-		# if we can see the target, update positon
-		if check_target_is_visible(current_target):
-			# get enemy parent node's position
-			var self_pos = enemy_parent_node.position
-			# get current target of enemy parent's detection manager
-			# then get the position of that target
-			var target_pos = current_target.position
-			# sets last known position - this is in case the target is lost suddenly
-			detection_manager.target_last_known_location = target_pos
-			# calls the enemy parent node's function for moving
-			enemy_parent_node.move_toward_given_position(self_pos, target_pos)
-		# if we can't see target,
-		else:
-			# clear current target of detection manager
-			detection_manager.current_target = null
-			# need to check for new state
+		# get the attack state node
+		var attack_call = state_manager_node.state_node_attack
+		# need to get if weapon can fire
+		# if weapon fulfills condition
+		if attack_call.check_state_condition():
+			# ignore our state and check for new state
 			emit_signal("check_state")
+		
+		# otherwise we continue on with hunting state
+		else:
+			# get current_target of the detection manager
+			var current_target = detection_manager.current_target
+			# if we can see the target, update positon
+			if check_target_is_visible(current_target):
+				# get enemy parent node's position
+				var self_pos = enemy_parent_node.position
+				# get current target of enemy parent's detection manager
+				# then get the position of that target
+				var target_pos = current_target.position
+				# sets last known position - this is in case the target is lost suddenly
+				detection_manager.target_last_known_location = target_pos
+				# calls the enemy parent node's function for moving
+				enemy_parent_node.move_toward_given_position(self_pos, target_pos)
+			# if we can't see target,
+			else:
+				# clear current target of detection manager
+				detection_manager.current_target = null
+				# need to check for new state
+				emit_signal("check_state")
 
 
 # check if we can still see the target

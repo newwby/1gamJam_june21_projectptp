@@ -134,7 +134,6 @@ func call_state_condition_check(state_identifier):
 	get(state_call_dict[state_identifier]).check_state_condition()
 	return state_check
 
-
 # call this if a state can activate
 # gets the state_action() function from the current state's node
 func call_active_state_node_action():
