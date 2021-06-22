@@ -22,11 +22,16 @@ script = ExtResource( 7 )
 [node name="State_Searching" type="Node2D" parent="."]
 script = ExtResource( 8 )
 
+[node name="SearchTimer" type="Timer" parent="State_Searching"]
+one_shot = true
+
 [node name="State_Hunting" type="Node2D" parent="."]
 script = ExtResource( 2 )
 
 [node name="State_Attack" type="Node2D" parent="."]
 script = ExtResource( 3 )
+
+[node name="AttackDelayTimer" type="Timer" parent="State_Attack"]
 
 [node name="State_Hurt" type="Node2D" parent="."]
 script = ExtResource( 4 )
@@ -36,4 +41,9 @@ script = ExtResource( 5 )
 
 [node name="State_Scanning" type="Node2D" parent="."]
 script = ExtResource( 9 )
+
+[node name="ReactionTimer" type="Timer" parent="."]
+autostart = true
 [connection signal="check_state" from="." to="." method="_on_check_state"]
+[connection signal="timeout" from="State_Searching/SearchTimer" to="State_Searching" method="_on_SearchTimer_timeout"]
+[connection signal="timeout" from="ReactionTimer" to="." method="_on_ReactionTimer_timeout"]

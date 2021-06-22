@@ -2,8 +2,9 @@
 class_name DetectionManager, "res://art/projectile/kenney_particlePack_1.1/circle_03.png"
 extends Node2D
 
-signal body_changed_detection_radius(body)
+signal body_changed_detection_radius(body, is_entering_radius, range_group)
 
+#			state_manager_node.set_new_state(StateManager.State.ATTACK)
 # the current actor the enemy is hunting
 var current_target
 # last known location of the target if lost sight of them
@@ -222,6 +223,7 @@ func _on_Range_Far_body_exited(body):
 func add_to_detection_group(range_group, body):
 	# make sure we're not detecting the enemy or any non-actor
 	if body != self and body != owner and body is Actor:
+		emit_signal("body_changed_detection_radius", body, true, range_group)
 		var range_string = GlobalVariables.RangeGroup.keys()[range_group]
 		var full_range_string = grouping_string+range_string
 		if GlobalDebug.enemy_detection_radii_logs: print("detection group " + full_range_string + " entered by " + body.name)
@@ -234,6 +236,7 @@ func add_to_detection_group(range_group, body):
 func remove_from_detection_group(range_group, body):
 	# make sure we're not detecting the enemy or any non-actor
 	if body != self and body != owner and body is Actor:
+		emit_signal("body_changed_detection_radius", body, false, range_group)
 		var range_string = GlobalVariables.RangeGroup.keys()[range_group]
 		var full_range_string = grouping_string+range_string
 		if GlobalDebug.enemy_detection_radii_logs: print("detection group " + full_range_string + " entered by " + body.name)
@@ -341,3 +344,4 @@ func is_actor_in_range_group(target, range_group):
 		return target in range_group
 	else:
 		if GlobalDebug.enemy_detection_func_logs: print("function [is_actor_in_range_group] exception")
+

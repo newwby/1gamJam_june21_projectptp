@@ -28,9 +28,12 @@ var show_sniper_line = true
 	# how long do they pursue during second stage searching
 		# 5x float for timer
 
+var gamestat_reaction_speed = 20
+
 # stat REACTION_SPEED --
-	# how long additional time on top of weapon cooldown?
+	# how long additional time on top of weapon cooldown? (value/100)
 	# initial cooldown multiplied by float of reaction speed
+	# how many times per second the enemy can change state
 
 onready var weapon_node = $AbilityHolder/WeaponAbility
 onready var detection_scan = $DetectionHandler
@@ -52,6 +55,8 @@ func _process(delta):
 #	_process_call_state_behaviour(delta)
 	move_and_slide(velocity.normalized() * movement_speed)
 #	detection_scan.player
+	if state_manager.current_state != null:
+		$DebugStateLabel.text = str(state_manager.current_state)
 
 
 ###############################################################################
@@ -145,3 +150,26 @@ func move_toward_given_position(self_position, target_position):
 #	# if not start checking state conditions
 ##	else:
 #	recheck_state()
+
+
+func _on_DetectionHandler_body_changed_detection_radius(body, is_entering_radius, range_group):
+	print(body, is_entering_radius, range_group)
+	if body is Player\
+	 and range_group == GlobalVariables.RangeGroup.NEAR:
+		if is_entering_radius:
+#			state_manager
+			state_manager.set_new_state(StateManager.State.HUNTING)
+			detection_scan.current_target = body
+		if not is_entering_radius:
+			state_manager.set_new_state(StateManager.State.SEARCHING)
+#			state_manager.state_node_searching.start_timer()
+#			.search_state_first_phase.start()
+			detection_scan.current_target = null
+
+
+func _on_OffscreenNotifier_screen_exited():
+# implemented ham-fisted fix of the laggy initial state behaviour implementation
+# implemented offscreen force of idle state
+	state_manager.set_new_state(StateManager.State.IDLE)
+	velocity = Vector2.ZERO
+#	current_state = State.IDLE

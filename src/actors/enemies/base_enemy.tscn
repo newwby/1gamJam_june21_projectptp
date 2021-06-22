@@ -31,3 +31,15 @@ texture = ExtResource( 3 )
 [node name="StateManager" parent="." instance=ExtResource( 5 )]
 
 [node name="DetectionHandler" parent="." instance=ExtResource( 4 )]
+
+[node name="DebugStateLabel" type="Label" parent="."]
+margin_left = -19.3551
+margin_top = -111.459
+margin_right = 20.6449
+margin_bottom = -97.4589
+text = "NULL"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="screen_exited" from="OffscreenNotifier" to="." method="_on_OffscreenNotifier_screen_exited"]
+[connection signal="body_changed_detection_radius" from="DetectionHandler" to="." method="_on_DetectionHandler_body_changed_detection_radius"]

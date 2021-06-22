@@ -436,7 +436,7 @@ const STYLE_DATA = {
 		DataType.SHOT_AUDIO_STYLE			: AudioStyle.WHILST_HELD,
 		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
 		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
-		DataType.SHOT_AIM_TYPE				: AimType.FIXED_ON_HOLD,
+		DataType.SHOT_AIM_TYPE				: AimType.FREE_AIM,
 		DataType.SHOT_USE_COOLDOWN			: 0.75,
 		DataType.SHOT_STATIONARY_BONUS		: 0.95,
 		DataType.AI_MIN_USE_RANGE			: GlobalVariables.RangeGroup.CLOSE,

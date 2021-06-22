@@ -2,9 +2,9 @@
 class_name StateSearching, "res://art/shrek_pup_eye_sprite.png"
 extends StateParent
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+
+# stop searching after this
+onready var search_state_first_phase = $State_Searching/SearchTimer
 
 
 # Called when the node enters the scene tree for the first time.
@@ -39,3 +39,12 @@ func set_state_priority():
 #	var detector = enemy_parent_node.detection_scan
 #	enemy_parent_node.current_target =\
 #	 detector.get_closest_player_in_near_group()
+
+
+func start_timer():
+	search_state_first_phase.start()
+
+
+func _on_SearchTimer_timeout():
+	if state_manager_node.current_state == StateManager.State.SEARCHING:
+		state_manager_node.set_new_state(StateManager.State.IDLE)

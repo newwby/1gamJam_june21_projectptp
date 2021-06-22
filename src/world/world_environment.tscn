@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://src/entities/pickups/new_weapon_collect.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/actors/player/player_controller.tscn" type="PackedScene" id=2]
@@ -8,53 +8,237 @@
 [ext_resource path="res://src/world/prototype_level.tscn" type="PackedScene" id=6]
 [ext_resource path="res://src/interface/GameCamera2D.gd" type="Script" id=7]
 [ext_resource path="res://src/interface/GameCamera2D.tscn" type="PackedScene" id=8]
+[ext_resource path="res://src/technical/blocking_body.tscn" type="PackedScene" id=9]
 
 [node name="GameEnvironment" type="Node2D"]
 script = ExtResource( 3 )
 
 [node name="TileMap" parent="." instance=ExtResource( 6 )]
 
-[node name="NewWeaponPickup" parent="." instance=ExtResource( 1 )]
-position = Vector2( 6518.92, 1158.46 )
-
-[node name="NewWeaponPickup2" parent="." instance=ExtResource( 1 )]
-position = Vector2( 7082.28, 1098.53 )
-weapon_style_index = 1
-
-[node name="NewWeaponPickup3" parent="." instance=ExtResource( 1 )]
-position = Vector2( 6635.78, 936.715 )
-weapon_style_index = 2
-
-[node name="NewWeaponPickup4" parent="." instance=ExtResource( 1 )]
-position = Vector2( 7444.15, 1324.2 )
-weapon_style_index = 6
-
-[node name="NewWeaponPickup5" parent="." instance=ExtResource( 1 )]
-position = Vector2( 7282.84, 1468.34 )
-weapon_style_index = 4
-
-[node name="NewWeaponPickup6" parent="." instance=ExtResource( 1 )]
-position = Vector2( 7083.05, 1687.98 )
-weapon_style_index = 5
-
-[node name="NewWeaponPickup7" parent="." instance=ExtResource( 1 )]
-position = Vector2( 7245.82, 1249.09 )
-weapon_style_index = 7
-
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 8503.37, 2060.83 )
+
+[node name="LeafSpriteController" parent="Player" instance=ExtResource( 5 )]
+leaf_spawn_position = Vector2( -500, -500 )
 
 [node name="Enemy" parent="." instance=ExtResource( 4 )]
 position = Vector2( 8912.2, 2063.67 )
 
-[node name="LeafSpriteController" parent="." instance=ExtResource( 5 )]
-leaf_spawn_position = Vector2( -500, -500 )
+[node name="Enemy2" parent="." instance=ExtResource( 4 )]
+position = Vector2( 9207.98, 2024.47 )
+
+[node name="Enemy3" parent="." instance=ExtResource( 4 )]
+position = Vector2( 8538.02, 1753.64 )
+
+[node name="Enemy4" parent="." instance=ExtResource( 4 )]
+position = Vector2( 8883.69, 1750.07 )
 
 [node name="GameCamera2D" parent="." instance=ExtResource( 8 )]
 current = true
 script = ExtResource( 7 )
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="WorldObjectNodes" type="Node2D" parent="."]
+
+[node name="WeaponPickups" type="Node2D" parent="WorldObjectNodes"]
+
+[node name="NewWeaponPickup" parent="WorldObjectNodes/WeaponPickups" instance=ExtResource( 1 )]
+position = Vector2( 6518.92, 1158.46 )
+
+[node name="NewWeaponPickup2" parent="WorldObjectNodes/WeaponPickups" instance=ExtResource( 1 )]
+position = Vector2( 7082.28, 1098.53 )
+weapon_style_index = 1
+
+[node name="NewWeaponPickup3" parent="WorldObjectNodes/WeaponPickups" instance=ExtResource( 1 )]
+position = Vector2( 6635.78, 936.715 )
+weapon_style_index = 2
+
+[node name="NewWeaponPickup4" parent="WorldObjectNodes/WeaponPickups" instance=ExtResource( 1 )]
+position = Vector2( 7444.15, 1324.2 )
+weapon_style_index = 6
+
+[node name="NewWeaponPickup5" parent="WorldObjectNodes/WeaponPickups" instance=ExtResource( 1 )]
+position = Vector2( 7282.84, 1468.34 )
+weapon_style_index = 4
+
+[node name="NewWeaponPickup6" parent="WorldObjectNodes/WeaponPickups" instance=ExtResource( 1 )]
+position = Vector2( 7083.05, 1687.98 )
+weapon_style_index = 5
+
+[node name="NewWeaponPickup7" parent="WorldObjectNodes/WeaponPickups" instance=ExtResource( 1 )]
+position = Vector2( 7245.82, 1249.09 )
+weapon_style_index = 7
+
+[node name="InvisibleBlocking" type="Node2D" parent="WorldObjectNodes"]
+
+[node name="InvisibleBlockingBody" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 7975.08, 2362.1 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody2" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 9061.13, 2166.81 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody3" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 8485.78, 1594.46 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody4" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 9444.69, 1019.11 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody5" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 7973.36, 1082.04 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody6" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 6948.51, 1207.89 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody7" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 6955.58, 2038.29 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody8" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 6181.55, 3765.93 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody9" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 6756.73, 4084.64 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody10" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 7910.76, 3965.12 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody11" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 6055.52, 4600.06 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody12" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 7913.42, 4734.91 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody13" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 4716.04, 3963.53 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody14" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 4389.4, 4471.21 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody15" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 3625.27, 4093.64 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody16" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 3625.27, 3509.97 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody17" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 4394.49, 2105.13 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody18" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 3944.78, 1400.76 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody19" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 1380.87, 1655.9 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody20" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 999.77, 1850.85 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody21" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 1516.14, 2105.64 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody22" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 2344.8, 1979.21 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody23" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 737.711, 763.556 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="InvisibleBlockingBody24" parent="WorldObjectNodes/InvisibleBlocking" instance=ExtResource( 9 )]
+position = Vector2( 1251.42, 632.27 )
+collision_layer = 16
+collision_mask = 5
+mode = 1
+can_sleep = false
+
+[node name="LightingPatch" type="ColorRect" parent="WorldObjectNodes"]
 modulate = Color( 1, 1, 1, 0.0588235 )
 margin_left = 8219.98
 margin_top = 1758.01

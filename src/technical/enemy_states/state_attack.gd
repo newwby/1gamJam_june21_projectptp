@@ -51,10 +51,11 @@ func state_action():
 #			print("find target", detection_manager, get_target, detection_manager.current_target)
 			var firing_target = detection_manager.target_last_known_location
 			if get_target != null and firing_target != null:
-				enemy_parent_node.current_mouse_target = -(firing_target)
-				enemy_parent_node.firing_target = -(firing_target)
+				enemy_parent_node.current_mouse_target = -(enemy_parent_node.position-firing_target)
+				enemy_parent_node.firing_target = -(enemy_parent_node.position-firing_target)
 #				print("FIRE!")
 				get_weapon_node.attempt_ability()
+				state_manager_node.set_new_state(StateManager.State.HUNTING)
 			else:
 				# need to check for new state
 				emit_signal("check_state")

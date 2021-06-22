@@ -75,7 +75,10 @@ func track_and_move_toward_target():
 		# if weapon fulfills condition
 		if attack_call.check_state_condition():
 			# ignore our state and check for new state
-			emit_signal("check_state")
+#			emit_signal("check_state")
+		# check state signal is temp disabled due to lag problems
+		# TODO re-enable check state
+			state_manager_node.set_new_state(StateManager.State.ATTACK)
 		
 		# otherwise we continue on with hunting state
 		else:
