@@ -6,6 +6,13 @@ const ENEMY_TYPE_BASE_MOVEMENT_SPEED = 150
 
 var is_active = true
 
+# TODO replace weapon ability call with aiming_target var
+# this is a fake variable to make weapon node work with enemy calss
+var current_mouse_target
+var firing_target
+#
+var show_sniper_line = true
+
 # stat PERCEPTION --
 	# multiplies the initial detection radii
 	# multiplies the additional size of additional detection radii
@@ -25,6 +32,7 @@ var is_active = true
 	# how long additional time on top of weapon cooldown?
 	# initial cooldown multiplied by float of reaction speed
 
+onready var weapon_node = $AbilityHolder/WeaponAbility
 onready var detection_scan = $DetectionHandler
 onready var state_manager = $StateManager
 
@@ -35,8 +43,8 @@ onready var state_manager = $StateManager
 func _ready():
 	self.add_to_group("enemies")
 	set_enemy_stats()
+	
 #	set_initial_state(State.IDLE)
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -51,6 +59,10 @@ func _process(delta):
 
 func set_enemy_stats():
 	movement_speed = ENEMY_TYPE_BASE_MOVEMENT_SPEED
+
+
+func set_enemy_weapon():
+	var base_weapon
 
 
 ###############################################################################

@@ -15,6 +15,8 @@ const NODE_2D_DELETION_HANDLER = GlobalReferences.node_2d_deletion
 # has a chance to update)
 const MINIMUM_SHOT_COOLDOWN = 0.1
 
+export var base_weapon_override = 8
+
 var base_weapon_style = weapon.Style.FLAMETHROWER
 var selected_weapon_style
 var current_weapon_style
@@ -93,7 +95,7 @@ onready var minimum_cooldown_timer = $MinimumShotCooldown
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	set_ability_type()
-	set_new_weapon(base_weapon_style)
+	set_first_weapon()
 	set_new_cooldown_timer()
 	set_minimum_cooldown_timer()
 
@@ -107,6 +109,14 @@ func _process(_delta):
 
 func set_ability_type():
 	my_ability_type = AbilityType.WEAPON
+
+
+func set_first_weapon():
+	if base_weapon_override > weapon.Style.size()-1:
+		set_new_weapon(base_weapon_style)
+	else:
+#		print (weapon.Style.keys()[base_weapon_override])
+		set_new_weapon(base_weapon_override)
 
 
 func set_new_weapon(passed_weapon):

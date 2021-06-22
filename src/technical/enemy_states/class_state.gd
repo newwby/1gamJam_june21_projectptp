@@ -71,7 +71,7 @@ func set_state_manager_and_enemy_self():
 	if owner.owner != null and owner.owner is Enemy:
 		enemy_parent_node = owner.owner
 		# also get detection manager of enemy parent node
-		detection_manager = enemy_parent_node.detection_scan
+		yield(set_detection_manager(), "completed")
 		if GlobalDebug.enemy_state_logs: print(self, " correctly set parent enemy node as ", enemy_parent_node)
 		set_enemy_parent = true
 	else:
@@ -83,6 +83,13 @@ func set_state_manager_and_enemy_self():
 	if set_state_manager and set_enemy_parent:
 		is_active = true
 		if GlobalDebug.enemy_state_logs: print(self, " has been correctly set, state node ", name, " enabled")
+
+
+# wait until parent's parent is ready before trying to set this variable
+func set_detection_manager():
+	yield(enemy_parent_node, "ready")
+	detection_manager = enemy_parent_node.detection_scan
+	
 
 
 # placeholder function to be derived by child classes
