@@ -34,7 +34,7 @@ script = ExtResource( 3 )
 [node name="AttackDelayTimer" type="Timer" parent="State_Attack"]
 one_shot = true
 
-[node name="AttackDelayTimer2" type="Timer" parent="State_Attack"]
+[node name="AimingPauseTimer" type="Timer" parent="State_Attack"]
 wait_time = 0.5
 one_shot = true
 

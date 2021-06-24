@@ -6,6 +6,7 @@ extends StateParent
 var attack_delay_timer_wait_time = 0.1
 
 onready var attack_delay = $AttackDelayTimer
+onready var aim_pause = $AimingPauseTimer
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -72,7 +73,6 @@ func state_action():
 
 func perform_attack(target_pos, weapon_node):
 	if attack_delay.is_stopped():
-		var aim_pause = $AttackDelayTimer2
 		# start new delay timer
 		attack_delay.start()
 		# set line

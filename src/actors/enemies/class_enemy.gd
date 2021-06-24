@@ -13,7 +13,15 @@ var firing_target
 #
 var show_sniper_line = true
 
+var invert_squish = false
+var horizontal_squish = Vector2(1.05, 0.95)
+var vertical_squish = Vector2(0.95, 1.05)
+var squish_randomness_cap = 0.05
+var squish_duration  = 0.5
+
+onready var enemy_sprite = $SpriteHolder/TestSprite
 onready var target_line = $AbilityHolder/WeaponAbility/TargetLine
+onready var squish_tween = $SpriteHolder/TestSprite/SquishingTween
 
 # stat PERCEPTION --
 # stat PERCEPTION --
@@ -49,7 +57,8 @@ onready var state_manager = $StateManager
 func _ready():
 	self.add_to_group("enemies")
 	set_enemy_stats()
-	
+	set_squish_randomness()
+	Squish_Tween_Start()
 #	set_initial_state(State.IDLE)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -60,9 +69,27 @@ func _process(delta):
 #	detection_scan.player
 	if state_manager.current_state != null:
 		$DebugStateLabel.text = str(state_manager.current_state)
-
+	if velocity != Vector2.ZERO:
+		squish_tween.playback_speed = 2.0
+	else:
+		squish_tween.playback_speed = 0.5
 
 ###############################################################################
+
+
+func set_squish_randomness():
+	var random_squish =\
+	 GlobalFuncs.ReturnRandomRange(\
+	 -squish_randomness_cap, squish_randomness_cap)
+	
+	if random_squish < 0.03 and random_squish > 0:
+		random_squish += 0.03
+	elif random_squish < 0 and random_squish > -0.03:
+		random_squish -= 0.03
+	
+	horizontal_squish = Vector2(1.0-random_squish, 1.0+random_squish)
+	vertical_squish = Vector2(1.0+random_squish, 1.0-random_squish)
+	squish_duration += random_squish
 
 
 func set_enemy_stats():
@@ -176,3 +203,16 @@ func _on_OffscreenNotifier_screen_exited():
 	state_manager.set_new_state(StateManager.State.IDLE)
 	velocity = Vector2.ZERO
 #	current_state = State.IDLE
+
+func Squish_Tween_Start():
+	var start_scale = horizontal_squish if invert_squish else vertical_squish
+	var end_scale = vertical_squish if invert_squish else horizontal_squish
+	squish_tween.interpolate_property(enemy_sprite, "scale",\
+	 start_scale, end_scale, squish_duration,\
+	 Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	squish_tween.start()
+
+
+func _on_SquishingTween_tween_all_completed():
+	invert_squish = !invert_squish
+	Squish_Tween_Start()

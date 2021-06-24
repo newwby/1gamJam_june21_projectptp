@@ -24,6 +24,8 @@ shape = SubResource( 1 )
 [node name="TestSprite" type="Sprite" parent="SpriteHolder"]
 texture = ExtResource( 3 )
 
+[node name="SquishingTween" type="Tween" parent="SpriteHolder/TestSprite"]
+
 [node name="OrbitalProjectileHolder" type="Node2D" parent="."]
 
 [node name="OffscreenNotifier" type="VisibilityNotifier2D" parent="."]
@@ -46,6 +48,7 @@ gradient = SubResource( 2 )
 [node name="DetectionHandler" parent="." instance=ExtResource( 4 )]
 
 [node name="DebugStateLabel" type="Label" parent="."]
+visible = false
 margin_left = -19.3551
 margin_top = -111.459
 margin_right = 20.6449
@@ -54,5 +57,6 @@ text = "NULL"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+[connection signal="tween_all_completed" from="SpriteHolder/TestSprite/SquishingTween" to="." method="_on_SquishingTween_tween_all_completed"]
 [connection signal="screen_exited" from="OffscreenNotifier" to="." method="_on_OffscreenNotifier_screen_exited"]
 [connection signal="body_changed_detection_radius" from="DetectionHandler" to="." method="_on_DetectionHandler_body_changed_detection_radius"]
