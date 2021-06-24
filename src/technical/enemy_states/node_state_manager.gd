@@ -13,6 +13,7 @@ extends Node2D
 
 # TODO conflict with class_state check_state signal, fix one or the other
 signal check_state
+signal state_manager_active
 
 # list of potential states for the enemy
 enum State{

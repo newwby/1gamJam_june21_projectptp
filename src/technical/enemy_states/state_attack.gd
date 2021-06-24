@@ -2,14 +2,15 @@
 class_name StateAttack, "res://art/shrek_pup_eye_sprite.png"
 extends StateParent
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+# TODO tie this to enemy parent reaction stat
+var attack_delay_timer_wait_time = 0.1
 
+onready var attack_delay = $AttackDelayTimer
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+#	set_attack_delay_wait_time()
+	pass
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -21,7 +22,12 @@ func _ready():
 # set the state priority
 func set_state_priority():
 	state_priority = 50
-#
+
+# attack delay is set by enemy parent node perception
+func set_attack_delay_wait_time():
+	attack_delay.wait_time = attack_delay_timer_wait_time
+	attack_delay.start()
+
 #
 ################################################################################
 #
@@ -35,10 +41,8 @@ func check_state_condition():
 	
 	if get_target != null and firing_target != null\
 	and get_weapon_node.activation_timer.is_stopped():
-		print("true")
 		return true
 	else:
-		print("false")
 		return false
 #
 #
@@ -46,17 +50,40 @@ func check_state_condition():
 func state_action():
 	if is_active:
 		if enemy_parent_node != null:# and detection_manager != null:
+			# stop the enemy node
+			enemy_parent_node.velocity = Vector2.ZERO
 			var get_weapon_node = enemy_parent_node.weapon_node
 			var get_target = detection_manager.current_target
 #			print("find target", detection_manager, get_target, detection_manager.current_target)
 			var firing_target = detection_manager.target_last_known_location
-			if get_target != null and firing_target != null:
-				enemy_parent_node.current_mouse_target = -(enemy_parent_node.position-firing_target)
-				enemy_parent_node.firing_target = -(enemy_parent_node.position-firing_target)
+			if get_target != null and firing_target != null:#\
+#			and attack_delay.is_stopped():
+				var aiming_vector = -(enemy_parent_node.position-firing_target)
+				enemy_parent_node.current_mouse_target = aiming_vector
+				enemy_parent_node.firing_target = aiming_vector
 #				print("FIRE!")
-				get_weapon_node.attempt_ability()
-				state_manager_node.set_new_state(StateManager.State.HUNTING)
-			else:
-				# need to check for new state
-				emit_signal("check_state")
+				perform_attack(get_target.position, get_weapon_node)
+				
+			
+			# start node behaviour again
+			state_manager_node.set_new_state(StateManager.State.HUNTING)
 #	get_weapon_node
+
+
+func perform_attack(target_pos, weapon_node):
+	if attack_delay.is_stopped():
+		var aim_pause = $AttackDelayTimer2
+		# start new delay timer
+		attack_delay.start()
+		# set line
+		var enemy_target_line = enemy_parent_node.target_line
+		enemy_target_line.look_at(target_pos)
+		enemy_target_line.rotation_degrees -= 90
+		enemy_target_line.visible = true
+		# wait
+		aim_pause.start()
+		yield(aim_pause, "timeout")
+		# hide line
+		enemy_target_line.visible = false
+		# fire
+		weapon_node.attempt_ability()

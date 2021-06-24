@@ -13,6 +13,9 @@ var firing_target
 #
 var show_sniper_line = true
 
+onready var target_line = $AbilityHolder/WeaponAbility/TargetLine
+
+# stat PERCEPTION --
 # stat PERCEPTION --
 	# multiplies the initial detection radii
 	# multiplies the additional size of additional detection radii

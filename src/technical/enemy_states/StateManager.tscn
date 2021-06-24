@@ -32,6 +32,11 @@ script = ExtResource( 2 )
 script = ExtResource( 3 )
 
 [node name="AttackDelayTimer" type="Timer" parent="State_Attack"]
+one_shot = true
+
+[node name="AttackDelayTimer2" type="Timer" parent="State_Attack"]
+wait_time = 0.5
+one_shot = true
 
 [node name="State_Hurt" type="Node2D" parent="."]
 script = ExtResource( 4 )
@@ -43,7 +48,7 @@ script = ExtResource( 5 )
 script = ExtResource( 9 )
 
 [node name="ReactionTimer" type="Timer" parent="."]
-autostart = true
+one_shot = true
 [connection signal="check_state" from="." to="." method="_on_check_state"]
 [connection signal="timeout" from="State_Searching/SearchTimer" to="State_Searching" method="_on_SearchTimer_timeout"]
 [connection signal="timeout" from="ReactionTimer" to="." method="_on_ReactionTimer_timeout"]
