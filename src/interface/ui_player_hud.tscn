@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://src/interface/ui_player_hud.gd" type="Script" id=1]
 [ext_resource path="res://art/icons/lorc-gameicons_sniper_greyscale.png" type="Texture" id=2]
@@ -10,6 +10,8 @@
 [ext_resource path="res://art/icons/lorc-gameicons_time_slow_greyscale.png" type="Texture" id=8]
 [ext_resource path="res://art/icons/lorc-gameicons_blink_dash.png" type="Texture" id=9]
 [ext_resource path="res://fonts/kenney_fontpackage/Fonts/Kenney Blocks.ttf" type="DynamicFontData" id=10]
+[ext_resource path="res://art/icons/heart_center.png.png" type="Texture" id=11]
+[ext_resource path="res://art/icons/heart-outer.png" type="Texture" id=12]
 
 [sub_resource type="DynamicFont" id=1]
 size = 36
@@ -166,6 +168,100 @@ margin_right = 814.0
 margin_bottom = 96.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="HBox4" type="HBoxContainer" parent="MarginContainer/TopHUDBar/TopRightHUD/HBox2"]
+margin_right = 268.0
+margin_bottom = 46.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBox5" type="HBoxContainer" parent="MarginContainer/TopHUDBar/TopRightHUD/HBox2"]
+margin_left = 272.0
+margin_right = 540.0
+margin_bottom = 46.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LifeBackground" type="ColorRect" parent="MarginContainer/TopHUDBar/TopRightHUD/HBox2"]
+margin_left = 544.0
+margin_right = 814.0
+margin_bottom = 46.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 1, 0, 0, 0.392157 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartIcon1" type="TextureProgress" parent="MarginContainer/TopHUDBar/TopRightHUD/HBox2/LifeBackground"]
+margin_left = 13.5
+margin_top = 4.5
+margin_right = 231.5
+margin_bottom = 190.5
+rect_scale = Vector2( 0.2, 0.2 )
+max_value = 2.0
+value = 1.0
+texture_over = ExtResource( 12 )
+texture_progress = ExtResource( 11 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartIcon2" type="TextureProgress" parent="MarginContainer/TopHUDBar/TopRightHUD/HBox2/LifeBackground"]
+margin_left = 63.5
+margin_top = 4.5
+margin_right = 281.5
+margin_bottom = 190.5
+rect_scale = Vector2( 0.2, 0.2 )
+max_value = 2.0
+value = 1.0
+texture_over = ExtResource( 12 )
+texture_progress = ExtResource( 11 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartIcon3" type="TextureProgress" parent="MarginContainer/TopHUDBar/TopRightHUD/HBox2/LifeBackground"]
+margin_left = 113.5
+margin_top = 4.5
+margin_right = 331.5
+margin_bottom = 190.5
+rect_scale = Vector2( 0.2, 0.2 )
+max_value = 2.0
+value = 1.0
+texture_over = ExtResource( 12 )
+texture_progress = ExtResource( 11 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartIcon4" type="TextureProgress" parent="MarginContainer/TopHUDBar/TopRightHUD/HBox2/LifeBackground"]
+margin_left = 163.5
+margin_top = 4.5
+margin_right = 381.5
+margin_bottom = 190.5
+rect_scale = Vector2( 0.2, 0.2 )
+max_value = 2.0
+value = 1.0
+texture_over = ExtResource( 12 )
+texture_progress = ExtResource( 11 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartIcon5" type="TextureProgress" parent="MarginContainer/TopHUDBar/TopRightHUD/HBox2/LifeBackground"]
+margin_left = 213.5
+margin_top = 4.5
+margin_right = 431.5
+margin_bottom = 190.5
+rect_scale = Vector2( 0.2, 0.2 )
+max_value = 2.0
+value = 1.0
+texture_over = ExtResource( 12 )
+texture_progress = ExtResource( 11 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="CooldownRadialHolder" type="Control" parent="."]
 margin_right = 40.0

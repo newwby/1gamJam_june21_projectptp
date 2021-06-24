@@ -63,7 +63,7 @@ func set_timer_parameters(timer_given, wait_duration, is_auto, is_oneshot):
 func _on_DamageImmunityTimer_timeout():
 	if is_active:
 		is_flashed_on = false
-		print(sprite_parent)
+#		print(sprite_parent)
 		if sprite_base_alpha != null:
 			sprite_parent.modulate.a = sprite_base_alpha
 			sprite_base_alpha = null

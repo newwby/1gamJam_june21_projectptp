@@ -31,6 +31,9 @@ var maximum_ticks_moving = 10000
 var rotation_per_tick
 
 # projectile moves at this rate
+var projectile_damage = 10
+
+# projectile moves at this rate
 var projectile_speed = 1600
 # projectile is allowed to move
 var is_projectile_movement_allowed = true
@@ -409,4 +412,5 @@ func start_projectile_radar_sweep():
 
 func _on_Projectile_body_entered(body):
 	if body is Actor and body != projectile_owner:
-		body.emit_signal("damaged")
+		body.emit_signal("damaged", projectile_damage)
+		self.queue_free()

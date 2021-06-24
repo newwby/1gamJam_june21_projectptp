@@ -478,6 +478,10 @@ func instance_new_projectile():
 	# size of projectile
 	new_projectile.projectile_set_size =\
 	 current_weapon_style[weapon.DataType.PROJECTILE_SIZE]
+	
+	# damage of projectile
+	new_projectile.projectile_damage =\
+	 current_weapon_style[weapon.DataType.BASE_DAMAGE]
 
 	# projectile lifespan (by timer, before deletion)
 	new_projectile.projectile_lifespan =\

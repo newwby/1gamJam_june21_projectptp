@@ -4,6 +4,8 @@ extends Actor
 
 const ENEMY_TYPE_BASE_MOVEMENT_SPEED = 150
 
+export var enemy_life = 35
+
 var is_active = true
 
 # TODO replace weapon ability call with aiming_target var
@@ -22,11 +24,16 @@ var vertical_squish = Vector2(0.95, 1.05)
 var squish_randomness_cap = 0.05
 var squish_duration  = 0.5
 
+var lifebar_visibility_wait_time = 2.0
+
 onready var enemy_sprite = $SpriteHolder/TestSprite
 onready var target_line = $AbilityHolder/WeaponAbility/TargetLine
 onready var squish_tween = $SpriteHolder/TestSprite/SquishingTween
 
 onready var damage_immunity_timer = $SpriteHolder/TestSprite/DamageImmunityTimer
+
+onready var debug_lifebar = $Lifebar
+onready var damaged_recently_timer = $Lifebar/LifebarTimer
 
 # stat PERCEPTION --
 # stat PERCEPTION --
@@ -64,6 +71,7 @@ func _ready():
 	set_enemy_stats()
 	set_squish_randomness()
 	Squish_Tween_Start()
+	setup_lifebar()
 #	set_initial_state(State.IDLE)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -225,6 +233,28 @@ func _on_SquishingTween_tween_all_completed():
 	Squish_Tween_Start()
 
 
-func _on_Enemy_damaged():
+func _on_Enemy_damaged(damage_taken):
 	if damage_immunity_timer.is_stopped():
 		damage_immunity_timer.start_immunity()
+		enemy_life -= damage_taken
+		debug_lifebar.visible = true
+		update_lifebar()
+
+func setup_lifebar():
+	debug_lifebar.visible = false
+	debug_lifebar.max_value = enemy_life#
+	damaged_recently_timer.wait_time = lifebar_visibility_wait_time
+	update_lifebar()
+
+func update_lifebar():
+	debug_lifebar.value = enemy_life
+	damaged_recently_timer.start()
+	if enemy_life <= 0:
+		enemy_died()
+
+func enemy_died():
+	debug_lifebar.visible = false
+	queue_free()
+
+func _on_LifebarTimer_timeout():
+	debug_lifebar.visible = false

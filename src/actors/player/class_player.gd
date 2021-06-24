@@ -7,6 +7,8 @@ var last_facing_not_firing: Vector2 = Vector2.ZERO
 # player sprite is automatically resized according to this value
 var sprite_intended_size = 100
 
+var player_life = 10
+
 # determine whether the player has immunity to damage from foes or not
 # note: damage is damage to health from foes
 # it does not include self-damage (a separate stat)
@@ -52,6 +54,12 @@ onready var player_HUD = $UICanvasLayer/PlayerHUD
 
 onready var damage_immunity_timer = $SpriteHolder/StaticSprite/DamageImmunityTimer
 
+onready var lifeheart_1_hp012 = $UICanvasLayer/PlayerHUD/MarginContainer/TopHUDBar/TopRightHUD/HBox2/LifeBackground/HeartIcon1
+onready var lifeheart_2_hp234 = $UICanvasLayer/PlayerHUD/MarginContainer/TopHUDBar/TopRightHUD/HBox2/LifeBackground/HeartIcon2
+onready var lifeheart_3_hp456 = $UICanvasLayer/PlayerHUD/MarginContainer/TopHUDBar/TopRightHUD/HBox2/LifeBackground/HeartIcon3
+onready var lifeheart_4_hp678 = $UICanvasLayer/PlayerHUD/MarginContainer/TopHUDBar/TopRightHUD/HBox2/LifeBackground/HeartIcon4
+onready var lifeheart_5_hp8910 = $UICanvasLayer/PlayerHUD/MarginContainer/TopHUDBar/TopRightHUD/HBox2/LifeBackground/HeartIcon5
+
 ###############################################################################
 
 
@@ -60,6 +68,7 @@ func _ready():
 	# adjust the player sprite according to (var sprite_intended_size)
 	setup_sprite_scale()
 	set_ability_nodes()
+	update_life_hearts()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -261,6 +270,66 @@ func _on_ActiveAbility2_updated_cooldown(ability_node, ability_type, new_value, 
 
 
 
-func _on_Player_damaged():
+func _on_Player_damaged(damage_taken):
 	if damage_immunity_timer.is_stopped():
 		damage_immunity_timer.start_immunity()
+		var damage_taken_scaled = damage_taken/10
+		player_life -= damage_taken_scaled
+		update_life_hearts()
+
+func update_life_hearts():
+	#clear all
+	lifeheart_1_hp012.value = 0
+	lifeheart_2_hp234.value = 0
+	lifeheart_3_hp456.value = 0
+	lifeheart_4_hp678.value = 0
+	lifeheart_5_hp8910.value = 0
+	
+	# this is a lazy way of doing this
+	# TODO make a better way
+	match player_life:
+		0:
+			player_died()
+		1:
+			lifeheart_1_hp012.value = 1
+		2:
+			lifeheart_1_hp012.value = 2
+		3:
+			lifeheart_1_hp012.value = 2
+			lifeheart_2_hp234.value = 1
+		4:
+			lifeheart_1_hp012.value = 2
+			lifeheart_2_hp234.value = 2
+		5:
+			lifeheart_1_hp012.value = 2
+			lifeheart_2_hp234.value = 2
+			lifeheart_3_hp456.value = 1
+		6:
+			lifeheart_1_hp012.value = 2
+			lifeheart_2_hp234.value = 2
+			lifeheart_3_hp456.value = 2
+		7:
+			lifeheart_1_hp012.value = 2
+			lifeheart_2_hp234.value = 2
+			lifeheart_3_hp456.value = 2
+			lifeheart_4_hp678.value = 1
+		8:
+			lifeheart_1_hp012.value = 2
+			lifeheart_2_hp234.value = 2
+			lifeheart_3_hp456.value = 2
+			lifeheart_4_hp678.value = 2
+		9:
+			lifeheart_1_hp012.value = 2
+			lifeheart_2_hp234.value = 2
+			lifeheart_3_hp456.value = 2
+			lifeheart_4_hp678.value = 2
+			lifeheart_5_hp8910.value = 1
+		10:
+			lifeheart_1_hp012.value = 2
+			lifeheart_2_hp234.value = 2
+			lifeheart_3_hp456.value = 2
+			lifeheart_4_hp678.value = 2
+			lifeheart_5_hp8910.value = 2
+
+func player_died():
+	self.queue_free()

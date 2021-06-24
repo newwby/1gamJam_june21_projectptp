@@ -2,7 +2,7 @@
 class_name Actor
 extends KinematicBody2D
 
-signal damaged
+signal damaged(hp_damage_taken)
 
 # this is the movement rate per tick of the actor
 var movement_speed = 400

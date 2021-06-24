@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://src/technical/abilities/weapon_ability.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/actors/enemies/class_enemy.gd" type="Script" id=2]
@@ -6,6 +6,8 @@
 [ext_resource path="res://src/actors/enemies/DetectionHandler.tscn" type="PackedScene" id=4]
 [ext_resource path="res://src/technical/enemy_states/StateManager.tscn" type="PackedScene" id=5]
 [ext_resource path="res://src/technical/DamageImmunityTimer.tscn" type="PackedScene" id=6]
+[ext_resource path="res://art/icons/enemy_lifebar_full.png" type="Texture" id=7]
+[ext_resource path="res://art/icons/enemy_lifebar_empty.png" type="Texture" id=8]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 50, 50 )
@@ -15,7 +17,6 @@ offsets = PoolRealArray( 0, 0.487685, 1 )
 colors = PoolColorArray( 0, 0, 0, 0.392157, 1, 1, 1, 0, 0, 0, 0, 0 )
 
 [node name="Enemy" type="KinematicBody2D"]
-position = Vector2( 144.83, 147.5 )
 collision_layer = 4
 collision_mask = 119
 script = ExtResource( 2 )
@@ -64,7 +65,24 @@ text = "NULL"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Lifebar" type="TextureProgress" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -50.0
+margin_top = -100.0
+margin_right = 354.0
+margin_bottom = -48.0
+rect_scale = Vector2( 0.25, 0.25 )
+texture_over = ExtResource( 8 )
+texture_progress = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LifebarTimer" type="Timer" parent="Lifebar"]
 [connection signal="damaged" from="." to="." method="_on_Enemy_damaged"]
 [connection signal="tween_all_completed" from="SpriteHolder/TestSprite/SquishingTween" to="." method="_on_SquishingTween_tween_all_completed"]
 [connection signal="screen_exited" from="OffscreenNotifier" to="." method="_on_OffscreenNotifier_screen_exited"]
 [connection signal="body_changed_detection_radius" from="DetectionHandler" to="." method="_on_DetectionHandler_body_changed_detection_radius"]
+[connection signal="timeout" from="Lifebar/LifebarTimer" to="." method="_on_LifebarTimer_timeout"]

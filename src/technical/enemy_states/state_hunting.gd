@@ -82,7 +82,11 @@ func track_and_move_toward_target():
 			# sets last known position - this is in case the target is lost suddenly
 			detection_manager.target_last_known_location = target_pos
 			# calls the enemy parent node's function for moving
-			enemy_parent_node.move_toward_given_position(self_pos, target_pos)
+#			if enemy_parent_node
+			if self_pos.distance_to(target_pos) > 400:
+				enemy_parent_node.move_toward_given_position(self_pos, target_pos)
+			else:
+				enemy_parent_node.velocity = Vector2.ZERO
 		# if we can't see target,
 		else:
 			# clear current target of detection manager
