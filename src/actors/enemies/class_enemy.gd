@@ -13,6 +13,9 @@ var firing_target
 #
 var show_sniper_line = true
 
+var sprite_rescale_x = 0.75
+var sprite_rescale_y = 0.75
+
 var invert_squish = false
 var horizontal_squish = Vector2(1.05, 0.95)
 var vertical_squish = Vector2(0.95, 1.05)
@@ -22,6 +25,8 @@ var squish_duration  = 0.5
 onready var enemy_sprite = $SpriteHolder/TestSprite
 onready var target_line = $AbilityHolder/WeaponAbility/TargetLine
 onready var squish_tween = $SpriteHolder/TestSprite/SquishingTween
+
+onready var damage_immunity_timer = $SpriteHolder/TestSprite/DamageImmunityTimer
 
 # stat PERCEPTION --
 # stat PERCEPTION --
@@ -87,8 +92,10 @@ func set_squish_randomness():
 	elif random_squish < 0 and random_squish > -0.03:
 		random_squish -= 0.03
 	
-	horizontal_squish = Vector2(1.0-random_squish, 1.0+random_squish)
-	vertical_squish = Vector2(1.0+random_squish, 1.0-random_squish)
+	horizontal_squish = Vector2(\
+	sprite_rescale_x - random_squish, sprite_rescale_y + random_squish)
+	vertical_squish = Vector2(\
+	sprite_rescale_x + random_squish, sprite_rescale_y - random_squish)
 	squish_duration += random_squish
 
 
@@ -216,3 +223,8 @@ func Squish_Tween_Start():
 func _on_SquishingTween_tween_all_completed():
 	invert_squish = !invert_squish
 	Squish_Tween_Start()
+
+
+func _on_Enemy_damaged():
+	if damage_immunity_timer.is_stopped():
+		damage_immunity_timer.start_immunity()

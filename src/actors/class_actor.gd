@@ -2,6 +2,8 @@
 class_name Actor
 extends KinematicBody2D
 
+signal damaged
+
 # this is the movement rate per tick of the actor
 var movement_speed = 400
 # this is the actor's current velocity

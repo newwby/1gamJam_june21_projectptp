@@ -50,6 +50,8 @@ onready var right_eye_sprite = $SpriteHolder/StaticSprite/EyeSprite_Right
 
 onready var player_HUD = $UICanvasLayer/PlayerHUD
 
+onready var damage_immunity_timer = $SpriteHolder/StaticSprite/DamageImmunityTimer
+
 ###############################################################################
 
 
@@ -240,6 +242,9 @@ func handle_ability_cooldown_signal(ability_node, ability_type, new_value, new_c
 		ability_type, ability_enum_id, new_value, new_cooldown)
 
 
+# TODO clean this code
+
+
 func _on_WeaponAbility_updated_cooldown(ability_node, ability_type, new_value, new_cooldown):
 	if GlobalDebug.ability_cooldown_call_logs: print("signal from wep", ", ability_node=", ability_node, ", ability_type=", ability_type, ", new_value=", new_value, ", new_cooldown=", new_cooldown)
 	handle_ability_cooldown_signal(ability_node, ability_type, new_value, new_cooldown)
@@ -254,3 +259,8 @@ func _on_ActiveAbility2_updated_cooldown(ability_node, ability_type, new_value, 
 	if GlobalDebug.ability_cooldown_call_logs: print("signal from ab2", ", ability_node=", ability_node, ", ability_type=", ability_type, ", new_value=", new_value, ", new_cooldown=", new_cooldown)
 	handle_ability_cooldown_signal(ability_node, ability_type, new_value, new_cooldown)
 
+
+
+func _on_Player_damaged():
+	if damage_immunity_timer.is_stopped():
+		damage_immunity_timer.start_immunity()

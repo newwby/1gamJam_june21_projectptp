@@ -103,6 +103,7 @@ func _ready():
 	set_particle_effects()
 	set_orbital_initialisation_timer()
 	set_maximum_projectile_range()
+	set_collision_layers()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -139,6 +140,32 @@ func _process_ticks_travelled(dt):
 ##############################################################################
 
 
+# setup collision for projectile
+func set_collision_layers():
+	
+	# projectiles should only ever be spawned by readied actors
+	if projectile_owner is Actor:
+		#
+		# if projectile is spawned by a player actor
+		if projectile_owner is Player:
+			# player entity, or 1
+			set_collision_layer_bit(\
+			GlobalReferences.CollisionLayers.PLAYER_ENTITY, true)
+			# enemy body, or 2
+			set_collision_mask_bit(\
+			GlobalReferences.CollisionLayers.ENEMY_BODY, true)
+		#
+		# if projectile is spawned by an enemy actor
+		elif projectile_owner is Enemy:
+			# enemy entity, or 3
+			set_collision_layer_bit(\
+			GlobalReferences.CollisionLayers.ENEMY_ENTITY, true)
+			# player body, or 0
+			set_collision_mask_bit(\
+			GlobalReferences.CollisionLayers.PLAYER_BODY, true)
+	
+
+
 # initial setup of collision size and sprite size
 func set_collision_and_sprite_size():
 	# no longer necessary
@@ -158,7 +185,7 @@ func set_projectile_scale():
 	if projectile_owner is Player:
 		projectile_modified_scale *= 1.10
 	elif projectile_owner is Enemy:
-		projectile_modified_scale *= 0.90
+		projectile_modified_scale *= 0.80
 		
 	# if the projectile is size modified, also modify the collision area
 	simple_sprite.scale =\
@@ -378,3 +405,8 @@ func start_projectile_radar_sweep():
 #			anim_sprite.scale = set_sprite_scale
 #			anim_sprite.playing = true
 #			if GlobalDebug.proj_sprite_handling: print(anim_sprite.name, "set")
+
+
+func _on_Projectile_body_entered(body):
+	if body is Actor and body != projectile_owner:
+		body.emit_signal("damaged")

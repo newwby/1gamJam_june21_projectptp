@@ -16,10 +16,7 @@ script = ExtResource( 3 )
 [node name="TileMap" parent="." instance=ExtResource( 6 )]
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
-position = Vector2( 8503.37, 2060.83 )
-
-[node name="LeafSpriteController" parent="Player" instance=ExtResource( 5 )]
-leaf_spawn_position = Vector2( -500, -500 )
+position = Vector2( 7844.3, 2187 )
 
 [node name="Enemy" parent="." instance=ExtResource( 4 )]
 position = Vector2( 8912.2, 2063.67 )
@@ -237,6 +234,29 @@ collision_layer = 16
 collision_mask = 5
 mode = 1
 can_sleep = false
+
+[node name="Environment" type="Node2D" parent="WorldObjectNodes"]
+
+[node name="LeafSpriteController" parent="WorldObjectNodes/Environment" instance=ExtResource( 5 )]
+position = Vector2( 203.417, 194.941 )
+
+[node name="LeafSpriteController2" parent="WorldObjectNodes/Environment" instance=ExtResource( 5 )]
+position = Vector2( 152.563, 1305.26 )
+
+[node name="LeafSpriteController3" parent="WorldObjectNodes/Environment" instance=ExtResource( 5 )]
+position = Vector2( 3513.18, 559.396 )
+
+[node name="LeafSpriteController4" parent="WorldObjectNodes/Environment" instance=ExtResource( 5 )]
+position = Vector2( 3042.78, 3161.44 )
+
+[node name="LeafSpriteController5" parent="WorldObjectNodes/Environment" instance=ExtResource( 5 )]
+position = Vector2( 5708.39, 3233.48 )
+
+[node name="LeafSpriteController6" parent="WorldObjectNodes/Environment" instance=ExtResource( 5 )]
+position = Vector2( 5945.71, 457.687 )
+
+[node name="LeafSpriteController7" parent="WorldObjectNodes/Environment" instance=ExtResource( 5 )]
+position = Vector2( 7979.87, 466.163 )
 
 [node name="LightingPatch" type="ColorRect" parent="WorldObjectNodes"]
 modulate = Color( 1, 1, 1, 0.0588235 )

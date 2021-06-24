@@ -3,6 +3,8 @@ extends Node
 # console logging for node validation
 var validate_node_existence = true
 
+const DEBUG_BUTTON_ENABLED = false
+
 # console logging for other debug purposes (print commands)
 # debug for the rocking tween starting and stopping
 var player_rocking_anim_tween = false

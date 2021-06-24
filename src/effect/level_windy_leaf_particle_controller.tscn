@@ -2,6 +2,8 @@
 
 [ext_resource path="res://src/effect/level_windy_leaf_particle_controller.gd" type="Script" id=1]
 
-[node name="LeafSpriteController" type="Timer"]
+[node name="LeafSpriteController" type="Node2D"]
 script = ExtResource( 1 )
-[connection signal="timeout" from="." to="." method="_on_LeafSpriteController_timeout"]
+
+[node name="TimerController" type="Timer" parent="."]
+[connection signal="timeout" from="TimerController" to="." method="_on_TimerController_timeout"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://src/actors/player/class_player.gd" type="Script" id=1]
 [ext_resource path="res://art/kenneynl_testsprite_dog.png" type="Texture" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://art/shrek_pup_dog_sprite.png" type="Texture" id=7]
 [ext_resource path="res://art/shrek_pup_eye_sprite.png" type="Texture" id=8]
 [ext_resource path="res://src/interface/ui_player_hud.tscn" type="PackedScene" id=9]
+[ext_resource path="res://src/technical/DamageImmunityTimer.tscn" type="PackedScene" id=10]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -64,6 +65,9 @@ texture = ExtResource( 8 )
 position = Vector2( 33.5, 5.5 )
 texture = ExtResource( 8 )
 
+[node name="DamageImmunityTimer" parent="SpriteHolder/StaticSprite" instance=ExtResource( 10 )]
+immunity_duration = 0.75
+
 [node name="StaticSpriteShadowUnder" type="Sprite" parent="."]
 modulate = Color( 0, 0, 0, 0.215686 )
 show_behind_parent = true
@@ -85,6 +89,7 @@ offset = Vector2( 4, 5 )
 [node name="UICanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="PlayerHUD" parent="UICanvasLayer" instance=ExtResource( 9 )]
+[connection signal="damaged" from="." to="." method="_on_Player_damaged"]
 [connection signal="updated_cooldown" from="AbilityHolder/WeaponAbility" to="." method="_on_WeaponAbility_updated_cooldown"]
 [connection signal="updated_cooldown" from="AbilityHolder/ActiveAbility1" to="." method="_on_ActiveAbility1_updated_cooldown"]
 [connection signal="updated_cooldown" from="AbilityHolder/ActiveAbility2" to="." method="_on_ActiveAbility2_updated_cooldown"]
