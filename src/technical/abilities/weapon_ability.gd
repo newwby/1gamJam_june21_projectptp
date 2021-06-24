@@ -531,7 +531,7 @@ func spawn_new_projectile(spawn_position, spawn_velocity, rotation_alteration):
 	# the newly created projectile
 	var new_projectile = instance_new_projectile()
 
-#
+#	# TODO move this to after added to tree
 #	# if spread has been applied, affix a sprite change
 	new_projectile.rotation_degrees = rotation_alteration*10
 	

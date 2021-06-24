@@ -4,9 +4,11 @@ extends StateParent
 
 # TODO tie this to enemy parent reaction stat
 var attack_delay_timer_wait_time = 0.1
+var base_aim_timer_wait_timer = 0.25
 
 onready var attack_delay = $AttackDelayTimer
 onready var aim_pause = $AimingPauseTimer
+onready var aim_randomisation = 0.75
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -80,9 +82,17 @@ func perform_attack(target_pos, weapon_node):
 		enemy_target_line.look_at(target_pos)
 		enemy_target_line.rotation_degrees -= 90
 		enemy_target_line.visible = true
-		# wait
+		
+		# wait for aiming
+		# TODO - this should probably be a set thing on init
+		# calling random every time might be a bit over the top
+		var wait_time_aim_randomisation =\
+		 base_aim_timer_wait_timer +\
+		 (GlobalFuncs.ReturnRandomRange(0, aim_randomisation))
+		aim_pause.wait_time = wait_time_aim_randomisation
 		aim_pause.start()
 		yield(aim_pause, "timeout")
+		
 		# hide line
 		enemy_target_line.visible = false
 		# fire

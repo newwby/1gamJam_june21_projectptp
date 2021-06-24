@@ -148,13 +148,20 @@ func set_collision_and_sprite_size():
 
 # sets the collision and projectile size
 func set_projectile_scale():
+	var projectile_modified_scale
+	projectile_modified_scale = projectile_set_size
+	print(projectile_owner)
+	if projectile_owner is Player:
+		projectile_modified_scale *= 1.10
+	elif projectile_owner is Enemy:
+		projectile_modified_scale *= 0.90
 	# if the projectile is size modified, also modify the collision area
 	simple_sprite.scale =\
-	 Vector2(projectile_set_size, projectile_set_size)
+	 Vector2(projectile_modified_scale, projectile_modified_scale)
 	simple_sprite_undershadow.scale =\
-	 Vector2(projectile_set_size, projectile_set_size)
+	 Vector2(projectile_modified_scale, projectile_modified_scale)
 	projectile_collision.shape.radius =\
-	 projectile_collision_base_radius * projectile_set_size
+	 projectile_collision_base_radius * projectile_modified_scale
 	# set sprite
 	if projectile_sprite_path != null:
 		simple_sprite.texture = load(projectile_sprite_path)

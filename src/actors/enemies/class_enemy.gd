@@ -183,7 +183,7 @@ func move_toward_given_position(self_position, target_position):
 
 
 func _on_DetectionHandler_body_changed_detection_radius(body, is_entering_radius, range_group):
-	print(body, is_entering_radius, range_group)
+#	print(body, is_entering_radius, range_group)
 	if body is Player\
 	 and range_group == GlobalVariables.RangeGroup.NEAR:
 		if is_entering_radius:
