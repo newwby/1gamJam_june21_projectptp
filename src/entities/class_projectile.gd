@@ -150,11 +150,16 @@ func set_collision_and_sprite_size():
 func set_projectile_scale():
 	var projectile_modified_scale
 	projectile_modified_scale = projectile_set_size
-	print(projectile_owner)
+
+	# Modify projectile based on player or enemy ownership
+	# Player projectiles are bigger
+	# Enemy projectiles are smaller
+#	print(projectile_owner)
 	if projectile_owner is Player:
 		projectile_modified_scale *= 1.10
 	elif projectile_owner is Enemy:
 		projectile_modified_scale *= 0.90
+		
 	# if the projectile is size modified, also modify the collision area
 	simple_sprite.scale =\
 	 Vector2(projectile_modified_scale, projectile_modified_scale)
@@ -162,11 +167,28 @@ func set_projectile_scale():
 	 Vector2(projectile_modified_scale, projectile_modified_scale)
 	projectile_collision.shape.radius =\
 	 projectile_collision_base_radius * projectile_modified_scale
+	
 	# set sprite
 	if projectile_sprite_path != null:
 		simple_sprite.texture = load(projectile_sprite_path)
 		simple_sprite_undershadow.texture = load(projectile_sprite_path)
 	simple_sprite.modulate = projectile_colour_code
+
+	# TODO merge this with above player/enemy code block
+	# Modify projectile based on player or enemy ownership
+	# Player projectiles are darker/faded
+	# Enemy projectiles are lighter/clearer
+	if projectile_owner is Player:
+		simple_sprite.modulate.a -= 0.1
+		simple_sprite.modulate.r += 0.2
+		simple_sprite.modulate.g += 0.2
+		simple_sprite.modulate.b += 0.2
+	elif projectile_owner is Enemy:
+		simple_sprite.modulate.a += 0.1
+		simple_sprite.modulate.r -= 0.2
+		simple_sprite.modulate.g -= 0.2
+		simple_sprite.modulate.b -= 0.2
+		projectile_speed *= 0.75
 
 
 # if the projectile is spawned the lifespan timer is assigned a given

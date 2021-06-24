@@ -25,6 +25,9 @@ func set_state_priority():
 #
 ################################################################################
 ##
+# TODO reimplement search state
+# TODO reimplement roaming state
+#
 ### placeholder function to be derived by child classes
 ### returns false without any superseding child class function
 #func check_state_condition():
