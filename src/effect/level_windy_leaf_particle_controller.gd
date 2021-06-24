@@ -23,8 +23,8 @@ onready var leaf_timer = $TimerController
 func _ready():
 	set_spawn_rate_of_leaves()
 	leaf_spawn_position = Vector2(\
-	self.position.x-50,\
-	self.position.y-50)
+	self.position.x-5,\
+	self.position.y-5)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

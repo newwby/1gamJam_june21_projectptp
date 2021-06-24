@@ -270,7 +270,7 @@ func _on_ActiveAbility2_updated_cooldown(ability_node, ability_type, new_value, 
 
 
 
-func _on_Player_damaged(damage_taken):
+func _on_Player_damaged(damage_taken, damager):
 	if damage_immunity_timer.is_stopped():
 		damage_immunity_timer.start_immunity()
 		var damage_taken_scaled = damage_taken/10

@@ -412,5 +412,5 @@ func start_projectile_radar_sweep():
 
 func _on_Projectile_body_entered(body):
 	if body is Actor and body != projectile_owner:
-		body.emit_signal("damaged", projectile_damage)
+		body.emit_signal("damaged", projectile_damage, projectile_owner)
 		self.queue_free()

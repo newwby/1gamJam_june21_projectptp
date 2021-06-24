@@ -18,6 +18,8 @@ var show_sniper_line = true
 var sprite_rescale_x = 0.75
 var sprite_rescale_y = 0.75
 
+var is_offscreen = false
+
 var invert_squish = false
 var horizontal_squish = Vector2(1.05, 0.95)
 var vertical_squish = Vector2(0.95, 1.05)
@@ -25,6 +27,8 @@ var squish_randomness_cap = 0.05
 var squish_duration  = 0.5
 
 var lifebar_visibility_wait_time = 2.0
+var offscreen_activity_time = 2.0
+var aggression_timer_if_damaged = 5.0
 
 onready var enemy_sprite = $SpriteHolder/TestSprite
 onready var target_line = $AbilityHolder/WeaponAbility/TargetLine
@@ -34,6 +38,9 @@ onready var damage_immunity_timer = $SpriteHolder/TestSprite/DamageImmunityTimer
 
 onready var debug_lifebar = $Lifebar
 onready var damaged_recently_timer = $Lifebar/LifebarTimer
+
+onready var offscreen_timer = $OffscreenTimer
+onready var aggression_timer = $AggressionTimer
 
 # stat PERCEPTION --
 # stat PERCEPTION --
@@ -72,6 +79,7 @@ func _ready():
 	set_squish_randomness()
 	Squish_Tween_Start()
 	setup_lifebar()
+	set_behaviour_timers()
 #	set_initial_state(State.IDLE)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -106,6 +114,10 @@ func set_squish_randomness():
 	sprite_rescale_x + random_squish, sprite_rescale_y - random_squish)
 	squish_duration += random_squish
 
+
+func set_behaviour_timers():
+	offscreen_timer.wait_time = offscreen_activity_time
+	aggression_timer.wait_time = aggression_timer_if_damaged
 
 func set_enemy_stats():
 	movement_speed = ENEMY_TYPE_BASE_MOVEMENT_SPEED
@@ -205,7 +217,10 @@ func _on_DetectionHandler_body_changed_detection_radius(body, is_entering_radius
 #			state_manager
 			state_manager.set_new_state(StateManager.State.HUNTING)
 			detection_scan.current_target = body
-		if not is_entering_radius:
+		if not is_entering_radius\
+	 	 and not range_group in\
+		 [GlobalVariables.RangeGroup.MELEE, GlobalVariables.RangeGroup.CLOSE]\
+		 and aggression_timer.is_stopped():
 			state_manager.set_new_state(StateManager.State.SEARCHING)
 #			state_manager.state_node_searching.start_timer()
 #			.search_state_first_phase.start()
@@ -215,9 +230,29 @@ func _on_DetectionHandler_body_changed_detection_radius(body, is_entering_radius
 func _on_OffscreenNotifier_screen_exited():
 # implemented ham-fisted fix of the laggy initial state behaviour implementation
 # implemented offscreen force of idle state
-	state_manager.set_new_state(StateManager.State.IDLE)
-	velocity = Vector2.ZERO
 #	current_state = State.IDLE
+	start_offscreen_timer()
+	is_offscreen = true
+
+func _on_OffscreenNotifier_screen_entered():
+	is_offscreen = false
+
+
+func start_offscreen_timer():
+	if offscreen_timer.is_stopped():
+		offscreen_timer.start()
+	else:
+		offscreen_timer.stop()
+		offscreen_timer.start()
+
+
+func _on_OffscreenTimer_timeout():
+	if is_offscreen and aggression_timer.is_stopped():
+		state_manager.set_new_state(StateManager.State.IDLE)
+		velocity = Vector2.ZERO
+
+
+
 
 func Squish_Tween_Start():
 	var start_scale = horizontal_squish if invert_squish else vertical_squish
@@ -233,11 +268,17 @@ func _on_SquishingTween_tween_all_completed():
 	Squish_Tween_Start()
 
 
-func _on_Enemy_damaged(damage_taken):
+func _on_Enemy_damaged(damage_taken, damager):
 	if damage_immunity_timer.is_stopped():
 		damage_immunity_timer.start_immunity()
 		enemy_life -= damage_taken
 		debug_lifebar.visible = true
+		aggression_timer.start()
+#		if not state_manager.current_state in\
+#		[StateManager.State.HUNTING, StateManager.State.ATTACK]:
+#			state_manager.set_new_state(StateManager.State.HUNTING)
+#			detection_scan.current_target = damager
+		detection_scan._on_Range_Near_body_entered(damager)
 		update_lifebar()
 
 func setup_lifebar():

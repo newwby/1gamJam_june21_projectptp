@@ -16,54 +16,76 @@ script = ExtResource( 3 )
 [node name="TileMap" parent="." instance=ExtResource( 6 )]
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
-position = Vector2( 7844.3, 2187 )
-
-[node name="Enemy" parent="." instance=ExtResource( 4 )]
-position = Vector2( 8912.2, 2063.67 )
-
-[node name="Enemy2" parent="." instance=ExtResource( 4 )]
-position = Vector2( 9207.98, 2024.47 )
-
-[node name="Enemy3" parent="." instance=ExtResource( 4 )]
-position = Vector2( 8538.02, 1753.64 )
-
-[node name="Enemy4" parent="." instance=ExtResource( 4 )]
-position = Vector2( 8883.69, 1750.07 )
+position = Vector2( 6849, 1464.73 )
 
 [node name="GameCamera2D" parent="." instance=ExtResource( 8 )]
 current = true
 script = ExtResource( 7 )
+
+[node name="Enemies" type="Node" parent="."]
+
+[node name="Enemy" parent="Enemies" instance=ExtResource( 4 )]
+position = Vector2( 8912.2, 2063.67 )
+
+[node name="Enemy2" parent="Enemies" instance=ExtResource( 4 )]
+position = Vector2( 9207.98, 2024.47 )
+
+[node name="Enemy3" parent="Enemies" instance=ExtResource( 4 )]
+position = Vector2( 8538.02, 1753.64 )
+
+[node name="Enemy4" parent="Enemies" instance=ExtResource( 4 )]
+position = Vector2( 8883.69, 1750.07 )
+
+[node name="Enemy5" parent="Enemies" instance=ExtResource( 4 )]
+position = Vector2( 9251.23, 1334.76 )
+
+[node name="Enemy6" parent="Enemies" instance=ExtResource( 4 )]
+position = Vector2( 9547.01, 1295.56 )
+
+[node name="Enemy7" parent="Enemies" instance=ExtResource( 4 )]
+position = Vector2( 8877.05, 1024.73 )
+
+[node name="Enemy8" parent="Enemies" instance=ExtResource( 4 )]
+position = Vector2( 9222.72, 1021.16 )
+
+[node name="Enemy9" parent="Enemies" instance=ExtResource( 4 )]
+position = Vector2( 8331.61, 1233.05 )
+
+[node name="Enemy10" parent="Enemies" instance=ExtResource( 4 )]
+position = Vector2( 8627.39, 1193.85 )
+
+[node name="Enemy11" parent="Enemies" instance=ExtResource( 4 )]
+position = Vector2( 7957.43, 923.023 )
+
+[node name="Enemy12" parent="Enemies" instance=ExtResource( 4 )]
+position = Vector2( 8303.11, 919.452 )
 
 [node name="WorldObjectNodes" type="Node2D" parent="."]
 
 [node name="WeaponPickups" type="Node2D" parent="WorldObjectNodes"]
 
 [node name="NewWeaponPickup" parent="WorldObjectNodes/WeaponPickups" instance=ExtResource( 1 )]
-position = Vector2( 6518.92, 1158.46 )
+position = Vector2( 6752.27, 1179.1 )
 
 [node name="NewWeaponPickup2" parent="WorldObjectNodes/WeaponPickups" instance=ExtResource( 1 )]
-position = Vector2( 7082.28, 1098.53 )
+position = Vector2( 7088.63, 1200.12 )
 weapon_style_index = 1
 
 [node name="NewWeaponPickup3" parent="WorldObjectNodes/WeaponPickups" instance=ExtResource( 1 )]
-position = Vector2( 6635.78, 936.715 )
+position = Vector2( 6554.82, 1347.85 )
 weapon_style_index = 2
 
 [node name="NewWeaponPickup4" parent="WorldObjectNodes/WeaponPickups" instance=ExtResource( 1 )]
-position = Vector2( 7444.15, 1324.2 )
+position = Vector2( 6544.09, 1594.06 )
 weapon_style_index = 6
 
 [node name="NewWeaponPickup5" parent="WorldObjectNodes/WeaponPickups" instance=ExtResource( 1 )]
-position = Vector2( 7282.84, 1468.34 )
+position = Vector2( 6779.63, 1812.81 )
 weapon_style_index = 4
 
 [node name="NewWeaponPickup6" parent="WorldObjectNodes/WeaponPickups" instance=ExtResource( 1 )]
-position = Vector2( 7083.05, 1687.98 )
+position = Vector2( 7130.67, 1780.05 )
 weapon_style_index = 5
-
-[node name="NewWeaponPickup7" parent="WorldObjectNodes/WeaponPickups" instance=ExtResource( 1 )]
-position = Vector2( 7245.82, 1249.09 )
-weapon_style_index = 7
 
 [node name="InvisibleBlocking" type="Node2D" parent="WorldObjectNodes"]
 
@@ -238,32 +260,20 @@ can_sleep = false
 [node name="Environment" type="Node2D" parent="WorldObjectNodes"]
 
 [node name="LeafSpriteController" parent="WorldObjectNodes/Environment" instance=ExtResource( 5 )]
-position = Vector2( 203.417, 194.941 )
-
-[node name="LeafSpriteController2" parent="WorldObjectNodes/Environment" instance=ExtResource( 5 )]
-position = Vector2( 152.563, 1305.26 )
-
-[node name="LeafSpriteController3" parent="WorldObjectNodes/Environment" instance=ExtResource( 5 )]
-position = Vector2( 3513.18, 559.396 )
+position = Vector2( -300.888, 139.849 )
 
 [node name="LeafSpriteController4" parent="WorldObjectNodes/Environment" instance=ExtResource( 5 )]
-position = Vector2( 3042.78, 3161.44 )
-
-[node name="LeafSpriteController5" parent="WorldObjectNodes/Environment" instance=ExtResource( 5 )]
-position = Vector2( 5708.39, 3233.48 )
+position = Vector2( 3092.9, 2792.97 )
 
 [node name="LeafSpriteController6" parent="WorldObjectNodes/Environment" instance=ExtResource( 5 )]
-position = Vector2( 5945.71, 457.687 )
-
-[node name="LeafSpriteController7" parent="WorldObjectNodes/Environment" instance=ExtResource( 5 )]
-position = Vector2( 7979.87, 466.163 )
+position = Vector2( 5776.12, 392.84 )
 
 [node name="LightingPatch" type="ColorRect" parent="WorldObjectNodes"]
 modulate = Color( 1, 1, 1, 0.0588235 )
-margin_left = 8219.98
-margin_top = 1758.01
-margin_right = 8374.98
-margin_bottom = 1913.01
+margin_left = 6365.38
+margin_top = 881.105
+margin_right = 9865.38
+margin_bottom = 2381.1
 __meta__ = {
 "_edit_use_anchors_": false
 }
