@@ -89,6 +89,7 @@ offset = Vector2( 4, 5 )
 [node name="UICanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="PlayerHUD" parent="UICanvasLayer" instance=ExtResource( 9 )]
+visible = false
 [connection signal="damaged" from="." to="." method="_on_Player_damaged"]
 [connection signal="updated_cooldown" from="AbilityHolder/WeaponAbility" to="." method="_on_WeaponAbility_updated_cooldown"]
 [connection signal="updated_cooldown" from="AbilityHolder/ActiveAbility1" to="." method="_on_ActiveAbility1_updated_cooldown"]

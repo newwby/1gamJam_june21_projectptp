@@ -73,14 +73,15 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	# check for player key input
-	get_attack_input()
-	get_ability_input()
-	# handle per tick functions
-	_process_orbit_handler_rotate(delta)
-	_process_rotate_targeting_sprite(delta)
-	_process_rotate_sprite_eyes(delta)
-	_process_tween_speed(delta)
+	if is_active:
+		# check for player key input
+		get_attack_input()
+		get_ability_input()
+		# handle per tick functions
+		_process_orbit_handler_rotate(delta)
+		_process_rotate_targeting_sprite(delta)
+		_process_rotate_sprite_eyes(delta)
+		_process_tween_speed(delta)
 
 # for orbital and radar projectiles
 func _process_orbit_handler_rotate(_dt):
@@ -119,9 +120,10 @@ func _process_rotate_sprite_eyes(_dt):
 
 # player class override for handling movement, with key input
 func process_handle_movement(_dt):
-	velocity = Vector2(0,0)
-	velocity = get_movement_input() * movement_speed
-	var _collided_with = move_and_slide(velocity)
+	if is_active:
+		velocity = Vector2(0,0)
+		velocity = get_movement_input() * movement_speed
+		var _collided_with = move_and_slide(velocity)
 
 
 # control the speed of the animation based on whether the player is moving
@@ -202,25 +204,27 @@ func get_movement_input():
 # when fire button is released we are allowed to store a new firing velocity
 # hold button to fire
 func get_attack_input():
-	if Input.is_action_pressed("fire_weapon"):
-		
-		if GlobalDebug.log_projectile_spawn_steps: ("get_attack_input_Input.is_action_pressed(fire_weapon):")
-		current_mouse_target = -(self.position - get_global_mouse_position())
-		if not is_firing:
-			is_firing = true
-			firing_target = current_mouse_target
-		weapon_ability_node.attempt_ability()
-	elif not Input.is_action_pressed("fire_weapon"):
-		if is_firing:
-			is_firing = false
+	if is_active:
+		if Input.is_action_pressed("fire_weapon"):
+			
+			if GlobalDebug.log_projectile_spawn_steps: ("get_attack_input_Input.is_action_pressed(fire_weapon):")
+			current_mouse_target = -(self.position - get_global_mouse_position())
+			if not is_firing:
+				is_firing = true
+				firing_target = current_mouse_target
+			weapon_ability_node.attempt_ability()
+		elif not Input.is_action_pressed("fire_weapon"):
+			if is_firing:
+				is_firing = false
 
 
 # active ability calls
 func get_ability_input():
-	if Input.is_action_pressed("power_item_1"):
-		active_ability_node_1.attempt_ability()
-	if Input.is_action_pressed("power_item_2"):
-		active_ability_node_2.attempt_ability()
+	if is_active:
+		if Input.is_action_pressed("power_item_1"):
+			active_ability_node_1.attempt_ability()
+		if Input.is_action_pressed("power_item_2"):
+			active_ability_node_2.attempt_ability()
 
 
 ###############################################################################
@@ -333,3 +337,8 @@ func update_life_hearts():
 
 func player_died():
 	self.queue_free()
+
+
+func _on_GameEnvironment_game_started():
+	player_HUD.is_time_passing = true
+#	player_HUD._on_GameTimer_Seconds_timeout()

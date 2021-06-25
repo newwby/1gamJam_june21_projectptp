@@ -4,6 +4,8 @@ extends KinematicBody2D
 
 signal damaged(hp_damage_taken)
 
+export var is_active = true
+
 # this is the movement rate per tick of the actor
 var movement_speed = 400
 # this is the actor's current velocity

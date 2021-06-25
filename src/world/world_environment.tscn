@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://src/entities/pickups/new_weapon_collect.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/actors/player/player_controller.tscn" type="PackedScene" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://src/interface/GameCamera2D.gd" type="Script" id=7]
 [ext_resource path="res://src/interface/GameCamera2D.tscn" type="PackedScene" id=8]
 [ext_resource path="res://src/technical/blocking_body.tscn" type="PackedScene" id=9]
+[ext_resource path="res://art/splash_screen.png" type="Texture" id=10]
 
 [node name="GameEnvironment" type="Node2D"]
 script = ExtResource( 3 )
@@ -16,49 +17,62 @@ script = ExtResource( 3 )
 [node name="TileMap" parent="." instance=ExtResource( 6 )]
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
+visible = false
 position = Vector2( 6849, 1464.73 )
+is_active = false
 
 [node name="GameCamera2D" parent="." instance=ExtResource( 8 )]
-current = true
 script = ExtResource( 7 )
 
 [node name="Enemies" type="Node" parent="."]
 
 [node name="Enemy" parent="Enemies" instance=ExtResource( 4 )]
 position = Vector2( 8912.2, 2063.67 )
+is_active = false
 
 [node name="Enemy2" parent="Enemies" instance=ExtResource( 4 )]
 position = Vector2( 9207.98, 2024.47 )
+is_active = false
 
 [node name="Enemy3" parent="Enemies" instance=ExtResource( 4 )]
 position = Vector2( 8538.02, 1753.64 )
+is_active = false
 
 [node name="Enemy4" parent="Enemies" instance=ExtResource( 4 )]
 position = Vector2( 8883.69, 1750.07 )
+is_active = false
 
 [node name="Enemy5" parent="Enemies" instance=ExtResource( 4 )]
 position = Vector2( 9251.23, 1334.76 )
+is_active = false
 
 [node name="Enemy6" parent="Enemies" instance=ExtResource( 4 )]
 position = Vector2( 9547.01, 1295.56 )
+is_active = false
 
 [node name="Enemy7" parent="Enemies" instance=ExtResource( 4 )]
 position = Vector2( 8877.05, 1024.73 )
+is_active = false
 
 [node name="Enemy8" parent="Enemies" instance=ExtResource( 4 )]
 position = Vector2( 9222.72, 1021.16 )
+is_active = false
 
 [node name="Enemy9" parent="Enemies" instance=ExtResource( 4 )]
 position = Vector2( 8331.61, 1233.05 )
+is_active = false
 
 [node name="Enemy10" parent="Enemies" instance=ExtResource( 4 )]
 position = Vector2( 8627.39, 1193.85 )
+is_active = false
 
 [node name="Enemy11" parent="Enemies" instance=ExtResource( 4 )]
 position = Vector2( 7957.43, 923.023 )
+is_active = false
 
 [node name="Enemy12" parent="Enemies" instance=ExtResource( 4 )]
 position = Vector2( 8303.11, 919.452 )
+is_active = false
 
 [node name="WorldObjectNodes" type="Node2D" parent="."]
 
@@ -277,3 +291,44 @@ margin_bottom = 2381.1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="TempFade" type="Node2D" parent="."]
+position = Vector2( 2590.4, -1894.92 )
+z_index = 4096
+
+[node name="FadeBlkBkg" type="ColorRect" parent="TempFade"]
+margin_left = -4313.97
+margin_top = -4596.19
+margin_right = 10686.0
+margin_bottom = 10403.8
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FadeInTween" type="Tween" parent="TempFade"]
+
+[node name="StartTimer" type="Timer" parent="TempFade"]
+wait_time = 3.0
+one_shot = true
+
+[node name="OpeningCamera" type="Camera2D" parent="TempFade"]
+position = Vector2( -1270.95, -464.436 )
+current = true
+
+[node name="OpeningCanvasLayer" type="CanvasLayer" parent="TempFade/OpeningCamera"]
+follow_viewport_enable = true
+
+[node name="GameSplashSprite" type="Sprite" parent="TempFade/OpeningCamera/OpeningCanvasLayer"]
+position = Vector2( 1334.03, -2361.19 )
+scale = Vector2( 1.05, 1 )
+texture = ExtResource( 10 )
+
+[node name="OpeningLogoTween" type="Tween" parent="TempFade/OpeningCamera/OpeningCanvasLayer"]
+
+[node name="BackgroundBGM" type="AudioStreamPlayer" parent="."]
+[connection signal="game_started" from="." to="Player" method="_on_GameEnvironment_game_started"]
+[connection signal="tween_all_completed" from="TempFade/FadeInTween" to="." method="_on_FadeInTween_tween_all_completed"]
+[connection signal="tween_completed" from="TempFade/FadeInTween" to="." method="_on_FadeInTween_tween_completed"]
+[connection signal="timeout" from="TempFade/StartTimer" to="." method="_on_StartTimer_timeout"]
+[connection signal="tween_all_completed" from="TempFade/OpeningCamera/OpeningCanvasLayer/OpeningLogoTween" to="." method="_on_OpeningLogoTween_tween_all_completed"]

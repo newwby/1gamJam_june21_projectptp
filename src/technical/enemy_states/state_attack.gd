@@ -97,3 +97,4 @@ func perform_attack(target_pos, weapon_node):
 		enemy_target_line.visible = false
 		# fire
 		weapon_node.attempt_ability()
+		enemy_parent_node.get_shot_sound_and_play()

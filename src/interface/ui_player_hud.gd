@@ -16,7 +16,7 @@ enum GameDifficulty{
 	HARD
 }
 
-var is_time_passing = true
+var is_time_passing = false
 
 var chosen_difficulty = GameDifficulty.NORMAL
 

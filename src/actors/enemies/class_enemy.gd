@@ -6,8 +6,6 @@ const ENEMY_TYPE_BASE_MOVEMENT_SPEED = 150
 
 export var enemy_life = 35
 
-var is_active = true
-
 # TODO replace weapon ability call with aiming_target var
 # this is a fake variable to make weapon node work with enemy calss
 var current_mouse_target
@@ -41,6 +39,12 @@ onready var damaged_recently_timer = $Lifebar/LifebarTimer
 
 onready var offscreen_timer = $OffscreenTimer
 onready var aggression_timer = $AggressionTimer
+
+onready var shot_audio1 = $EnemyShots/Shot1
+onready var shot_audio2 = $EnemyShots/Shot2
+onready var shot_audio3 = $EnemyShots/Shot3
+onready var shot_audio4 = $EnemyShots/Shot4
+onready var shot_audio5 = $EnemyShots/Shot5
 
 # stat PERCEPTION --
 # stat PERCEPTION --
@@ -84,16 +88,19 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-#	_process_check_state()
-#	_process_call_state_behaviour(delta)
-	move_and_slide(velocity.normalized() * movement_speed)
-#	detection_scan.player
-	if state_manager.current_state != null:
-		$DebugStateLabel.text = str(state_manager.current_state)
 	if velocity != Vector2.ZERO:
 		squish_tween.playback_speed = 2.0
 	else:
 		squish_tween.playback_speed = 0.5
+	if is_active:
+	#	_process_check_state()
+	#	_process_call_state_behaviour(delta)
+		move_and_slide(velocity.normalized() * movement_speed)
+	#	detection_scan.player
+#		if state_manager.current_state != null:
+#			$DebugStateLabel.text = str(state_manager.current_state)
+	else:
+		state_manager.set_new_state(StateManager.State.IDLE)
 
 ###############################################################################
 
@@ -211,7 +218,7 @@ func move_toward_given_position(self_position, target_position):
 
 func _on_DetectionHandler_body_changed_detection_radius(body, is_entering_radius, range_group):
 #	print(body, is_entering_radius, range_group)
-	if body is Player\
+	if is_active and body is Player\
 	 and range_group == GlobalVariables.RangeGroup.NEAR:
 		if is_entering_radius:
 #			state_manager
@@ -299,3 +306,14 @@ func enemy_died():
 
 func _on_LifebarTimer_timeout():
 	debug_lifebar.visible = false
+
+
+func get_shot_sound_and_play():
+	var audio_array_shot = [\
+	shot_audio1, shot_audio2, shot_audio3, shot_audio4, shot_audio5]
+	var upper_limit = audio_array_shot.size()
+	var random_sound = GlobalFuncs.ReturnRandomRange(1, upper_limit)
+	print(audio_array_shot)
+	var chosen_sound = audio_array_shot[random_sound]
+	print(chosen_sound)
+	chosen_sound.play()
