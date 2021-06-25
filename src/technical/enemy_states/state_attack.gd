@@ -74,7 +74,7 @@ func state_action():
 
 
 func perform_attack(target_pos, weapon_node):
-	if attack_delay.is_stopped():
+	if attack_delay.is_stopped() and enemy_parent_node.is_active:
 		# start new delay timer
 		attack_delay.start()
 		# set line

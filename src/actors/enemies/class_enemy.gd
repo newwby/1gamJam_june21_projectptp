@@ -2,6 +2,8 @@
 class_name Enemy
 extends Actor
 
+signal enemy_defeated
+
 const ENEMY_TYPE_BASE_MOVEMENT_SPEED = 150
 
 export var enemy_life = 35
@@ -28,6 +30,8 @@ var lifebar_visibility_wait_time = 2.0
 var offscreen_activity_time = 2.0
 var aggression_timer_if_damaged = 5.0
 
+onready var enemy_hitbox = $CollisionShape2D
+
 onready var enemy_sprite = $SpriteHolder/TestSprite
 onready var target_line = $AbilityHolder/WeaponAbility/TargetLine
 onready var squish_tween = $SpriteHolder/TestSprite/SquishingTween
@@ -45,6 +49,13 @@ onready var shot_audio2 = $EnemyShots/Shot2
 onready var shot_audio3 = $EnemyShots/Shot3
 onready var shot_audio4 = $EnemyShots/Shot4
 onready var shot_audio5 = $EnemyShots/Shot5
+
+onready var damaged_audio1 = $EnemyOtherAudio/Damaged1
+onready var damaged_audio2 = $EnemyOtherAudio/Damaged2
+onready var damaged_audio3 = $EnemyOtherAudio/Damaged3
+
+onready var death_particles = $DeathEffect
+onready var death_timer = $DeathEffect/DeathTimer
 
 # stat PERCEPTION --
 # stat PERCEPTION --
@@ -85,6 +96,7 @@ func _ready():
 	setup_lifebar()
 	set_behaviour_timers()
 #	set_initial_state(State.IDLE)
+	set_parent_spawn_handler()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -132,6 +144,14 @@ func set_enemy_stats():
 
 func set_enemy_weapon():
 	var base_weapon
+
+
+func set_parent_spawn_handler():
+	var myParent = get_parent()
+	if myParent != null:
+		yield(myParent, "ready")
+		if myParent is WaveSpawnHandler:
+			connect("enemy_defeated", myParent, "check_enemy_count")
 
 
 ###############################################################################
@@ -286,6 +306,7 @@ func _on_Enemy_damaged(damage_taken, damager):
 #			state_manager.set_new_state(StateManager.State.HUNTING)
 #			detection_scan.current_target = damager
 		detection_scan._on_Range_Near_body_entered(damager)
+		get_damaged_sound_and_play()
 		update_lifebar()
 
 func setup_lifebar():
@@ -301,13 +322,24 @@ func update_lifebar():
 		enemy_died()
 
 func enemy_died():
+	is_active = false
+	enemy_hitbox.disabled = true
+	# todo this should be in globalvar not globalref
+	set_collision_layer_bit(GlobalReferences.CollisionLayers.ENEMY_BODY, false)
+	detection_scan.disable_all()
 	debug_lifebar.visible = false
-	queue_free()
+	enemy_sprite.visible = false
+	death_particles.emitting = true
+	get_damaged_sound_and_play()
+	death_timer.start()
 
 func _on_LifebarTimer_timeout():
 	debug_lifebar.visible = false
 
-
+# TODO make audio controller for handling multiple audio nodes and
+# audio resources, controlling subtitles, playing and stopping,
+# selecting random sounds etc
+# espesh combine this function with next copypasta function
 func get_shot_sound_and_play():
 	var audio_array_shot = [\
 	shot_audio1, shot_audio2, shot_audio3, shot_audio4, shot_audio5]
@@ -317,3 +349,16 @@ func get_shot_sound_and_play():
 	var chosen_sound = audio_array_shot[random_sound]
 	print(chosen_sound)
 	chosen_sound.play()
+
+
+func get_damaged_sound_and_play():
+	var audio_array_damaged = [\
+	damaged_audio1, damaged_audio2, damaged_audio3]
+	var upper_limit = audio_array_damaged.size()
+	var random_sound = GlobalFuncs.ReturnRandomRange(1, upper_limit)
+	var chosen_sound = audio_array_damaged[random_sound]
+	chosen_sound.play()
+
+
+func _on_DeathTimer_timeout():
+	queue_free()

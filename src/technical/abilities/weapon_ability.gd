@@ -2,6 +2,8 @@
 class_name WeaponAbility
 extends BaseAbility
 
+signal weapon_fired
+
 # this is the temporary faux-json for data storage on weapon behaviours
 var weapon = preload("res://src/technical/abilities/json_weapon_styles.gd")
 
@@ -453,7 +455,6 @@ func end_spawn_pattern():
 	if GlobalDebug.log_projectile_spawn_steps: ("end_spawn_pattern")
 	minimum_cooldown_timer.start()
 
-
 ###############################################################################
 
 
@@ -530,54 +531,64 @@ func instance_new_projectile():
 func spawn_new_projectile(spawn_position, spawn_velocity, rotation_alteration):
 	if GlobalDebug.log_projectile_spawn_steps: ("spawn_new_projectile")
 
+
 	# call the function to instance a new projectile correctly
 	# it applies all the related weapon style data dict values to
 	# the newly created projectile
 	var new_projectile = instance_new_projectile()
 
-#	# TODO move this to after added to tree
-#	# if spread has been applied, affix a sprite change
-	new_projectile.rotation_degrees = rotation_alteration*10
-	
-	# rotate projectile to look in direction it is heading
-	new_projectile.look_at(spawn_velocity)
-	# apply godot engine 90degree fix
-#	new_projectile.rotation_degrees += 90
-
-	new_projectile.position = spawn_position
-	new_projectile.velocity = spawn_velocity
-#
-#	TODO - having problems with projectile rotation toward target, need
-#	to fix that if I ever want to (re)introduce pointed projectiles
-#	- for now just going to use circular projectiles
-#
-#	#new_projectile.rotation_degrees = 90
-##	var offset = owner.position - owner.firing_target
-#	var offset = owner.firing_target - owner.position
-#	new_projectile.rotation -= offset.angle();
-	
-	var get_move_style = new_projectile.projectile_movement_behaviour
-	if get_move_style == GlobalVariables.ProjectileMovement.DIRECT:
-		# add projectile to the root viewport for now # TODO replace this
-		var projectile_parent = get_tree().get_root()
-		projectile_parent.add_child(new_projectile)
-	elif get_move_style == GlobalVariables.ProjectileMovement.ORBIT:
-		
-		var projectile_parent = new_projectile.projectile_owner.orbit_handler_node
-		var count_children = projectile_parent.get_child_count()
-		var new_parent = Node2D.new()
-		var spawn_spacing = weapon.ORBIT_PATTERN_ROTATION_SPACING
-		new_parent.rotation_degrees = spawn_spacing * count_children
-		new_parent.add_child(new_projectile)
-		projectile_parent.add_child(new_parent)
-		# now defunct script attachment to the node2d for cleanup
-		# cleanup is now a function of weapon node
-#		new_parent.set_script(node2d_deletion_script)
-		
-	elif get_move_style == GlobalVariables.ProjectileMovement.RADAR:
-		
-		var projectile_parent = new_projectile.projectile_owner.orbit_handler_node
-		projectile_parent.add_child(new_projectile)
+	# catch
+	if new_projectile.projectile_owner != null:
+		# should be
+		if new_projectile.projectile_owner is Actor:
+			# don't fire if dead
+			if new_projectile.projectile_owner.is_active:
+			#	# TODO move this to after added to tree
+			#	# if spread has been applied, affix a sprite change
+				new_projectile.rotation_degrees = rotation_alteration*10
+				
+				# rotate projectile to look in direction it is heading
+				new_projectile.look_at(spawn_velocity)
+				# apply godot engine 90degree fix
+			#	new_projectile.rotation_degrees += 90
+			
+				new_projectile.position = spawn_position
+				new_projectile.velocity = spawn_velocity
+			#
+			#	TODO - having problems with projectile rotation toward target, need
+			#	to fix that if I ever want to (re)introduce pointed projectiles
+			#	- for now just going to use circular projectiles
+			#
+			#	#new_projectile.rotation_degrees = 90
+			##	var offset = owner.position - owner.firing_target
+			#	var offset = owner.firing_target - owner.position
+			#	new_projectile.rotation -= offset.angle();
+				
+				var get_move_style = new_projectile.projectile_movement_behaviour
+				if get_move_style == GlobalVariables.ProjectileMovement.DIRECT:
+					# add projectile to the root viewport for now # TODO replace this
+					var projectile_parent = get_tree().get_root()
+					projectile_parent.add_child(new_projectile)
+				elif get_move_style == GlobalVariables.ProjectileMovement.ORBIT:
+					
+					var projectile_parent = new_projectile.projectile_owner.orbit_handler_node
+					var count_children = projectile_parent.get_child_count()
+					var new_parent = Node2D.new()
+					var spawn_spacing = weapon.ORBIT_PATTERN_ROTATION_SPACING
+					new_parent.rotation_degrees = spawn_spacing * count_children
+					new_parent.add_child(new_projectile)
+					projectile_parent.add_child(new_parent)
+					# now defunct script attachment to the node2d for cleanup
+					# cleanup is now a function of weapon node
+			#		new_parent.set_script(node2d_deletion_script)
+					
+				elif get_move_style == GlobalVariables.ProjectileMovement.RADAR:
+					
+					var projectile_parent = new_projectile.projectile_owner.orbit_handler_node
+					projectile_parent.add_child(new_projectile)
+					# TODO this should be connected to enemy
+					# or any actor via code
+				emit_signal("weapon_fired")
 
 
 ###############################################################################

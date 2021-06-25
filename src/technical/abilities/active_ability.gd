@@ -2,6 +2,8 @@
 class_name ActiveAbility
 extends BaseAbility
 
+signal activate_signal(ability_type)
+
 var current_ability_loadout
 
 # reference a string path held elsewhere (for simpler path changes)
@@ -142,6 +144,8 @@ func call_ability_blink():
 		blink_timer.start()
 		# wait until it is finished
 		yield(blink_timer, "timeout")
+		# sound
+		emit_signal("activate_signal", "blink")
 		# repeat loop until this hits condition
 		current_loop += 1
 	
@@ -183,6 +187,7 @@ func call_ability_time_slow():
 		if projectile.projectile_owner != self.owner:
 			time_slow_projectile_speed(projectile)
 	# TODO handle newly created things between start and expiry
+	emit_signal("activate_signal", "time_slow")
 
 
 ###############################################################################

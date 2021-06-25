@@ -60,6 +60,23 @@ onready var lifeheart_3_hp456 = $UICanvasLayer/PlayerHUD/MarginContainer/TopHUDB
 onready var lifeheart_4_hp678 = $UICanvasLayer/PlayerHUD/MarginContainer/TopHUDBar/TopRightHUD/HBox2/LifeBackground/HeartIcon4
 onready var lifeheart_5_hp8910 = $UICanvasLayer/PlayerHUD/MarginContainer/TopHUDBar/TopRightHUD/HBox2/LifeBackground/HeartIcon5
 
+onready var shot_audio1 = $AudioEffectsHolder/WeaponFireEffects/Shot1
+onready var shot_audio2 = $AudioEffectsHolder/WeaponFireEffects/Shot2
+onready var shot_audio3 = $AudioEffectsHolder/WeaponFireEffects/Shot3
+onready var shot_audio4 = $AudioEffectsHolder/WeaponFireEffects/Shot4
+onready var shot_audio5 = $AudioEffectsHolder/WeaponFireEffects/Shot5
+
+onready var damaged_audio1 = $AudioEffectsHolder/DamagedEffects/Damaged1
+onready var damaged_audio2 = $AudioEffectsHolder/DamagedEffects/Damaged2
+
+onready var blink_ability_audio1 = $AudioEffectsHolder/AbilityBlinkEffects/Blink1
+onready var blink_ability_audio2 = $AudioEffectsHolder/AbilityBlinkEffects/Blink2
+onready var blink_ability_audio3 = $AudioEffectsHolder/AbilityBlinkEffects/Blink3
+
+onready var time_slow_ability_audio1 = $AudioEffectsHolder/AbilityTimeSlowEffects/TimeSlow1
+onready var time_slow_ability_audio2 = $AudioEffectsHolder/AbilityTimeSlowEffects/TimeSlow2
+onready var time_slow_ability_audio3 = $AudioEffectsHolder/AbilityTimeSlowEffects/TimeSlow3
+
 ###############################################################################
 
 
@@ -212,6 +229,7 @@ func get_attack_input():
 			if not is_firing:
 				is_firing = true
 				firing_target = current_mouse_target
+			# TODO fix this placement
 			weapon_ability_node.attempt_ability()
 		elif not Input.is_action_pressed("fire_weapon"):
 			if is_firing:
@@ -275,11 +293,13 @@ func _on_ActiveAbility2_updated_cooldown(ability_node, ability_type, new_value, 
 
 
 func _on_Player_damaged(damage_taken, damager):
-	if damage_immunity_timer.is_stopped():
+	if damage_immunity_timer.is_stopped() and is_damageable_by_foes:
 		damage_immunity_timer.start_immunity()
 		var damage_taken_scaled = damage_taken/10
 		player_life -= damage_taken_scaled
+		get_damaged_sound_and_play()
 		update_life_hearts()
+
 
 func update_life_hearts():
 	#clear all
@@ -342,3 +362,54 @@ func player_died():
 func _on_GameEnvironment_game_started():
 	player_HUD.is_time_passing = true
 #	player_HUD._on_GameTimer_Seconds_timeout()
+
+
+func get_shot_sound_and_play():
+	var audio_array_shot = [\
+	shot_audio1, shot_audio2, shot_audio3, shot_audio4, shot_audio5]
+	var upper_limit = audio_array_shot.size()
+	var random_sound = GlobalFuncs.ReturnRandomRange(1, upper_limit)
+	print("player has ", audio_array_shot)
+	var chosen_sound = audio_array_shot[random_sound]
+	print("player has ", chosen_sound)
+	chosen_sound.play()
+
+
+func _on_WeaponAbility_weapon_fired():
+	get_shot_sound_and_play()
+
+# TODO make these all one func
+func get_damaged_sound_and_play():
+	var audio_array_damaged = [\
+	damaged_audio1, damaged_audio2]
+	var upper_limit = audio_array_damaged.size()
+	var random_sound = GlobalFuncs.ReturnRandomRange(1, upper_limit)
+	var chosen_sound = audio_array_damaged[random_sound]
+	chosen_sound.play()
+
+func get_blink_sound_and_play():
+	var audio_array_blink = [\
+	blink_ability_audio1, blink_ability_audio2, blink_ability_audio3]
+	var upper_limit = audio_array_blink.size()
+	var random_sound = GlobalFuncs.ReturnRandomRange(1, upper_limit)
+	var chosen_sound = audio_array_blink[random_sound]
+	print(chosen_sound)
+	chosen_sound.play()
+
+func get_time_slow_sound_and_play():
+	var audio_array_time_slow = [\
+	time_slow_ability_audio1, time_slow_ability_audio2, time_slow_ability_audio3]
+	var upper_limit = audio_array_time_slow.size()
+	var random_sound = GlobalFuncs.ReturnRandomRange(1, upper_limit)
+	var chosen_sound = audio_array_time_slow[random_sound]
+	chosen_sound.play()
+
+
+func _on_ActiveAbility1_activate_signal(ability_type):
+	if ability_type == "blink":
+		get_blink_sound_and_play()
+
+
+func _on_ActiveAbility2_activate_signal(ability_type):
+	if ability_type == "time_slow":
+		get_time_slow_sound_and_play()

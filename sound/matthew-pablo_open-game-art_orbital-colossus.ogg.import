@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/matthew-pablo_open-game-art_orbital-colossus.ogg-4d18b28abd810927673b5f24611a367e.oggstr"
+
+[deps]
+
+source_file="res://sound/matthew-pablo_open-game-art_orbital-colossus.ogg"
+dest_files=[ "res://.import/matthew-pablo_open-game-art_orbital-colossus.ogg-4d18b28abd810927673b5f24611a367e.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

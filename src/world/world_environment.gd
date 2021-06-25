@@ -71,6 +71,7 @@ func _on_OpeningLogoTween_tween_all_completed():
 	fade_max, fade_zero, tween_bkg_fade_in_dur,\
 	Tween.TRANS_LINEAR,Tween.EASE_IN_OUT)
 	
+	background_music.play()
 	fade_in.start()
 
 
@@ -83,5 +84,4 @@ func _on_FadeInTween_tween_completed(object, key):
 	var all_actors = get_tree().get_nodes_in_group("actors")
 	for actor_node in all_actors:
 		actor_node.is_active = true
-	background_music.play()
 	emit_signal("game_started")

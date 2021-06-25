@@ -119,6 +119,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/technical/enemy_states/state_searching.gd"
 }, {
+"base": "Node",
+"class": "WaveSpawnHandler",
+"language": "GDScript",
+"path": "res://src/world/EnemySpawnHandler.gd"
+}, {
 "base": "BaseAbility",
 "class": "WeaponAbility",
 "language": "GDScript",
@@ -147,6 +152,7 @@ _global_script_class_icons={
 "StateRoaming": "res://art/shrek_pup_eye_sprite.png",
 "StateScanning": "res://art/shrek_pup_eye_sprite.png",
 "StateSearching": "res://art/shrek_pup_eye_sprite.png",
+"WaveSpawnHandler": "",
 "WeaponAbility": ""
 }
 

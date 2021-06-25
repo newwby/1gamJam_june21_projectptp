@@ -201,7 +201,6 @@ func _on_Range_Far_body_exited(body):
 	remove_from_detection_group(GlobalVariables.RangeGroup.FAR, body)
 	add_to_detection_group(GlobalVariables.RangeGroup.DISTANT, body)
 
-
 # TODO
 # include code for an enemy damaged by a player automatically
 # adding that player to their distant detection radii if not already in it
@@ -345,3 +344,9 @@ func is_actor_in_range_group(target, range_group):
 	else:
 		if GlobalDebug.enemy_detection_func_logs: print("function [is_actor_in_range_group] exception")
 
+
+func disable_all():
+	collision_radius_melee.disabled = true
+	collision_radius_close.disabled = true
+	collision_radius_near.disabled = true
+	collision_radius_far.disabled = true
