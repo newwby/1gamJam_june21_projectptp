@@ -345,10 +345,11 @@ func get_shot_sound_and_play():
 	shot_audio1, shot_audio2, shot_audio3, shot_audio4, shot_audio5]
 	var upper_limit = audio_array_shot.size()
 	var random_sound = GlobalFuncs.ReturnRandomRange(1, upper_limit)
-	print(audio_array_shot)
+	
 	var chosen_sound = audio_array_shot[random_sound]
-	print(chosen_sound)
-	chosen_sound.play()
+	
+	if GlobalDebug.ENEMY_SE_ENABLED:
+		chosen_sound.play()
 
 
 func get_damaged_sound_and_play():
@@ -357,7 +358,9 @@ func get_damaged_sound_and_play():
 	var upper_limit = audio_array_damaged.size()
 	var random_sound = GlobalFuncs.ReturnRandomRange(1, upper_limit)
 	var chosen_sound = audio_array_damaged[random_sound]
-	chosen_sound.play()
+	
+	if GlobalDebug.ENEMY_SE_ENABLED:
+		chosen_sound.play()
 
 
 func _on_DeathTimer_timeout():

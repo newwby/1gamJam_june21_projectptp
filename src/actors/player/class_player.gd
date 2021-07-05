@@ -369,10 +369,11 @@ func get_shot_sound_and_play():
 	shot_audio1, shot_audio2, shot_audio3, shot_audio4, shot_audio5]
 	var upper_limit = audio_array_shot.size()
 	var random_sound = GlobalFuncs.ReturnRandomRange(1, upper_limit)
-	print("player has ", audio_array_shot)
+	
 	var chosen_sound = audio_array_shot[random_sound]
-	print("player has ", chosen_sound)
-	chosen_sound.play()
+	
+	if GlobalDebug.PLAYER_SE_ENABLED:
+		chosen_sound.play()
 
 
 func _on_WeaponAbility_weapon_fired():
@@ -385,7 +386,8 @@ func get_damaged_sound_and_play():
 	var upper_limit = audio_array_damaged.size()
 	var random_sound = GlobalFuncs.ReturnRandomRange(1, upper_limit)
 	var chosen_sound = audio_array_damaged[random_sound]
-	chosen_sound.play()
+	if GlobalDebug.PLAYER_SE_ENABLED:
+		chosen_sound.play()
 
 func get_blink_sound_and_play():
 	var audio_array_blink = [\
@@ -394,7 +396,8 @@ func get_blink_sound_and_play():
 	var random_sound = GlobalFuncs.ReturnRandomRange(1, upper_limit)
 	var chosen_sound = audio_array_blink[random_sound]
 	print(chosen_sound)
-	chosen_sound.play()
+	if GlobalDebug.PLAYER_SE_ENABLED:
+		chosen_sound.play()
 
 func get_time_slow_sound_and_play():
 	var audio_array_time_slow = [\
@@ -402,7 +405,8 @@ func get_time_slow_sound_and_play():
 	var upper_limit = audio_array_time_slow.size()
 	var random_sound = GlobalFuncs.ReturnRandomRange(1, upper_limit)
 	var chosen_sound = audio_array_time_slow[random_sound]
-	chosen_sound.play()
+	if GlobalDebug.PLAYER_SE_ENABLED:
+		chosen_sound.play()
 
 
 func _on_ActiveAbility1_activate_signal(ability_type):

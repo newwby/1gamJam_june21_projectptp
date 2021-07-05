@@ -71,7 +71,8 @@ func _on_OpeningLogoTween_tween_all_completed():
 	fade_max, fade_zero, tween_bkg_fade_in_dur,\
 	Tween.TRANS_LINEAR,Tween.EASE_IN_OUT)
 	
-	background_music.play()
+	if GlobalDebug.MUSIC_ENABLED:
+		background_music.play()
 	fade_in.start()
 
 
