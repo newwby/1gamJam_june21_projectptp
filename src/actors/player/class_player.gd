@@ -229,7 +229,7 @@ func get_attack_input():
 			if not is_firing:
 				is_firing = true
 				firing_target = current_mouse_target
-			# TODO fix this placement
+			# TODO UNKNOWN fix this placement (?) get_attack_input
 			weapon_ability_node.attempt_ability()
 		elif not Input.is_action_pressed("fire_weapon"):
 			if is_firing:
@@ -273,9 +273,6 @@ func handle_ability_cooldown_signal(ability_node, ability_type, new_value, new_c
 		ability_type, ability_enum_id, new_value, new_cooldown)
 
 
-# TODO clean this code
-
-
 func _on_WeaponAbility_updated_cooldown(ability_node, ability_type, new_value, new_cooldown):
 	if GlobalDebug.ability_cooldown_call_logs: print("signal from wep", ", ability_node=", ability_node, ", ability_type=", ability_type, ", new_value=", new_value, ", new_cooldown=", new_cooldown)
 	handle_ability_cooldown_signal(ability_node, ability_type, new_value, new_cooldown)
@@ -309,8 +306,8 @@ func update_life_hearts():
 	lifeheart_4_hp678.value = 0
 	lifeheart_5_hp8910.value = 0
 	
-	# this is a lazy way of doing this
-	# TODO make a better way
+	# this is a lazy way of doing this, make a better way
+	# TODO TASK rewrite player_life match in update_life_hearts()
 	match player_life:
 		0:
 			player_died()
@@ -379,7 +376,7 @@ func get_shot_sound_and_play():
 func _on_WeaponAbility_weapon_fired():
 	get_shot_sound_and_play()
 
-# TODO make these all one func
+# TODO TASK add globalfunc audioshuffler func
 func get_damaged_sound_and_play():
 	var audio_array_damaged = [\
 	damaged_audio1, damaged_audio2]

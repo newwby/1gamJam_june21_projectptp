@@ -11,7 +11,7 @@
 class_name StateManager, "res://art/shrek_pup_eye_sprite.png"
 extends Node2D
 
-# TODO conflict with class_state check_state signal, fix one or the other
+# TODO REVIEW reported conflict with class_state check_state signal
 signal check_state
 signal state_manager_active
 
@@ -50,8 +50,9 @@ var state_call_dict = {}
 # dict containing order in which to check states
 var state_priority_dict = {}
 
+# TODO REVIEW state machine logic, refactor? remove defunct variables
+# TODO TASK write unit tests for state machine logic before removing
 # left to its own devices the state machine will lag the game
-# (at least in this current iteration, TODO fix?)
 # limit how many times it can attempt to change per second
 var current_state_change_attempts_this_second
 var maximum_state_change_attempts_per_second
@@ -90,7 +91,7 @@ func _ready():
 func _process(delta):
 	if current_state == null:
 		# defunct and removed
-		# TODO fix laggy priority loop implementation
+# TODO OUT-OF-SCOPE todo review state priority register, don't call on process
 		# idea - state register that scans by priority for highest to execute
 		 # w/ action states that override
 		emit_signal("check_state")
@@ -241,7 +242,6 @@ func call_active_state_node_action():
 # if need to check for a state change, check here
 #func _on_check_state():
 	# this signal is disabled due to lag problems
-	# TODO fix and re-enable this
 	# is state node active and within acceptable check bounds
 	#
 #	print(current_state_change_attempts_this_second, maximum_state_change_attempts_per_second, "here")

@@ -201,10 +201,6 @@ func _on_Range_Far_body_exited(body):
 	remove_from_detection_group(GlobalVariables.RangeGroup.FAR, body)
 	add_to_detection_group(GlobalVariables.RangeGroup.DISTANT, body)
 
-# TODO
-# include code for an enemy damaged by a player automatically
-# adding that player to their distant detection radii if not already in it
-
 
 ###############################################################################
 
@@ -245,13 +241,6 @@ func remove_from_detection_group(range_group, body):
 		if body.is_in_group(full_range_string):
 			body.remove_from_group(full_range_string)
 #
-#func call_detection_group():
-##	# unfinished code for calling detection groups (TODO finish)
-##	var melee_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.MELEE]
-##	var close_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.CLOSE]
-##	var near_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.NEAR]
-##	var far_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.FAR]
-##	var distant_range_string = GlobalVariables.RangeGroup.keys()[GlobalVariables.RangeGroup.DISTANT]
 #
 #	var group_to_call = grouping_string # + pick any string above
 #	#get_tree().get_nodes_in_group(group_to_call)
@@ -259,8 +248,7 @@ func remove_from_detection_group(range_group, body):
 
 ###############################################################################
 
-# TODO review this code
-# identify all players in a range detection group
+# TODO REVIEW func get_players_in_range_group
 func get_players_in_range_group(range_group_to_scan):
 	var potential_targets = []
 	# scan all valid targets
@@ -300,7 +288,7 @@ func get_closest_in_group_of_targets(potential_targets):
 		return closest_target
 
 
-# TODO review this code
+# TODO REVIEW func get_nearest_player_in_range_group
 func get_nearest_player_in_range_group(range_group_to_scan):
 	
 	# set null variables
@@ -314,13 +302,6 @@ func get_nearest_player_in_range_group(range_group_to_scan):
 	
 	# return the closest target
 	return closest_target
-
-
-# TODO change to use call dict
-func get_closest_player_in_near_group():
-	var closest_player = get_nearest_player_in_range_group(get_tree().get_nodes_in_group(near_range_group))
-	if closest_player != null:
-		return closest_player
 
 
 # pass this function a GlobalVariables.RangeGroup constant or range group or 
@@ -345,8 +326,20 @@ func is_actor_in_range_group(target, range_group):
 		if GlobalDebug.enemy_detection_func_logs: print("function [is_actor_in_range_group] exception")
 
 
+# disable all collision radii
 func disable_all():
 	collision_radius_melee.disabled = true
 	collision_radius_close.disabled = true
 	collision_radius_near.disabled = true
 	collision_radius_far.disabled = true
+
+
+
+# defunct, removed
+#func get_closest_player_in_near_group():
+##	print("get closest")
+#	var near_group_to_pass = call_range_group(GlobalVariables.RangeGroup.NEAR)
+#	var closest_player = get_nearest_player_in_range_group(near_group_to_pass)
+##	var closest_player = get_nearest_player_in_range_group(get_tree().get_nodes_in_group(near_range_group))
+#	if closest_player != null:
+#		return closest_player

@@ -151,7 +151,7 @@ func update_ui_weapon_cooldown_graphic(enum_id):
 	# temporary needs fixing as this will break if anything below
 	# is changed even slightly
 	# very rough implementation
-	# TODO FIX THIS
+	# TODO TASK rewrite sprite_path lookup (&_greyscale lookup,  var by str ref)
 	match enum_id:
 		0:
 			sprite_path_prog = GlobalReferences.sprite_weapon_split_shot

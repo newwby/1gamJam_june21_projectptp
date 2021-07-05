@@ -64,32 +64,15 @@ onready var minimum_cooldown_timer = $MinimumShotCooldown
 ###############################################################################
 
 
-# TODO connect projectiles spawned by ability to owner of ability
-# signal for expiry initially, include others later
-
-# TODO set collision layers based on collision layers of spawner
-#	GlobalReferences.CollisionLayers.PLAYER_PROJECTILE
-#	GlobalReferences.CollisionLayers.ENEMY_PROJECTILE
-##		projectile.set_collision_layer_bit(index)
-
-# TODO - need to add these to projectile instances
-#		DataType.BASE_DAMAGE				: 12,
-##		DataType.PROJECTILE_FLIGHT_SPEED	: 250,
-##		DataType.PROJECTILE_SPRITE_TYPE	: ProjectileSprite.MAGICAL,
-##		DataType.PROJECTILE_SPRITE_ROTATE	: 0,
-##		DataType.PROJECTILE_PARTICLES		: ProjectileParticles.NONE,
-##		DataType.PROJECTILE_MOVE_PATTERN	: MovementBehaviour.DIRECT,
+# TODO TASK connect expiry signal from projectiles to proj owner
 #
-## TODO - need to add these to weapon ability nodes
+## TODO TASK - add logic for minimum fire range to foe from weapon style data
 ##		DataType.AI_MIN_USE_RANGE			: GlobalVariables.RangeGroup.CLOSE,
 ##		DataType.AI_MAX_USE_RANGE			: GlobalVariables.RangeGroup.FAR,
+# TODO OUT-OF-SCOPE add shot surge particle effects
 ##		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
+# TODO OUT-OF-SCOPE add alternate weapon shot sounds
 ##		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
-#
-## TODO - include this in spawn pattern logic
-##		DataType.PROJECTILE_SPAWN_DELAY	: 0,
-##		DataType.PROJECTILE_COUNT			: 1,
-##		DataType.PROJECTILE_SHOT_SPREAD	: 0.05,
 #
 ################################################################################
 #
@@ -137,6 +120,7 @@ func set_new_weapon(passed_weapon):
 func set_weapon_style(new_weapon_style):
 	# current_weapon_style should be set to the enum weapon.Style
 	# pulls from weapon.STYLE_DATA and populates ability data dict
+	# TODO TASK rewrite func set_weapon_style to pull weapon style not use switch
 	var ability_data
 	match new_weapon_style:
 		weapon.Style.SPLIT_SHOT :
@@ -154,9 +138,6 @@ func set_weapon_style(new_weapon_style):
 		
 		# debugging and tesitng only for player
 		# enemy and turret weapon styles
-		
-		# todo fix set_weapon_style
-		# it should be modular/automatic, not a match statement
 		
 		weapon.Style.BASIC_SHOT :
 			ability_data = weapon.STYLE_DATA[weapon.Style.BASIC_SHOT]
@@ -247,9 +228,11 @@ func activate_ability():
 	call_projectile_spawn_pattern_function()
 
 
+# TODO OUT-OF-SCOPE rewrite orbital handling logic, this is messy af
+# see below
 # okay this function works but it interferes with spawning projectiles
-# so TODO make this only run if no projectile has been spawned recently
-# TODO orbital handler is a local onready var when it should be parented, fix
+# so make this only run if no projectile has been spawned recently
+# orbital handler is a local onready var when it should be parented, fix
 func cleanup_orbital_node_holders():
 	# as part of its function the orbital weapon pattern creates node2d
 	# technical parents for the purposes of rotation around a central
@@ -305,7 +288,6 @@ func call_projectile_spawn_pattern_function():
 
 func call_spawn_pattern_spread():
 	if GlobalDebug.log_projectile_spawn_steps: ("call_spawn_pattern_spread")
-	# TODO implement handling for 
 #
 #	# get the spread pattern rotation applied to velocity
 	var projectile_spread_increment = (weapon.SPREAD_PATTERN_WIDTH)
@@ -323,13 +305,13 @@ func call_spawn_pattern_spread():
 	var adjusted_velocity
 	# this is to store the total rotation applied to projectile velocity
 	var spread_adjustment
-	# TODO rename this variable to be more representative
+	# 'proj_spacing_adjustment' is renamed from 'additonal_spread'
 	# this variable is basically an additive to spawn_loop to get an
 	# even distance between projectiles, it varies whether the
 	# projectile count is odd or even
-	var additional_spread
+	var proj_spacing_adjustment
 	
-	# TODO account for projecitle size in spread
+	# TODO OUT-OF-SCOPE account for projecitle size in spread
 	
 	var projectile_count_even = projectile_count % 2 == 0
 	
@@ -353,11 +335,11 @@ func call_spawn_pattern_spread():
 	# and set the additional spread to +1
 	if not projectile_count_even:
 		spawn_new_projectile(get_spawn_origin, given_velocity, 0)
-		additional_spread = 1.0
+		proj_spacing_adjustment = 1.0
 	# else additional spread (for even # of projectiles) is +0.5
 	else:
-		additional_spread = 0.5
-	if GlobalDebug.projectile_spread_pattern: print("additional spread value is ", additional_spread)
+		proj_spacing_adjustment = 0.5
+	if GlobalDebug.projectile_spread_pattern: print("additional spread value is ", proj_spacing_adjustment)
 	if GlobalDebug.projectile_spread_pattern: print("projectile count is ", projectile_count)
 	if GlobalDebug.projectile_spread_pattern: print("data type projectile count is ", current_weapon_style[weapon.DataType.PROJECTILE_COUNT])
 	# then we loop to spawn any flanking projectiles
@@ -380,7 +362,7 @@ func call_spawn_pattern_spread():
 			# the second will negatively rotate the spread by the increment total			
 			# spread gets wider each loop
 			spread_adjustment =\
-			projectile_spread_increment * (spawn_loop+additional_spread)
+			projectile_spread_increment * (spawn_loop+proj_spacing_adjustment)
 			# apply random variance to the fixed spread
 			spread_adjustment += return_shot_rotation_from_variance()
 			
@@ -501,7 +483,7 @@ func instance_new_projectile():
 	new_projectile.rotation_per_tick =\
 	 current_weapon_style[weapon.DataType.PROJECTILE_SPRITE_ROTATE]
 	
-	# TODO change to be a sprite scaling function
+	# TODO OUT-OF-SCOPE change set size to be a sprite scaling function
 	
 	# this property is called on projectile to scale projectile size
 	new_projectile.projectile_set_size =\
@@ -515,7 +497,7 @@ func instance_new_projectile():
 	 current_weapon_style[weapon.DataType.PROJECTILE_SPRITE_COLOUR]
 	#
 	# this establishes how the projectile moves once spawned
-	# TODO movement behaviours could become projectile subclasses
+	# TODO OUT-OF-SCOPE different proj behaviours as base_proj child classes
 	new_projectile.projectile_movement_behaviour =\
 	 current_weapon_style[weapon.DataType.PROJECTILE_MOVE_PATTERN]
 
@@ -543,7 +525,8 @@ func spawn_new_projectile(spawn_position, spawn_velocity, rotation_alteration):
 		if new_projectile.projectile_owner is Actor:
 			# don't fire if dead
 			if new_projectile.projectile_owner.is_active:
-			#	# TODO move this to after added to tree
+			# TODO TASK move this logic to after projecitle is added to tree
+			# (prevents get_global_transform !is_inside_tree() compiler error)
 			#	# if spread has been applied, affix a sprite change
 				new_projectile.rotation_degrees = rotation_alteration*10
 				
@@ -555,7 +538,8 @@ func spawn_new_projectile(spawn_position, spawn_velocity, rotation_alteration):
 				new_projectile.position = spawn_position
 				new_projectile.velocity = spawn_velocity
 			#
-			#	TODO - having problems with projectile rotation toward target, need
+			#	TODO OUT-OF-SCOPE REVIEW issues with proj rotation toward target
+			#  i.e. having problems with projectile rotation toward target, need
 			#	to fix that if I ever want to (re)introduce pointed projectiles
 			#	- for now just going to use circular projectiles
 			#
@@ -566,7 +550,9 @@ func spawn_new_projectile(spawn_position, spawn_velocity, rotation_alteration):
 				
 				var get_move_style = new_projectile.projectile_movement_behaviour
 				if get_move_style == GlobalVariables.ProjectileMovement.DIRECT:
-					# add projectile to the root viewport for now # TODO replace this
+					# TODO REVIEW projectile default parent (root viewport)
+					# is this an issue?
+					# adding projectile to the root viewport for now
 					var projectile_parent = get_tree().get_root()
 					projectile_parent.add_child(new_projectile)
 				elif get_move_style == GlobalVariables.ProjectileMovement.ORBIT:
@@ -586,8 +572,7 @@ func spawn_new_projectile(spawn_position, spawn_velocity, rotation_alteration):
 					
 					var projectile_parent = new_projectile.projectile_owner.orbit_handler_node
 					projectile_parent.add_child(new_projectile)
-					# TODO this should be connected to enemy
-					# or any actor via code
+					# TODO TASK connect expiry signal from proj to proj owner
 				emit_signal("weapon_fired")
 
 
@@ -624,13 +609,14 @@ func return_shot_rotation_from_variance():
 
 
 ###############################################################################
+# TODO TASK remove all defunct functions from all classes
+# TODO TASK remove unused assets from all folders
 ###############################################################################
 #
 # DEFUNCT FUNCTIONS BELOW HERE
 #
 ## defunct, remove later
 #func defunct_testing_of_call_spawn_pattern_spread():
-#	# TODO implement handling for 
 #	# use our current weapon style to get the number of projectiles fired
 #	var get_projectile_count = \
 #	current_weapon_style[weapon.DataType.PROJECTILE_COUNT]

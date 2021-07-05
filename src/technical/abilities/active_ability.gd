@@ -149,8 +149,7 @@ func call_ability_blink():
 		# repeat loop until this hits condition
 		current_loop += 1
 	
-	# TODO fix this it does not work
-	# reenable collision with everything except walls/obstacles
+	# TODO REVIEW if collision setting works here with blink ability
 	owner.set_collision_mask_bit(2, true)
 	owner.set_collision_mask_bit(3, true)
 	owner.set_collision_mask_bit(5, true)
@@ -168,13 +167,13 @@ func call_ability_blink():
 # ability code for time slow below
 
 
+# TODO rewrite time slow ability as time slow bubble (reuse code on area entry)
 # function for slowing time
 func call_ability_time_slow():
 	
 	time_slow_bubble_effect()
 	
 	# call actor speed func on all actors active
-	# TODO exclude actor who called this ability
 	var group_to_call = get_tree().get_nodes_in_group("actors")
 	# call	
 	for actor in group_to_call:
@@ -186,7 +185,6 @@ func call_ability_time_slow():
 	for projectile in group_to_call:
 		if projectile.projectile_owner != self.owner:
 			time_slow_projectile_speed(projectile)
-	# TODO handle newly created things between start and expiry
 	emit_signal("activate_signal", "time_slow")
 
 
@@ -260,13 +258,12 @@ func time_slow_projectile_speed(target):
 
 ###############################################################################
 
-
+# defunct code
 #	get_tree().call_group("actors", set_actor_move_speed_slowed())
 #	get_tree().call_group("projectiles", set_projectile_flight_speed_slowed())
 #	get_tree().call_group("projectiles", set_projectile_rotator_orbit_speed_slowed())
 
 
-	# TODO fix the time slow implementation
 	# it should be an object created on everything
 	# not a singleton that calls all
 #func defunct_create_time_slow_mod(target):

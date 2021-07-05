@@ -8,8 +8,9 @@ const ENEMY_TYPE_BASE_MOVEMENT_SPEED = 150
 
 export var enemy_life = 35
 
-# TODO replace weapon ability call with aiming_target var
-# this is a fake variable to make weapon node work with enemy calss
+# TODO TASK add weapon node functionality for enemy
+# replace weapon ability call with aiming_target var
+# this is a fake variable to make weapon node work with enemy class
 var current_mouse_target
 var firing_target
 #
@@ -175,7 +176,6 @@ func move_toward_given_position(self_position, target_position):
 #	pass
 #
 #	# defunct/old logic for state_register
-#	# TODO modify this to account for offscreen/idle check << ???
 #	# if enemy is doing nothing and isn't already idle, set to idle
 ##	if not is_active\
 ##	 and current_state != State.IDLE\
@@ -324,7 +324,7 @@ func update_lifebar():
 func enemy_died():
 	is_active = false
 	enemy_hitbox.disabled = true
-	# todo this should be in globalvar not globalref
+	# TODO TASK move collision layers to global var instead of globalref
 	set_collision_layer_bit(GlobalReferences.CollisionLayers.ENEMY_BODY, false)
 	detection_scan.disable_all()
 	debug_lifebar.visible = false
@@ -336,10 +336,13 @@ func enemy_died():
 func _on_LifebarTimer_timeout():
 	debug_lifebar.visible = false
 
-# TODO make audio controller for handling multiple audio nodes and
-# audio resources, controlling subtitles, playing and stopping,
-# selecting random sounds etc
+# TODO OUT-OF-SCOPE make audio controller for handling audio nodes
+# controlling multiple audio nodes and audio resources
+# functions including stuff like:
+ # controlling subtitles, playing and stopping,
+ # selecting random sounds etc
 # espesh combine this function with next copypasta function
+# TODO TASK add globalfunc audioshuffler func
 func get_shot_sound_and_play():
 	var audio_array_shot = [\
 	shot_audio1, shot_audio2, shot_audio3, shot_audio4, shot_audio5]

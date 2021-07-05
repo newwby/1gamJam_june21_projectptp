@@ -6,9 +6,6 @@ extends Area2D
 # constant float for modifying velocity inherited from spawner
 const INHERITED_VELOCITY_MULTIPLIER := 0.5
 
-# TODO investigate old shooter prototype I made and how I implemented
-# burst fire/projectile spread
-
 var projectile_owner
 
 # colour code for modulate. of the sprite
@@ -72,7 +69,7 @@ var base_orbit_distance_from_player = 300
 # disabled, used to be used for weird big planet esque orbit chaos
 var orbit_variance_multiplier = 0
 # if orbiting behaviour this establishes timer wait time before it begins
-# TODO remove?
+# TODO TASK remove time_before_orbit
 var time_before_orbit = 0.001
 # timer for orbital movement projectiles to begin orbiting
 onready var orbit_init_timer = $OrbitInitialisationTimer
@@ -204,7 +201,6 @@ func set_projectile_scale():
 		simple_sprite_undershadow.texture = load(projectile_sprite_path)
 	simple_sprite.modulate = projectile_colour_code
 
-	# TODO merge this with above player/enemy code block
 	# Modify projectile based on player or enemy ownership
 	# Player projectiles are darker/faded
 	# Enemy projectiles are lighter/clearer

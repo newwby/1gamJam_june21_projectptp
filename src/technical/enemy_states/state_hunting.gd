@@ -64,8 +64,8 @@ func state_action():
 func track_and_move_toward_target():
 	if is_active:
 		
-		# if not set, set the detection manager
-		# TODO figure out why this is being called before state is set
+# if not set, set the detection manager
+# TODO TASK why is func track_and_move_toward_target called before state is set
 		if detection_manager == null:
 			detection_manager = enemy_parent_node.detection_scan
 	
@@ -102,8 +102,8 @@ func track_and_move_toward_target():
 		if attack_call.check_state_condition():
 			# ignore our state and check for new state
 #			emit_signal("check_state")
-		# check state signal is temp disabled due to lag problems
-		# TODO re-enable check state
+		# TODO REVIEW is state checking signal necessary still?
+		# currently check state signal is temp disabled due to lag problems
 			state_manager_node.set_new_state(StateManager.State.ATTACK)
 
 
