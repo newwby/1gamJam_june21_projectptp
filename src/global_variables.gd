@@ -1,5 +1,17 @@
 extends Node
 
+# enum for various collision layers, for standardised setting in code
+enum CollisionLayers {
+	PLAYER_BODY,
+	PLAYER_ENTITY,
+	ENEMY_BODY,
+	ENEMY_ENTITY,
+	OBSTACLE,
+	GROUND_EFFECT,
+	ROOM_WALL,
+	COLLECTABLE,
+}
+
 enum RangeGroup {
 	MELEE,
 	CLOSE,

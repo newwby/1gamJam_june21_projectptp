@@ -68,11 +68,6 @@ var projectile_particle_id
 var base_orbit_distance_from_player = 300
 # disabled, used to be used for weird big planet esque orbit chaos
 var orbit_variance_multiplier = 0
-# if orbiting behaviour this establishes timer wait time before it begins
-# TODO TASK remove time_before_orbit
-var time_before_orbit = 0.001
-# timer for orbital movement projectiles to begin orbiting
-onready var orbit_init_timer = $OrbitInitialisationTimer
 
 # array of every sprite involved with the projectile
 onready var projectile_sprite_holder = $SpriteHolder
@@ -101,7 +96,7 @@ func _ready():
 	set_collision_and_sprite_size()
 	set_projectile_lifespan_timer()
 	set_particle_effects()
-	set_orbital_initialisation_timer()
+	init_orbit_and_radar()
 	set_maximum_projectile_range()
 	set_collision_layers()
 
@@ -150,19 +145,19 @@ func set_collision_layers():
 		if projectile_owner is Player:
 			# player entity, or 1
 			set_collision_layer_bit(\
-			GlobalReferences.CollisionLayers.PLAYER_ENTITY, true)
+			GlobalVariables.CollisionLayers.PLAYER_ENTITY, true)
 			# enemy body, or 2
 			set_collision_mask_bit(\
-			GlobalReferences.CollisionLayers.ENEMY_BODY, true)
+			GlobalVariables.CollisionLayers.ENEMY_BODY, true)
 		#
 		# if projectile is spawned by an enemy actor
 		elif projectile_owner is Enemy:
 			# enemy entity, or 3
 			set_collision_layer_bit(\
-			GlobalReferences.CollisionLayers.ENEMY_ENTITY, true)
+			GlobalVariables.CollisionLayers.ENEMY_ENTITY, true)
 			# player body, or 0
 			set_collision_mask_bit(\
-			GlobalReferences.CollisionLayers.PLAYER_BODY, true)
+			GlobalVariables.CollisionLayers.PLAYER_BODY, true)
 	
 
 
@@ -242,9 +237,9 @@ func set_particle_effects():
 		heavy_particles.emitting = true
 
 
-# initialise the timer for handling orbit and orbit-related projectile movement
-func set_orbital_initialisation_timer():
-	orbit_init_timer.wait_time = time_before_orbit
+# initialise handling orbit and orbit-related projectile movement
+func init_orbit_and_radar():
+	# defunct timer
 	if projectile_movement_behaviour == GlobalVariables.ProjectileMovement.ORBIT:
 		start_projectile_orbit()
 	elif projectile_movement_behaviour == GlobalVariables.ProjectileMovement.RADAR:

@@ -85,9 +85,6 @@ z_index = 4000
 z_as_relative = false
 texture = ExtResource( 5 )
 
-[node name="OrbitInitialisationTimer" type="Timer" parent="."]
-one_shot = true
-
 [node name="FadeTween" type="Tween" parent="."]
 
 [node name="ProjectileParticlesOrbital" type="CPUParticles2D" parent="."]
@@ -121,6 +118,5 @@ scale_amount = 0.5
 [connection signal="body_entered" from="." to="." method="_on_Projectile_body_entered"]
 [connection signal="timeout" from="ProjectileLifespan" to="." method="_on_ProjectileLifespan_timeout"]
 [connection signal="screen_exited" from="ProjectileVisibilityNotifier" to="." method="_on_ProjectileVisibilityNotifier_screen_exited"]
-[connection signal="timeout" from="OrbitInitialisationTimer" to="." method="_on_OrbitInitialisationTimer_timeout"]
 [connection signal="tween_all_completed" from="FadeTween" to="." method="_on_FadeTween_tween_all_completed"]
 [connection signal="tween_completed" from="FadeTween" to="." method="_on_FadeTween_tween_completed"]

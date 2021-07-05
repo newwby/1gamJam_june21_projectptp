@@ -229,7 +229,6 @@ func get_attack_input():
 			if not is_firing:
 				is_firing = true
 				firing_target = current_mouse_target
-			# TODO UNKNOWN fix this placement (?) get_attack_input
 			weapon_ability_node.attempt_ability()
 		elif not Input.is_action_pressed("fire_weapon"):
 			if is_firing:
@@ -295,9 +294,13 @@ func _on_Player_damaged(damage_taken, damager):
 		var damage_taken_scaled = damage_taken/10
 		player_life -= damage_taken_scaled
 		get_damaged_sound_and_play()
-		update_life_hearts()
+		if player_life > 0:
+			update_life_hearts()
+		else:
+			player_died()
 
 
+# update life heart gui
 func update_life_hearts():
 	#clear all
 	lifeheart_1_hp012.value = 0
@@ -306,51 +309,13 @@ func update_life_hearts():
 	lifeheart_4_hp678.value = 0
 	lifeheart_5_hp8910.value = 0
 	
-	# this is a lazy way of doing this, make a better way
-	# TODO TASK rewrite player_life match in update_life_hearts()
-	match player_life:
-		0:
-			player_died()
-		1:
-			lifeheart_1_hp012.value = 1
-		2:
-			lifeheart_1_hp012.value = 2
-		3:
-			lifeheart_1_hp012.value = 2
-			lifeheart_2_hp234.value = 1
-		4:
-			lifeheart_1_hp012.value = 2
-			lifeheart_2_hp234.value = 2
-		5:
-			lifeheart_1_hp012.value = 2
-			lifeheart_2_hp234.value = 2
-			lifeheart_3_hp456.value = 1
-		6:
-			lifeheart_1_hp012.value = 2
-			lifeheart_2_hp234.value = 2
-			lifeheart_3_hp456.value = 2
-		7:
-			lifeheart_1_hp012.value = 2
-			lifeheart_2_hp234.value = 2
-			lifeheart_3_hp456.value = 2
-			lifeheart_4_hp678.value = 1
-		8:
-			lifeheart_1_hp012.value = 2
-			lifeheart_2_hp234.value = 2
-			lifeheart_3_hp456.value = 2
-			lifeheart_4_hp678.value = 2
-		9:
-			lifeheart_1_hp012.value = 2
-			lifeheart_2_hp234.value = 2
-			lifeheart_3_hp456.value = 2
-			lifeheart_4_hp678.value = 2
-			lifeheart_5_hp8910.value = 1
-		10:
-			lifeheart_1_hp012.value = 2
-			lifeheart_2_hp234.value = 2
-			lifeheart_3_hp456.value = 2
-			lifeheart_4_hp678.value = 2
-			lifeheart_5_hp8910.value = 2
+	# min value is 0, max value is 2, can't underfill or overflow
+	lifeheart_1_hp012.value = player_life# if player_life <= 2 else 2
+	lifeheart_2_hp234.value = player_life-2# if player_life <= 4 else 2
+	lifeheart_3_hp456.value = player_life-4# if player_life <= 6 else 2
+	lifeheart_4_hp678.value = player_life-6# if player_life <= 8 else 2
+	lifeheart_5_hp8910.value = player_life-8# if player_life <= 10 else 2
+
 
 func player_died():
 	self.queue_free()
@@ -361,49 +326,36 @@ func _on_GameEnvironment_game_started():
 #	player_HUD._on_GameTimer_Seconds_timeout()
 
 
-func get_shot_sound_and_play():
-	var audio_array_shot = [\
-	shot_audio1, shot_audio2, shot_audio3, shot_audio4, shot_audio5]
-	var upper_limit = audio_array_shot.size()
-	var random_sound = GlobalFuncs.ReturnRandomRange(1, upper_limit)
-	
-	var chosen_sound = audio_array_shot[random_sound]
-	
-	if GlobalDebug.PLAYER_SE_ENABLED:
-		chosen_sound.play()
-
-
 func _on_WeaponAbility_weapon_fired():
 	get_shot_sound_and_play()
 
-# TODO TASK add globalfunc audioshuffler func
+
+func get_shot_sound_and_play():
+	var audio_array_shot = [\
+	shot_audio1, shot_audio2, shot_audio3, shot_audio4, shot_audio5]
+	if GlobalDebug.PLAYER_SE_ENABLED:
+		GlobalFuncs.shuffle_audio_and_play(audio_array_shot)
+
+
 func get_damaged_sound_and_play():
 	var audio_array_damaged = [\
 	damaged_audio1, damaged_audio2]
-	var upper_limit = audio_array_damaged.size()
-	var random_sound = GlobalFuncs.ReturnRandomRange(1, upper_limit)
-	var chosen_sound = audio_array_damaged[random_sound]
 	if GlobalDebug.PLAYER_SE_ENABLED:
-		chosen_sound.play()
+		GlobalFuncs.shuffle_audio_and_play(audio_array_damaged)
+
 
 func get_blink_sound_and_play():
 	var audio_array_blink = [\
 	blink_ability_audio1, blink_ability_audio2, blink_ability_audio3]
-	var upper_limit = audio_array_blink.size()
-	var random_sound = GlobalFuncs.ReturnRandomRange(1, upper_limit)
-	var chosen_sound = audio_array_blink[random_sound]
-	print(chosen_sound)
 	if GlobalDebug.PLAYER_SE_ENABLED:
-		chosen_sound.play()
+		GlobalFuncs.shuffle_audio_and_play(audio_array_blink)
+
 
 func get_time_slow_sound_and_play():
 	var audio_array_time_slow = [\
 	time_slow_ability_audio1, time_slow_ability_audio2, time_slow_ability_audio3]
-	var upper_limit = audio_array_time_slow.size()
-	var random_sound = GlobalFuncs.ReturnRandomRange(1, upper_limit)
-	var chosen_sound = audio_array_time_slow[random_sound]
 	if GlobalDebug.PLAYER_SE_ENABLED:
-		chosen_sound.play()
+		GlobalFuncs.shuffle_audio_and_play(audio_array_time_slow)
 
 
 func _on_ActiveAbility1_activate_signal(ability_type):

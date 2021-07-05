@@ -324,8 +324,7 @@ func update_lifebar():
 func enemy_died():
 	is_active = false
 	enemy_hitbox.disabled = true
-	# TODO TASK move collision layers to global var instead of globalref
-	set_collision_layer_bit(GlobalReferences.CollisionLayers.ENEMY_BODY, false)
+	set_collision_layer_bit(GlobalVariables.CollisionLayers.ENEMY_BODY, false)
 	detection_scan.disable_all()
 	debug_lifebar.visible = false
 	enemy_sprite.visible = false
@@ -336,34 +335,24 @@ func enemy_died():
 func _on_LifebarTimer_timeout():
 	debug_lifebar.visible = false
 
-# TODO OUT-OF-SCOPE make audio controller for handling audio nodes
 # controlling multiple audio nodes and audio resources
 # functions including stuff like:
  # controlling subtitles, playing and stopping,
  # selecting random sounds etc
 # espesh combine this function with next copypasta function
-# TODO TASK add globalfunc audioshuffler func
+
 func get_shot_sound_and_play():
 	var audio_array_shot = [\
 	shot_audio1, shot_audio2, shot_audio3, shot_audio4, shot_audio5]
-	var upper_limit = audio_array_shot.size()
-	var random_sound = GlobalFuncs.ReturnRandomRange(1, upper_limit)
-	
-	var chosen_sound = audio_array_shot[random_sound]
-	
 	if GlobalDebug.ENEMY_SE_ENABLED:
-		chosen_sound.play()
+		GlobalFuncs.shuffle_audio_and_play(audio_array_shot)
 
 
 func get_damaged_sound_and_play():
 	var audio_array_damaged = [\
 	damaged_audio1, damaged_audio2, damaged_audio3]
-	var upper_limit = audio_array_damaged.size()
-	var random_sound = GlobalFuncs.ReturnRandomRange(1, upper_limit)
-	var chosen_sound = audio_array_damaged[random_sound]
-	
 	if GlobalDebug.ENEMY_SE_ENABLED:
-		chosen_sound.play()
+		GlobalFuncs.shuffle_audio_and_play(audio_array_damaged)
 
 
 func _on_DeathTimer_timeout():

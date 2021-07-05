@@ -106,13 +106,12 @@ func call_ability_blink():
 	blink_particle_effect.one_shot = true
 	blink_particle_effect.direction = -particle_direction
 	
+	# this doesn't really work when collision checks both layer and mask
 	# disable collision with everything except walls/obstacles
-	owner.set_collision_mask_bit(2, false)
-	owner.set_collision_mask_bit(3, false)
-	owner.set_collision_mask_bit(5, false)
-	owner.set_collision_mask_bit(7, false)
-	# repurpose with this
-	##my_area.set_collision_mask_bit(Layer.WALLS, true)
+	owner.set_collision_mask_bit(GlobalVariables.CollisionLayers.ENEMY_BODY, false)
+	owner.set_collision_mask_bit(GlobalVariables.CollisionLayers.ENEMY_ENTITY, false)
+	owner.set_collision_mask_bit(GlobalVariables.CollisionLayers.GROUND_EFFECT, false)
+	owner.set_collision_mask_bit(GlobalVariables.CollisionLayers.ENEMY_BODY, false)
 	
 	# create a timer and set properties for this function
 	var blink_timer = Timer.new()
@@ -149,11 +148,11 @@ func call_ability_blink():
 		# repeat loop until this hits condition
 		current_loop += 1
 	
-	# TODO REVIEW if collision setting works here with blink ability
-	owner.set_collision_mask_bit(2, true)
-	owner.set_collision_mask_bit(3, true)
-	owner.set_collision_mask_bit(5, true)
-	owner.set_collision_mask_bit(7, true)
+	
+	owner.set_collision_mask_bit(GlobalVariables.CollisionLayers.ENEMY_BODY, true)
+	owner.set_collision_mask_bit(GlobalVariables.CollisionLayers.ENEMY_ENTITY, true)
+	owner.set_collision_mask_bit(GlobalVariables.CollisionLayers.GROUND_EFFECT, true)
+	owner.set_collision_mask_bit(GlobalVariables.CollisionLayers.ENEMY_BODY, true)
 
 	# reset actor properties modified within this function
 	owner.is_damageable_by_foes = true

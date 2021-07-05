@@ -91,7 +91,7 @@ func _ready():
 func _process(delta):
 	if current_state == null:
 		# defunct and removed
-# TODO OUT-OF-SCOPE todo review state priority register, don't call on process
+# OUT-OF-SCOPE (to-review/do) state priority register, don't call on process
 		# idea - state register that scans by priority for highest to execute
 		 # w/ action states that override
 		emit_signal("check_state")

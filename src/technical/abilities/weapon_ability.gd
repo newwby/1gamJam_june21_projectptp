@@ -69,9 +69,7 @@ onready var minimum_cooldown_timer = $MinimumShotCooldown
 ## TODO TASK - add logic for minimum fire range to foe from weapon style data
 ##		DataType.AI_MIN_USE_RANGE			: GlobalVariables.RangeGroup.CLOSE,
 ##		DataType.AI_MAX_USE_RANGE			: GlobalVariables.RangeGroup.FAR,
-# TODO OUT-OF-SCOPE add shot surge particle effects
 ##		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
-# TODO OUT-OF-SCOPE add alternate weapon shot sounds
 ##		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
 #
 ################################################################################
@@ -228,7 +226,7 @@ func activate_ability():
 	call_projectile_spawn_pattern_function()
 
 
-# TODO OUT-OF-SCOPE rewrite orbital handling logic, this is messy af
+# OUT-OF-SCOPE rewrite orbital handling logic, this is messy af
 # see below
 # okay this function works but it interferes with spawning projectiles
 # so make this only run if no projectile has been spawned recently
@@ -311,7 +309,7 @@ func call_spawn_pattern_spread():
 	# projectile count is odd or even
 	var proj_spacing_adjustment
 	
-	# TODO OUT-OF-SCOPE account for projecitle size in spread
+	# OUT-OF-SCOPE account for projecitle size in spread
 	
 	var projectile_count_even = projectile_count % 2 == 0
 	
@@ -483,7 +481,7 @@ func instance_new_projectile():
 	new_projectile.rotation_per_tick =\
 	 current_weapon_style[weapon.DataType.PROJECTILE_SPRITE_ROTATE]
 	
-	# TODO OUT-OF-SCOPE change set size to be a sprite scaling function
+	# OUT-OF-SCOPE change set size to be a sprite scaling function
 	
 	# this property is called on projectile to scale projectile size
 	new_projectile.projectile_set_size =\
@@ -497,7 +495,7 @@ func instance_new_projectile():
 	 current_weapon_style[weapon.DataType.PROJECTILE_SPRITE_COLOUR]
 	#
 	# this establishes how the projectile moves once spawned
-	# TODO OUT-OF-SCOPE different proj behaviours as base_proj child classes
+	# OUT-OF-SCOPE different proj behaviours as base_proj child classes
 	new_projectile.projectile_movement_behaviour =\
 	 current_weapon_style[weapon.DataType.PROJECTILE_MOVE_PATTERN]
 
@@ -538,7 +536,7 @@ func spawn_new_projectile(spawn_position, spawn_velocity, rotation_alteration):
 				new_projectile.position = spawn_position
 				new_projectile.velocity = spawn_velocity
 			#
-			#	TODO OUT-OF-SCOPE REVIEW issues with proj rotation toward target
+			#	OUT-OF-SCOPE REVIEW issues with proj rotation toward target
 			#  i.e. having problems with projectile rotation toward target, need
 			#	to fix that if I ever want to (re)introduce pointed projectiles
 			#	- for now just going to use circular projectiles

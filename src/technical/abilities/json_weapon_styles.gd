@@ -107,7 +107,7 @@ enum DataType {
 	PROJECTILE_SHOT_VARIANCE,
 }
 
-# TODO OUT-OF-SCOPE Add additional data types for
+# OUT-OF-SCOPE Add additional data types for
 
 #	ref		TriggerSecondaryWeapon	# or reference to another weapon?
 #	enum	TriggerCondition		# on hit, on crit, on timer
@@ -143,10 +143,13 @@ enum DataType {
 #	bool	isFixedFiringTarget		# can the player aim freely whilst firing?
 #	bool	isRootedDuringShot		# can the player move whilst firing?
 
-# TODO OUT-OF-SCOPE implement enum/array for on-contact actions
+# OUT-OF-SCOPE implement enum/array for on-contact actions
 # e.g. status effects and triggering other abilities
 #
 # implement spawn location for weapons
+
+# OUT-OF-SCOPE add shot surge particle effects
+# OUT-OF-SCOPE add alternate weapon shot sounds
 
 ###############################################################################
 
