@@ -13,7 +13,7 @@ extends Node2D
 
 # TODO REVIEW reported conflict with class_state check_state signal
 signal check_state
-signal state_manager_active
+signal state_manager_active # DEBUGGER ISSUE, UNUSED
 
 # list of potential states for the enemy
 enum State{
@@ -88,7 +88,7 @@ func _ready():
 #	set_state_reaction_timer()
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	if current_state == null:
 		# defunct and removed
 # OUT-OF-SCOPE (to-review/do) state priority register, don't call on process
@@ -111,7 +111,7 @@ func _process_state_behaviour_override(_dt):
 # get owner if owner is enemy, disables state manager if not
 # state manager requires coupling to an enemy node to function
 func set_enemy_parent_node():
-	var enemy_parent_node = owner
+	enemy_parent_node = owner
 	var has_set_enemy_parent_node = false
 	if enemy_parent_node != null:# and enemy_parent_node is Enemy:
 		# enable state manager

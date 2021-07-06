@@ -166,7 +166,7 @@ func call_ability_blink():
 # ability code for time slow below
 
 
-# TODO rewrite time slow ability as time slow bubble (reuse code on area entry)
+# TODO TASK rewrite time slow ability as time slow bubble (reuse code on area entry)
 # function for slowing time
 func call_ability_time_slow():
 	

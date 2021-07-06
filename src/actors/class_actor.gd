@@ -2,7 +2,7 @@
 class_name Actor
 extends KinematicBody2D
 
-signal damaged(hp_damage_taken)
+signal damaged(hp_damage_taken) # DEBUGGER ISSUE, UNUSED
 
 export var is_active = true
 

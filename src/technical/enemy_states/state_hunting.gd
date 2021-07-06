@@ -92,7 +92,7 @@ func track_and_move_toward_target():
 			# clear current target of detection manager
 			detection_manager.current_target = null
 			# need to check for new state
-			emit_signal("check_state")
+#			emit_signal("check_state")
 		
 		# process attack check
 		# get the attack state node

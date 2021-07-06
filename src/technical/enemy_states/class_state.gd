@@ -2,8 +2,8 @@
 class_name StateParent, "res://art/shrek_pup_eye_sprite.png"
 extends Node2D
 
-signal clear_state
-signal check_state
+signal clear_state # DEBUGGER ISSUE, UNUSED
+signal check_state # DEBUGGER ISSUE, UNUSED
 
 var is_active = false
 
@@ -95,6 +95,7 @@ func set_detection_manager():
 # placeholder function to be derived by child classes
 func set_state_signals():
 	# default signal connection
+	# DEBUGGER ISSUE, UNUSED (both signals return values but neither are used)
 	self.connect("clear_state", state_manager_node, "_on_clear_state")
 	self.connect("check_state", state_manager_node, "_on_check_state")
 

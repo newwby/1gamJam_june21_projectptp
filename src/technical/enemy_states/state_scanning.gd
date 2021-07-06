@@ -42,7 +42,8 @@ func state_action():
 	# get the parent enemy node's detection manag
 #	DetectionManager.get_closest_player_in_near_group()
 	var detector = enemy_parent_node.detection_scan
-	var target_found
+	# unused var/defunct
+#	var target_found
 	enemy_parent_node.detection_scan.current_target =\
 	 detector.get_closest_player_in_near_group()
 	emit_signal("check_state")

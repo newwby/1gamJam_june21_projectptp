@@ -2,7 +2,7 @@
 class_name Enemy
 extends Actor
 
-signal enemy_defeated
+signal enemy_defeated # DEBUGGER ISSUE, UNUSED
 
 const ENEMY_TYPE_BASE_MOVEMENT_SPEED = 150
 
@@ -100,7 +100,7 @@ func _ready():
 	set_parent_spawn_handler()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	if velocity != Vector2.ZERO:
 		squish_tween.playback_speed = 2.0
 	else:
@@ -108,7 +108,7 @@ func _process(delta):
 	if is_active:
 	#	_process_check_state()
 	#	_process_call_state_behaviour(delta)
-		move_and_slide(velocity.normalized() * movement_speed)
+		var discard_value = move_and_slide(velocity.normalized() * movement_speed)
 	#	detection_scan.player
 #		if state_manager.current_state != null:
 #			$DebugStateLabel.text = str(state_manager.current_state)
@@ -143,8 +143,8 @@ func set_enemy_stats():
 	movement_speed = ENEMY_TYPE_BASE_MOVEMENT_SPEED
 
 
-func set_enemy_weapon():
-	var base_weapon
+#func set_enemy_weapon():
+#	var base_weapon
 
 
 func set_parent_spawn_handler():
@@ -152,6 +152,7 @@ func set_parent_spawn_handler():
 	if myParent != null:
 		yield(myParent, "ready")
 		if myParent is WaveSpawnHandler:
+		# TODO REVIEW WaveSpawnHandler functionality and return value of connect
 			connect("enemy_defeated", myParent, "check_enemy_count")
 
 
@@ -325,6 +326,11 @@ func enemy_died():
 	is_active = false
 	enemy_hitbox.disabled = true
 	set_collision_layer_bit(GlobalVariables.CollisionLayers.ENEMY_BODY, false)
+#	call_deferred("set_collision_layer_bit", GlobalVariables.CollisionLayers.ENEMY_BODY, false)
+
+	# TODO TASK resolve collision issue with set/call deffered collision
+	# vis-a-vis above and func detection_scan below
+	
 	detection_scan.disable_all()
 	debug_lifebar.visible = false
 	enemy_sprite.visible = false

@@ -523,15 +523,6 @@ func spawn_new_projectile(spawn_position, spawn_velocity, rotation_alteration):
 		if new_projectile.projectile_owner is Actor:
 			# don't fire if dead
 			if new_projectile.projectile_owner.is_active:
-			# TODO TASK move this logic to after projecitle is added to tree
-			# (prevents get_global_transform !is_inside_tree() compiler error)
-			#	# if spread has been applied, affix a sprite change
-				new_projectile.rotation_degrees = rotation_alteration*10
-				
-				# rotate projectile to look in direction it is heading
-				new_projectile.look_at(spawn_velocity)
-				# apply godot engine 90degree fix
-			#	new_projectile.rotation_degrees += 90
 			
 				new_projectile.position = spawn_position
 				new_projectile.velocity = spawn_velocity
@@ -571,6 +562,17 @@ func spawn_new_projectile(spawn_position, spawn_velocity, rotation_alteration):
 					var projectile_parent = new_projectile.projectile_owner.orbit_handler_node
 					projectile_parent.add_child(new_projectile)
 					# TODO TASK connect expiry signal from proj to proj owner
+					
+			# TODO TASK move this logic to after projecitle is added to tree
+			# (prevents get_global_transform !is_inside_tree() compiler error)
+			#	# if spread has been applied, affix a sprite change
+				new_projectile.rotation_degrees = rotation_alteration*10
+				
+				# rotate projectile to look in direction it is heading
+				new_projectile.look_at(spawn_velocity)
+				# apply godot engine 90degree fix
+			#	new_projectile.rotation_degrees += 90
+			
 				emit_signal("weapon_fired")
 
 

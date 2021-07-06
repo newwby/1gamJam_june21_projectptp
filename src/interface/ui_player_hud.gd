@@ -54,7 +54,7 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	pass
 	# testing values
 #	weapon_cooldown.value += 1
@@ -100,8 +100,9 @@ func set_scale_and_center_radial(sprite_anchor, cooldown_radial):
 	# set scale of radial, textures are too large by default
 	cooldown_radial.rect_scale = base_cooldown_texture_scale
 	# adjust for set scale
-	var half_texture_size =\
-	 (sprite_anchor.texture.get_size() * sprite_anchor.scale) / 2.5
+	# unused variable, defunct
+#	var half_texture_size =\
+#	 (sprite_anchor.texture.get_size() * sprite_anchor.scale) / 2.5
 	# position setting currently disabled due to problems with the UI controls
 #	cooldown_radial.rect_position = sprite_anchor.position+half_texture_size
 

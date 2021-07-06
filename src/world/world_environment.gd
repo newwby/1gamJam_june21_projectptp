@@ -80,7 +80,7 @@ func _on_OpeningLogoTween_tween_all_completed():
 # we don't care if both tweens finished
 # let player start moving immediately
 # game go!
-func _on_FadeInTween_tween_completed(object, key):
+func _on_FadeInTween_tween_completed(_object, _key):
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	var all_actors = get_tree().get_nodes_in_group("actors")
 	for actor_node in all_actors:

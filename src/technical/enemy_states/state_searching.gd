@@ -4,7 +4,7 @@ extends StateParent
 
 
 # stop searching after this
-onready var search_state_first_phase = $State_Searching/SearchTimer
+onready var search_state_first_phase = $SearchTimer
 
 
 # Called when the node enters the scene tree for the first time.
