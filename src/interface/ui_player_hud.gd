@@ -96,7 +96,7 @@ func set_cooldown_texture_positions_and_dimensions():
 
 
 # changes scale and position of the cooldown radial
-func set_scale_and_center_radial(sprite_anchor, cooldown_radial):
+func set_scale_and_center_radial(_sprite_anchor, cooldown_radial):
 	# set scale of radial, textures are too large by default
 	cooldown_radial.rect_scale = base_cooldown_texture_scale
 	# adjust for set scale

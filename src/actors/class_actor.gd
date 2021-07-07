@@ -44,3 +44,7 @@ func process_handle_movement(_dt):
 
 ###############################################################################
 
+
+# for removing debugger complaints
+func voidfunc():
+	emit_signal("damaged")

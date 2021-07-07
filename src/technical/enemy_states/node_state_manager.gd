@@ -401,3 +401,8 @@ func sort_dictionary_by_int_value(given_dict):
 # for getting state manager and enemy from base states
 #	print(name, " owner is ", owner.name)
 #	print(name, " owner of my owner ", owner.name, " is ", owner.owner.name
+
+
+# for removing debugger complaints
+func voidfunc():
+	emit_signal("state_manager_active")

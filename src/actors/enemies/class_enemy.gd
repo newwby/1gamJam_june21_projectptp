@@ -108,7 +108,7 @@ func _process(_delta):
 	if is_active:
 	#	_process_check_state()
 	#	_process_call_state_behaviour(delta)
-		var discard_value = move_and_slide(velocity.normalized() * movement_speed)
+		var _discard_value = move_and_slide(velocity.normalized() * movement_speed)
 	#	detection_scan.player
 #		if state_manager.current_state != null:
 #			$DebugStateLabel.text = str(state_manager.current_state)
@@ -153,7 +153,7 @@ func set_parent_spawn_handler():
 		yield(myParent, "ready")
 		if myParent is WaveSpawnHandler:
 		# TODO REVIEW WaveSpawnHandler functionality and return value of connect
-			connect("enemy_defeated", myParent, "check_enemy_count")
+			var _discard_value = connect("enemy_defeated", myParent, "check_enemy_count")
 
 
 ###############################################################################
@@ -268,6 +268,9 @@ func _on_OffscreenNotifier_screen_entered():
 
 func start_offscreen_timer():
 	if offscreen_timer.is_stopped():
+		# check if not in tree and if it isn't, wait until it is
+		if !offscreen_timer.is_inside_tree():
+			yield(offscreen_timer, "tree_entered")
 		offscreen_timer.start()
 	else:
 		offscreen_timer.stop()
@@ -324,7 +327,8 @@ func update_lifebar():
 
 func enemy_died():
 	is_active = false
-	enemy_hitbox.disabled = true
+#	enemy_hitbox.disabled = true
+	enemy_hitbox.set_deferred("disabled", true)
 	set_collision_layer_bit(GlobalVariables.CollisionLayers.ENEMY_BODY, false)
 #	call_deferred("set_collision_layer_bit", GlobalVariables.CollisionLayers.ENEMY_BODY, false)
 
@@ -363,3 +367,11 @@ func get_damaged_sound_and_play():
 
 func _on_DeathTimer_timeout():
 	queue_free()
+
+
+##############################################################################
+
+
+# for removing debugger complaints
+func voidfunc():
+	emit_signal("enemy_defeated")

@@ -96,8 +96,8 @@ func set_detection_manager():
 func set_state_signals():
 	# default signal connection
 	# DEBUGGER ISSUE, UNUSED (both signals return values but neither are used)
-	self.connect("clear_state", state_manager_node, "_on_clear_state")
-	self.connect("check_state", state_manager_node, "_on_check_state")
+	var _discard_value = self.connect("clear_state", state_manager_node, "_on_clear_state")
+	_discard_value = self.connect("check_state", state_manager_node, "_on_check_state")
 
 ###############################################################################
 
@@ -119,3 +119,11 @@ func state_action():
 	else:
 		if GlobalDebug.enemy_state_logs: print("failed attempt at action for node ", name, " - is_active is set false")
 
+
+###############################################################################
+
+
+# for removing debugger complaints
+func voidfunc():
+	emit_signal("check_state")
+	emit_signal("clear_state")

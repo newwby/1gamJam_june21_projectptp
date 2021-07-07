@@ -7,8 +7,8 @@ const DEBUG_BUTTON_ENABLED = false
 
 # sound control settings for in-editor, out of gameplay
 const MUSIC_ENABLED = false
-const PLAYER_SE_ENABLED = true
-const ENEMY_SE_ENABLED = true
+const PLAYER_SE_ENABLED = false
+const ENEMY_SE_ENABLED = false
 
 # console logging for other debug purposes (print commands)
 # debug for the rocking tween starting and stopping

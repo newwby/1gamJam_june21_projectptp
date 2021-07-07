@@ -328,10 +328,10 @@ func is_actor_in_range_group(target, range_group):
 
 # disable all collision radii
 func disable_all():
-	collision_radius_melee.disabled = true
-	collision_radius_close.disabled = true
-	collision_radius_near.disabled = true
-	collision_radius_far.disabled = true
+	collision_radius_melee.set_deferred("disabled", true)#.disabled = true
+	collision_radius_close.set_deferred("disabled", true)#.disabled = true
+	collision_radius_near.set_deferred("disabled", true)#.disabled = true
+	collision_radius_far.set_deferred("disabled", true)#.disabled = true
 
 
 
