@@ -37,7 +37,6 @@ const sprite_weapon_vortex_shot_greyscale = "res://art/icons/lorc-gameicons_orbi
 const sprite_weapon_wind_scythe_greyscale = "res://art/icons/lorc-gameicons_whirlpool_shuriken_greyscale.png"
 const sprite_weapon_bolt_lance_greyscale = "res://art/icons/lorc-gameicons_lightning_frequency_greyscale.png"
 
-#TODO TASK add weapon collectable and projectile graphics to weapon style data
 # paths to projectile graphics
 const sprite_projectile_split_shot = "res://art/projectile/kenney_simplespace/meteor_squareLarge.png"
 const sprite_projectile_triple_burst_shot = "res://art/projectile/kenney_simplespace/meteor_squareDetailedLarge.png"

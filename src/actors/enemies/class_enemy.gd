@@ -327,6 +327,8 @@ func update_lifebar():
 
 func enemy_died():
 	is_active = false
+	# hide target line in case it was active at time of death
+	target_line.visible = false
 #	enemy_hitbox.disabled = true
 	enemy_hitbox.set_deferred("disabled", true)
 	set_collision_layer_bit(GlobalVariables.CollisionLayers.ENEMY_BODY, false)

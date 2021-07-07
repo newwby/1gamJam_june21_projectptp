@@ -1,5 +1,8 @@
 extends Control
 
+# this is the temporary faux-json for data storage on weapon behaviours
+var weapon = preload("res://src/technical/abilities/json_weapon_styles.gd")
+
 var base_cooldown_texture_scale = Vector2(0.12, 0.12)
 
 # initial game time settings
@@ -119,18 +122,20 @@ func _on_GameTimer_Seconds_timeout():
 
 
 
-
-func update_cooldown(ability_type, enum_id, new_value, new_max):
+# REVIEW sniper and burst fire segment timer not correct expiry rate
+# enum_id is passed from
+# player.gd 'ability_enum_id = weapon_ability_node.selected_weapon_style'
+func update_cooldown(ability_type, ability_enum_id, new_value, new_max):
 	if ability_type == BaseAbility.AbilityType.WEAPON:
 		ui_modify_cooldown(weapon_cooldown, weapon_cooldown_segment_timer, new_value, new_max)
-		if enum_id != current_weapon_cooldown_ui_graphic:
-			current_weapon_cooldown_ui_graphic = enum_id
-			update_ui_weapon_cooldown_graphic(enum_id)
+		if ability_enum_id != current_weapon_cooldown_ui_graphic:
+			current_weapon_cooldown_ui_graphic = ability_enum_id
+			update_ui_weapon_cooldown_graphic(ability_enum_id)
 	elif ability_type == BaseAbility.AbilityType.ACTIVE:
-		if enum_id == 0:
+		if ability_enum_id == 0:
 			ui_modify_cooldown(ability1_cooldown, ability1_cooldown_segment_timer, new_value, new_max)
 			#blink
-		elif enum_id == 1:
+		elif ability_enum_id == 1:
 			ui_modify_cooldown(ability2_cooldown, ability2_cooldown_segment_timer, new_value, new_max)
 			#time slow
 
@@ -146,39 +151,21 @@ func ui_modify_cooldown(cooldown_node, cooldown_segment_timer, new_value, new_ma
 		reset_timer(cooldown_segment_timer, segment_of_max)
 
 
-func update_ui_weapon_cooldown_graphic(enum_id):
+# REVIEW should this be part of pickup function?
+# changes ui weapon graphic
+func update_ui_weapon_cooldown_graphic(weapon_style_id):
+	# get correct sprite paths
 	var sprite_path_prog
 	var sprite_path_under
-	# temporary needs fixing as this will break if anything below
-	# is changed even slightly
-	# very rough implementation
-	# TODO TASK rewrite sprite_path lookup (&_greyscale lookup,  var by str ref)
-	match enum_id:
-		0:
-			sprite_path_prog = GlobalReferences.sprite_weapon_split_shot
-			sprite_path_under = GlobalReferences.sprite_weapon_split_shot_greyscale
-		1:
-			sprite_path_prog = GlobalReferences.sprite_weapon_triple_burst_shot
-			sprite_path_under = GlobalReferences.sprite_weapon_triple_burst_shot_greyscale
-		2:
-			sprite_path_prog = GlobalReferences.sprite_weapon_sniper_shot
-			sprite_path_under = GlobalReferences.sprite_weapon_sniper_shot_greyscale
-		3:
-			sprite_path_prog = GlobalReferences.sprite_weapon_rapid_shot
-			sprite_path_under = GlobalReferences.sprite_weapon_rapid_shot_greyscale
-		4:
-			sprite_path_prog = GlobalReferences.sprite_weapon_heavy_shot
-			sprite_path_under = GlobalReferences.sprite_weapon_heavy_shot_greyscale
-		5:
-			sprite_path_prog = GlobalReferences.sprite_weapon_vortex_shot
-			sprite_path_under = GlobalReferences.sprite_weapon_vortex_shot_greyscale
-		6:
-			sprite_path_prog = GlobalReferences.sprite_weapon_wind_scythe
-			sprite_path_under = GlobalReferences.sprite_weapon_wind_scythe_greyscale
-		7:
-			sprite_path_prog = GlobalReferences.sprite_weapon_bolt_lance
-			sprite_path_under = GlobalReferences.sprite_weapon_bolt_lance_greyscale
+	# get weapon type from passed style id
+	var weapon_type = weapon.STYLE_DATA[weapon_style_id]
+	# get file path for progress texture
+	sprite_path_prog = weapon_type[weapon.DataType.WEAPON_ICON_SPRITE]
+	# get file path without extension
+	# append greyscale texture modification and extension
+	sprite_path_under = sprite_path_prog.get_basename()+"_greyscale.png"
 	
+	# if textures are found, load correct texture
 	if sprite_path_under != null:
 		weapon_cooldown.texture_under = load(sprite_path_under)
 	if sprite_path_prog != null:

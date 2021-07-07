@@ -248,7 +248,7 @@ func remove_from_detection_group(range_group, body):
 
 ###############################################################################
 
-# TODO REVIEW func get_players_in_range_group
+# REVIEW - functional but predates call_dict, could be modified to use call_dict
 func get_players_in_range_group(range_group_to_scan):
 	var potential_targets = []
 	# scan all valid targets
@@ -288,7 +288,7 @@ func get_closest_in_group_of_targets(potential_targets):
 		return closest_target
 
 
-# TODO REVIEW func get_nearest_player_in_range_group
+# REVIEW - functional but predates call_dict, could be modified to use call_dict
 func get_nearest_player_in_range_group(range_group_to_scan):
 	
 	# set null variables

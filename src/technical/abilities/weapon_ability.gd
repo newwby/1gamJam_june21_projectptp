@@ -63,6 +63,8 @@ onready var minimum_cooldown_timer = $MinimumShotCooldown
 
 ###############################################################################
 
+# TODO TASK BUG w/sniper shot aiming in wrong direction on first firing
+# make target line logic execute on collecting sniper shot?
 
 # TODO TASK connect expiry signal from projectiles to proj owner
 #

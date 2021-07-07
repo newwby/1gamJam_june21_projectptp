@@ -11,7 +11,7 @@
 class_name StateManager, "res://art/shrek_pup_eye_sprite.png"
 extends Node2D
 
-# TODO REVIEW reported conflict with class_state check_state signal
+# REVIEW reported conflict with class_state check_state signal, cannot recreate
 signal check_state
 signal state_manager_active # DEBUGGER ISSUE, UNUSED
 
@@ -50,12 +50,20 @@ var state_call_dict = {}
 # dict containing order in which to check states
 var state_priority_dict = {}
 
-# TODO REVIEW state machine logic, refactor? remove defunct variables
-# TODO TASK write unit tests for state machine logic before removing
+#/*
+# REVIEW state machine logic, refactor? remove defunct variables
+# REVIEW write unit tests for state machine logic before major edits
+# have commented all references to state_change_attempts_per_second
+# current iteration of state machine does not use the _process loop
+# and therefore doesn't need to limit checks (will only call on logical
+# events for state changes)
+
+# 3rd generation state machine implementation defunct code
 # left to its own devices the state machine will lag the game
 # limit how many times it can attempt to change per second
-var current_state_change_attempts_this_second
-var maximum_state_change_attempts_per_second
+#var current_state_change_attempts_this_second
+#var maximum_state_change_attempts_per_second
+#*/
 
 # this timer controls how quickly a state can be changed
 # if it is running, state change is blocked
@@ -123,9 +131,9 @@ func set_enemy_parent_node():
 		if GlobalDebug.enemy_state_logs: print("failure to set enemy state manager\nstate manager disabled")
 	
 	if has_set_enemy_parent_node:
-		var reaction_speed = enemy_parent_node.gamestat_reaction_speed
-		current_state_change_attempts_this_second = 0
-		maximum_state_change_attempts_per_second = reaction_speed
+#		var reaction_speed = enemy_parent_node.gamestat_reaction_speed
+#		current_state_change_attempts_this_second = 0
+#		maximum_state_change_attempts_per_second = reaction_speed
 #		print(current_state_change_attempts_this_second, " for csats")
 #		print(maximum_state_change_attempts_per_second, " for msats")
 		is_active = true
@@ -201,7 +209,8 @@ func set_state_priority_list():
 
 
 func _on_ReactionTimer_timeout():
-	current_state_change_attempts_this_second = 0
+#	current_state_change_attempts_this_second = 0
+	pass
 #
 #
 ## implemented ham-fisted fix of the laggy initial state behaviour implementation

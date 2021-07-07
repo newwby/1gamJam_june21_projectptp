@@ -31,7 +31,7 @@ func _ready():
 func setup_collectable():
 	if not is_setup and not is_collected:
 		set_by_key()
-		set_weapon_to_collect()
+		set_pickup_sprite()
 		set_sprite()
 		is_setup = true
 
@@ -57,25 +57,10 @@ func set_by_key():
 				chosen_weapon_style = weapon.Style.BOLT_LANCE
 
 
-func set_weapon_to_collect():
-	# TODO TASK rewrite set_weapon_to_collect to utilise weapon style dict
-	match chosen_weapon_style:
-		weapon.Style.SPLIT_SHOT:
-			sprite_path = GlobalReferences.sprite_weapon_split_shot
-		weapon.Style.TRIPLE_BURST_SHOT:
-			sprite_path = GlobalReferences.sprite_weapon_triple_burst_shot
-		weapon.Style.SNIPER_SHOT:
-			sprite_path = GlobalReferences.sprite_weapon_sniper_shot
-		weapon.Style.RAPID_SHOT:
-			sprite_path = GlobalReferences.sprite_weapon_rapid_shot
-		weapon.Style.HEAVY_SHOT:
-			sprite_path = GlobalReferences.sprite_weapon_heavy_shot
-		weapon.Style.VORTEX_SHOT:
-			sprite_path = GlobalReferences.sprite_weapon_vortex_shot
-		weapon.Style.WIND_SCYTHE:
-			sprite_path = GlobalReferences.sprite_weapon_wind_scythe
-		weapon.Style.BOLT_LANCE:
-			sprite_path = GlobalReferences.sprite_weapon_bolt_lance
+# 
+func set_pickup_sprite():
+	var weapon_type = weapon.STYLE_DATA[chosen_weapon_style]
+	sprite_path = weapon_type[weapon.DataType.WEAPON_ICON_SPRITE]
 
 
 func set_sprite():
@@ -88,9 +73,11 @@ func set_sprite():
 
 func _on_Area_body_entered(body):
 	if not is_collected and body is Player:
-		body.weapon_ability_node.set_new_weapon(chosen_weapon_style)
-		body.weapon_ability_node.set_new_cooldown_timer()
-		emit_signal("collected")
+		# checks if player is blink dashing
+		if body.is_damageable_by_foes:
+			body.weapon_ability_node.set_new_weapon(chosen_weapon_style)
+			body.weapon_ability_node.set_new_cooldown_timer()
+			emit_signal("collected")
 
 
 func _on_NewWeaponPickup_collected():
