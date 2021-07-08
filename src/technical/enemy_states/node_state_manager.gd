@@ -11,7 +11,6 @@
 class_name StateManager, "res://art/shrek_pup_eye_sprite.png"
 extends Node2D
 
-# REVIEW reported conflict with class_state check_state signal, cannot recreate
 signal check_state
 signal state_manager_active # DEBUGGER ISSUE, UNUSED
 
@@ -50,21 +49,6 @@ var state_call_dict = {}
 # dict containing order in which to check states
 var state_priority_dict = {}
 
-#/*
-# REVIEW state machine logic, refactor? remove defunct variables
-# REVIEW write unit tests for state machine logic before major edits
-# have commented all references to state_change_attempts_per_second
-# current iteration of state machine does not use the _process loop
-# and therefore doesn't need to limit checks (will only call on logical
-# events for state changes)
-
-# 3rd generation state machine implementation defunct code
-# left to its own devices the state machine will lag the game
-# limit how many times it can attempt to change per second
-#var current_state_change_attempts_this_second
-#var maximum_state_change_attempts_per_second
-#*/
-
 # this timer controls how quickly a state can be changed
 # if it is running, state change is blocked
 # the perception gamestat of the enemy parent node controls this
@@ -98,10 +82,6 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	if current_state == null:
-		# defunct and removed
-# OUT-OF-SCOPE (to-review/do) state priority register, don't call on process
-		# idea - state register that scans by priority for highest to execute
-		 # w/ action states that override
 		emit_signal("check_state")
 	else:
 		call_active_state_node_action()
@@ -196,15 +176,6 @@ func set_state_priority_list():
 		state_priority_dict[state_to_check] = current_state_priority
 # print detail
 
-
-# defunct
-#func set_state_reaction_timer():
-#	# wait until parent is ready
-##	state_change_timer.wait_time = get_enemy_parent_reaction_speed()
-##	state_change_timer.start()
-#	current_state_change_attempts_this_second = 0
-#	maximum_state_change_attempts_per_second = get_enemy_parent_reaction_speed()
-
 ###############################################################################
 
 
@@ -218,6 +189,11 @@ func _on_ReactionTimer_timeout():
 #func _on_OffscreenNotifier_screen_exited():
 #	set_new_state(State.IDLE)
 ##	current_state = State.IDLE
+
+
+func _on_clear_state():
+	if is_active:
+		current_state = null
 
 
 ###############################################################################
@@ -235,16 +211,6 @@ func call_state_condition_check(state_identifier):
 func call_active_state_node_action():
 	if current_state != null:
 		get(state_call_dict[current_state]).state_action()
-
-
-###############################################################################
-
-#defunct
-#func get_enemy_parent_reaction_speed():
-#	if is_active:
-#		var reaction_speed
-#		reaction_speed = enemy_parent_node.gamestat_reaction_speed
-#		return reaction_speed
 
 ###############################################################################
 
@@ -268,11 +234,6 @@ func call_active_state_node_action():
 #		if can_check_state:
 #			current_state_change_attempts_this_second += 1
 #			check_if_can_change_state()
-
-
-func _on_clear_state():
-	if is_active:
-		current_state = null
 
 
 ###############################################################################

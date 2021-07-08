@@ -5,8 +5,7 @@ extends Node
 # paths to various resources handled by multiple scenes
 # the default weapon projectile modified by weapon style data
 const default_projectile = "res://src/entities/projectile.tscn"
-# node that handles deletion of node2d instances created by orbital
-# projectile spawn pattern (now defunct, handled elsewhere)
+# node for deletion of instances created by orbital proj spawn pattern
 const node_2d_deletion = "res://src/technical/node2d_deletion_handler.gd"
 # technical modifiers
 # technical modifier for time slow ability

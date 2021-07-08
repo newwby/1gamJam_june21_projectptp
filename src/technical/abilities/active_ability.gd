@@ -165,8 +165,6 @@ func call_ability_blink():
 
 # ability code for time slow below
 
-
-# TODO TASK rewrite time slow ability as time slow bubble (reuse code on area entry)
 # function for slowing time
 func call_ability_time_slow():
 	
@@ -256,15 +254,3 @@ func time_slow_projectile_speed(target):
 #	target.owner.orbiting_rotation_rate = 3
 
 ###############################################################################
-
-# defunct code
-#	get_tree().call_group("actors", set_actor_move_speed_slowed())
-#	get_tree().call_group("projectiles", set_projectile_flight_speed_slowed())
-#	get_tree().call_group("projectiles", set_projectile_rotator_orbit_speed_slowed())
-
-
-	# it should be an object created on everything
-	# not a singleton that calls all
-#func defunct_create_time_slow_mod(target):
-#	var time_slow_instance = modifier_time_slow_object.instance()
-#	target.add_child(time_slow_instance)

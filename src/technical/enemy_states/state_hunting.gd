@@ -2,10 +2,6 @@
 class_name StateHunting, "res://art/shrek_pup_eye_sprite.png"
 extends StateParent
 
-# defunct signals
-#signal update_current_velocity
-#signal is_current_target_visible
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
@@ -21,16 +17,6 @@ func _ready():
 func set_state_priority():
 	state_priority = 40
 
-#func set_state_signals():
-	# defunct signal connections
-	# we should not be putting state behaviour in the enemy parent node
-#	self.connect("update_current_velocity", enemy_parent_node, "on_update_velocity_with_current_target_position")
-#	self.connect("is_current_target_visible", enemy_parent_node, "on_is_current_target_visible")
-#	# set state signals should call parent class method
-#	.set_state_signals()
-
-
-#
 ################################################################################
 #
 ## placeholder function to be derived by child classes
@@ -65,7 +51,6 @@ func track_and_move_toward_target():
 	if is_active:
 		
 # if not set, set the detection manager
-# TODO TASK why is func track_and_move_toward_target called before state is set
 		if detection_manager == null:
 			detection_manager = enemy_parent_node.detection_scan
 	
@@ -102,7 +87,6 @@ func track_and_move_toward_target():
 		if attack_call.check_state_condition():
 			# ignore our state and check for new state
 #			emit_signal("check_state")
-		# TODO REVIEW is state checking signal necessary still?
 		# currently check state signal is temp disabled due to lag problems
 			state_manager_node.set_new_state(StateManager.State.ATTACK)
 
@@ -118,25 +102,3 @@ func check_target_is_visible(target):
 	return can_see_target
 
 ################################################################################
-
-
-# defunct
-#func find_closest_player_in_near_group():
-#	# find detection manager of enemy parent
-#	var detection_manager = enemy_parent_node.detection_scan
-#	var near_group
-#
-#	# make sure detection manager was found
-#	if detection_manager != null:
-#		# get group in the near range of the enemy
-#		near_group =\
-#		 get_tree().get_nodes_in_group(detection_manager.near_range_group)
-#
-#	# make sure we got the group (it isn't empty)
-#	if near_group != null:
-#		# get the closest player
-#		var closest_player =\
-#		 detection_manager.get_nearest_player_in_range_group(near_group)
-#		# make sure closest_player is in fact a player
-#		if closest_player is Player:
-#			return Player

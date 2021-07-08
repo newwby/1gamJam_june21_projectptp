@@ -143,14 +143,62 @@ func set_group_call_dict():
 		range_group_call_dict[enum_id] = full_call_string
 
 
-# pass a GlobalVariables.RangeGroup constant
-# get back list of nodes in said range group
-func call_range_group(range_id):
-#	print(range_id)
-#	if range_id in GlobalVariables.RangeGroup.keys():
-	var range_var_string = range_group_call_dict[range_id]
-#		print(range_var_string)
-	return get_tree().get_nodes_in_group(get(range_var_string))
+###############################################################################
+
+
+func get_players_in_range_group(range_group_to_scan):
+	var potential_targets = []
+	# scan all valid targets
+	for i in range_group_to_scan:
+		if i is Player:
+			potential_targets.append(i)
+	# return the group of nodes if not empty
+	if potential_targets.size() > 0:
+		return potential_targets
+
+
+# get the nearest in a generated group of nodes
+func get_closest_in_group_of_targets(potential_targets):
+	# clear these variables
+	var closest_target = null
+	var closest_target_distance = null
+	
+	# check who is the closest valid target
+	# is there are least one potential target?
+	if potential_targets != null:
+		if potential_targets.size() > 0:
+			# loop through
+			for i in potential_targets:
+				# how far away are they
+				var get_distance = position.distance_to(i.position)
+				# if haven't set ctd, set it
+				if closest_target_distance == null:
+					closest_target_distance = get_distance
+					closest_target = i
+				# if ctd has been set, is the new target closer?
+				# if they are, they are now the closest target
+				elif get_distance < closest_target_distance:
+					closest_target_distance = get_distance
+					closest_target = i
+	
+	# return the nearest target
+	if closest_target != null:
+		return closest_target
+
+
+func get_nearest_player_in_range_group(range_group_to_scan):
+	
+	# set null variables
+	var target_list
+	var closest_target
+	# target list is a list of valid players
+	target_list = get_players_in_range_group(range_group_to_scan)
+	
+	# closest target is the nearest in the list
+	closest_target = get_closest_in_group_of_targets(target_list)
+	
+	# return the closest target
+	return closest_target
 
 
 ###############################################################################
@@ -205,6 +253,44 @@ func _on_Range_Far_body_exited(body):
 ###############################################################################
 
 
+# pass a GlobalVariables.RangeGroup constant
+# get back list of nodes in said range group
+func call_range_group(range_id):
+#	print(range_id)
+#	if range_id in GlobalVariables.RangeGroup.keys():
+	var range_var_string = range_group_call_dict[range_id]
+#		print(range_var_string)
+	return get_tree().get_nodes_in_group(get(range_var_string))
+
+
+###############################################################################
+
+
+# pass this function a GlobalVariables.RangeGroup constant or range group or 
+# (pass call dict a GlobalVariables.RangeGroup constant to get range group)
+# and a target (any actor i.e. player or enemy)
+func is_actor_in_range_group(target, range_group):
+	# validate passed arguments, log error if incorrect arguments passed
+	# validate target arg and range_group arg
+	if target is Actor and range_group in GlobalVariables.RangeGroup\
+	or target is Actor and range_group is Array:
+		# if range_group was passed a GV.RangeGroup constant, create array
+		# note: if passed array we're trusting the calling function to pass
+		# an array with nodes in, else this will return false
+		if range_group in GlobalVariables.RangeGroup:
+			# set range_group var as the array of nodes in said range group
+			# using the group call dict
+			range_group = call_range_group(range_group)
+		# validated range_group arg successfully, carry on
+		# return the bool statement of whether target is in the array
+		return target in range_group
+	else:
+		if GlobalDebug.enemy_detection_func_logs: print("function [is_actor_in_range_group] exception")
+
+
+###############################################################################
+
+
 # NOTE: How do these detection radii work, and why do they exist?
 # Bodies are logged to enemy_specific node groups when moving in and out
 # of preset distances to the enemy
@@ -246,100 +332,11 @@ func remove_from_detection_group(range_group, body):
 #	#get_tree().get_nodes_in_group(group_to_call)
 ##	get_tree().call_group(group_to_call, do_this_method_test_example)
 
-###############################################################################
 
-# REVIEW - functional but predates call_dict, could be modified to use call_dict
-func get_players_in_range_group(range_group_to_scan):
-	var potential_targets = []
-	# scan all valid targets
-	for i in range_group_to_scan:
-		if i is Player:
-			potential_targets.append(i)
-	# return the group of nodes if not empty
-	if potential_targets.size() > 0:
-		return potential_targets
-
-# get the nearest in a generated group of nodes
-func get_closest_in_group_of_targets(potential_targets):
-	# clear these variables
-	var closest_target = null
-	var closest_target_distance = null
-	
-	# check who is the closest valid target
-	# is there are least one potential target?
-	if potential_targets != null:
-		if potential_targets.size() > 0:
-			# loop through
-			for i in potential_targets:
-				# how far away are they
-				var get_distance = position.distance_to(i.position)
-				# if haven't set ctd, set it
-				if closest_target_distance == null:
-					closest_target_distance = get_distance
-					closest_target = i
-				# if ctd has been set, is the new target closer?
-				# if they are, they are now the closest target
-				elif get_distance < closest_target_distance:
-					closest_target_distance = get_distance
-					closest_target = i
-	
-	# return the nearest target
-	if closest_target != null:
-		return closest_target
-
-
-# REVIEW - functional but predates call_dict, could be modified to use call_dict
-func get_nearest_player_in_range_group(range_group_to_scan):
-	
-	# set null variables
-	var target_list
-	var closest_target
-	# target list is a list of valid players
-	target_list = get_players_in_range_group(range_group_to_scan)
-	
-	# closest target is the nearest in the list
-	closest_target = get_closest_in_group_of_targets(target_list)
-	
-	# return the closest target
-	return closest_target
-
-
-# pass this function a GlobalVariables.RangeGroup constant or range group or 
-# (pass call dict a GlobalVariables.RangeGroup constant to get range group)
-# and a target (any actor i.e. player or enemy)
-func is_actor_in_range_group(target, range_group):
-	# validate passed arguments, log error if incorrect arguments passed
-	# validate target arg and range_group arg
-	if target is Actor and range_group in GlobalVariables.RangeGroup\
-	or target is Actor and range_group is Array:
-		# if range_group was passed a GV.RangeGroup constant, create array
-		# note: if passed array we're trusting the calling function to pass
-		# an array with nodes in, else this will return false
-		if range_group in GlobalVariables.RangeGroup:
-			# set range_group var as the array of nodes in said range group
-			# using the group call dict
-			range_group = call_range_group(range_group)
-		# validated range_group arg successfully, carry on
-		# return the bool statement of whether target is in the array
-		return target in range_group
-	else:
-		if GlobalDebug.enemy_detection_func_logs: print("function [is_actor_in_range_group] exception")
-
-
-# disable all collision radii
-func disable_all():
+# disable all collision radii in detection manager when it has a moment
+func disable_all_collision_radii():
 	collision_radius_melee.set_deferred("disabled", true)#.disabled = true
 	collision_radius_close.set_deferred("disabled", true)#.disabled = true
 	collision_radius_near.set_deferred("disabled", true)#.disabled = true
 	collision_radius_far.set_deferred("disabled", true)#.disabled = true
 
-
-
-# defunct, removed
-#func get_closest_player_in_near_group():
-##	print("get closest")
-#	var near_group_to_pass = call_range_group(GlobalVariables.RangeGroup.NEAR)
-#	var closest_player = get_nearest_player_in_range_group(near_group_to_pass)
-##	var closest_player = get_nearest_player_in_range_group(get_tree().get_nodes_in_group(near_range_group))
-#	if closest_player != null:
-#		return closest_player

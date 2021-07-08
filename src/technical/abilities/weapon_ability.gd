@@ -61,19 +61,7 @@ onready var node2d_deletion_script = preload(NODE_2D_DELETION_HANDLER)
 onready var shot_spawn_delay_timer = $ShotDelayTimer
 onready var minimum_cooldown_timer = $MinimumShotCooldown
 
-###############################################################################
 
-# TODO TASK BUG w/sniper shot aiming in wrong direction on first firing
-# make target line logic execute on collecting sniper shot?
-
-# TODO TASK connect expiry signal from projectiles to proj owner
-#
-## TODO TASK - add logic for minimum fire range to foe from weapon style data
-##		DataType.AI_MIN_USE_RANGE			: GlobalVariables.RangeGroup.CLOSE,
-##		DataType.AI_MAX_USE_RANGE			: GlobalVariables.RangeGroup.FAR,
-##		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
-##		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
-#
 ################################################################################
 #
 #
@@ -107,12 +95,6 @@ func set_first_weapon():
 func set_new_weapon(passed_weapon):
 	set_weapon_style(passed_weapon)
 	set_weapon_dependent_owner_variables()
-#	set_new_cooldown_timer()
-#	defunct comment line x3
-#	is not called here because the relevant code
-#	is included in set_activation_cooldown, the setter function for
-#	activation_cooldown which IS set by the set_new_cooldown_timer()
-
 
 # everything the weapon node needs to know about handling projectiles
 # is included in the data returned with this function
@@ -120,7 +102,7 @@ func set_new_weapon(passed_weapon):
 func set_weapon_style(new_weapon_style):
 	# current_weapon_style should be set to the enum weapon.Style
 	# pulls from weapon.STYLE_DATA and populates ability data dict
-	# TODO TASK rewrite func set_weapon_style to pull weapon style not use switch
+	
 	var ability_data
 	match new_weapon_style:
 		weapon.Style.SPLIT_SHOT :
@@ -228,33 +210,6 @@ func activate_ability():
 	call_projectile_spawn_pattern_function()
 
 
-# OUT-OF-SCOPE rewrite orbital handling logic, this is messy af
-# see below
-# okay this function works but it interferes with spawning projectiles
-# so make this only run if no projectile has been spawned recently
-# orbital handler is a local onready var when it should be parented, fix
-func cleanup_orbital_node_holders():
-	# as part of its function the orbital weapon pattern creates node2d
-	# technical parents for the purposes of rotation around a central
-	# rotating point - these are not cleaned by the projectile class
-	# and thus must be cleaned elsewhere
-	if current_weapon_style[weapon.DataType.PROJECTILE_MOVE_PATTERN]\
-	 in [GlobalVariables.ProjectileMovement.ORBIT, \
-	GlobalVariables.ProjectileMovement.ORBIT]:
-		# we make sure owner is valid/has the valid node first
-		if owner is Actor:
-			# don't try to cleanup if currently shooting
-			if not owner.is_firing:
-				# everything we're trying to clean up is child of this node
-				var cleanup_parent = owner.orbit_handler_node
-				for orbit_node in cleanup_parent.get_children():
-					# if the node has no children it is either new
-					# (but if we're not firing it shouldn't be new)
-					# or, what we want, it has had a child projectile removed
-					if orbit_node.get_child_count() == 0:
-						orbit_node.queue_free()
-
-
 ################################################################################
 #
 
@@ -311,7 +266,6 @@ func call_spawn_pattern_spread():
 	# projectile count is odd or even
 	var proj_spacing_adjustment
 	
-	# OUT-OF-SCOPE account for projecitle size in spread
 	
 	var projectile_count_even = projectile_count % 2 == 0
 	
@@ -483,7 +437,6 @@ func instance_new_projectile():
 	new_projectile.rotation_per_tick =\
 	 current_weapon_style[weapon.DataType.PROJECTILE_SPRITE_ROTATE]
 	
-	# OUT-OF-SCOPE change set size to be a sprite scaling function
 	
 	# this property is called on projectile to scale projectile size
 	new_projectile.projectile_set_size =\
@@ -497,7 +450,6 @@ func instance_new_projectile():
 	 current_weapon_style[weapon.DataType.PROJECTILE_SPRITE_COLOUR]
 	#
 	# this establishes how the projectile moves once spawned
-	# OUT-OF-SCOPE different proj behaviours as base_proj child classes
 	new_projectile.projectile_movement_behaviour =\
 	 current_weapon_style[weapon.DataType.PROJECTILE_MOVE_PATTERN]
 
@@ -528,21 +480,10 @@ func spawn_new_projectile(spawn_position, spawn_velocity, rotation_alteration):
 			
 				new_projectile.position = spawn_position
 				new_projectile.velocity = spawn_velocity
-			#
-			#	OUT-OF-SCOPE REVIEW issues with proj rotation toward target
-			#  i.e. having problems with projectile rotation toward target, need
-			#	to fix that if I ever want to (re)introduce pointed projectiles
-			#	- for now just going to use circular projectiles
-			#
-			#	#new_projectile.rotation_degrees = 90
-			##	var offset = owner.position - owner.firing_target
-			#	var offset = owner.firing_target - owner.position
-			#	new_projectile.rotation -= offset.angle();
 				
 				var get_move_style = new_projectile.projectile_movement_behaviour
 				if get_move_style == GlobalVariables.ProjectileMovement.DIRECT:
-					# TODO REVIEW projectile default parent (root viewport)
-					# is this an issue?
+					
 					# adding projectile to the root viewport for now
 					var projectile_parent = get_tree().get_root()
 					projectile_parent.add_child(new_projectile)
@@ -555,18 +496,16 @@ func spawn_new_projectile(spawn_position, spawn_velocity, rotation_alteration):
 					new_parent.rotation_degrees = spawn_spacing * count_children
 					new_parent.add_child(new_projectile)
 					projectile_parent.add_child(new_parent)
-					# now defunct script attachment to the node2d for cleanup
-					# cleanup is now a function of weapon node
-			#		new_parent.set_script(node2d_deletion_script)
 					
 				elif get_move_style == GlobalVariables.ProjectileMovement.RADAR:
 					
 					var projectile_parent = new_projectile.projectile_owner.orbit_handler_node
 					projectile_parent.add_child(new_projectile)
-					# TODO TASK connect expiry signal from proj to proj owner
-					
-			# TODO TASK move this logic to after projecitle is added to tree
-			# (prevents get_global_transform !is_inside_tree() compiler error)
+				
+				# connect expiry signal to projectile owner
+				# no function currently
+				new_projectile.connect("projectile_expired", new_projectile.projectile_owner, "owned_projectile_expired")
+			
 			#	# if spread has been applied, affix a sprite change
 				new_projectile.rotation_degrees = rotation_alteration*10
 				
@@ -611,43 +550,36 @@ func return_shot_rotation_from_variance():
 
 
 ###############################################################################
-# TODO TASK remove all defunct functions from all classes
-# TODO TASK remove unused assets from all folders
-###############################################################################
-#
-# DEFUNCT FUNCTIONS BELOW HERE
-#
-## defunct, remove later
-#func defunct_testing_of_call_spawn_pattern_spread():
-#	# use our current weapon style to get the number of projectiles fired
-#	var get_projectile_count = \
-#	current_weapon_style[weapon.DataType.PROJECTILE_COUNT]
-##
-##	# get the rotation applied to velocity for spread shots
-#	var base_projectile_spread = weapon.SPREAD_PATTERN_WIDTH
-#
-#	var projectile_spread_increment = (weapon.SPREAD_PATTERN_WIDTH * 0.75)
-###
-##	# get our position for spawn origin
-#	var get_spawn_origin = owner.position
-#	# initial velocity determined by the actor
-#	# specifically by the actor's 'firing_target'
-#	# for a player it is a vector toward their mouse position
-#	# (at the time they pressed the fire key)
-#	# for any AI it is the actor or entity they are aiming at
-#	# (after introducing some fake 'poor aim' and/or 'aiming delay')
-#	var given_velocity = get_projectile_initial_velocity()
-#	# adjusted velocity is the velocity accounting for projectile spread
-#	var adjusted_velocity
-#	# this is to store the total rotation applied to projectile velocity
-#	var total_spread_increment_counter
-#
-#	spawn_new_projectile(get_spawn_origin, given_velocity)
 
 
+
+# okay this function works but it interferes with spawning projectiles
+# so make this only run if no projectile has been spawned recently
+# orbital handler is a local onready var when it should be parented, fix
+func cleanup_orbital_node_holders():
+	# as part of its function the orbital weapon pattern creates node2d
+	# technical parents for the purposes of rotation around a central
+	# rotating point - these are not cleaned by the projectile class
+	# and thus must be cleaned elsewhere
+	if current_weapon_style[weapon.DataType.PROJECTILE_MOVE_PATTERN]\
+	 in [GlobalVariables.ProjectileMovement.ORBIT, \
+	GlobalVariables.ProjectileMovement.ORBIT]:
+		# we make sure owner is valid/has the valid node first
+		if owner is Actor:
+			# don't try to cleanup if currently shooting
+			if not owner.is_firing:
+				# everything we're trying to clean up is child of this node
+				var cleanup_parent = owner.orbit_handler_node
+				for orbit_node in cleanup_parent.get_children():
+					# if the node has no children it is either new
+					# (but if we're not firing it shouldn't be new)
+					# or, what we want, it has had a child projectile removed
+					if orbit_node.get_child_count() == 0:
+						orbit_node.queue_free()
 
 
 ###############################################################################
+
 
 # unfinished function to compare weapon dps
 func _calculate_weapon_dps():

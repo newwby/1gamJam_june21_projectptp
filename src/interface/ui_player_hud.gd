@@ -102,12 +102,6 @@ func set_cooldown_texture_positions_and_dimensions():
 func set_scale_and_center_radial(_sprite_anchor, cooldown_radial):
 	# set scale of radial, textures are too large by default
 	cooldown_radial.rect_scale = base_cooldown_texture_scale
-	# adjust for set scale
-	# unused variable, defunct
-#	var half_texture_size =\
-#	 (sprite_anchor.texture.get_size() * sprite_anchor.scale) / 2.5
-	# position setting currently disabled due to problems with the UI controls
-#	cooldown_radial.rect_position = sprite_anchor.position+half_texture_size
 
 
 ###############################################################################
@@ -118,11 +112,21 @@ func _on_GameTimer_Seconds_timeout():
 		update_time()
 
 
+func _on_WeaponSegmentTimer_timeout():
+	weapon_cooldown.value += 1
+
+
+func _on_Ability1SegmentTimer_timeout():
+	ability1_cooldown.value += 1
+
+
+func _on_Ability2SegmentTimer_timeout():
+	ability2_cooldown.value += 1
+
+
 ###############################################################################
 
 
-
-# REVIEW sniper and burst fire segment timer not correct expiry rate
 # enum_id is passed from
 # player.gd 'ability_enum_id = weapon_ability_node.selected_weapon_style'
 func update_cooldown(ability_type, ability_enum_id, new_value, new_max):
@@ -140,19 +144,6 @@ func update_cooldown(ability_type, ability_enum_id, new_value, new_max):
 			#time slow
 
 
-func ui_modify_cooldown(cooldown_node, cooldown_segment_timer, new_value, new_max):
-	# defunct so discard atm
-	var _discard = new_max
-	# set value of radial progress node on ui
-	cooldown_node.value = new_value
-	if new_max != null:
-		cooldown_node.max_value = 32
-		var segment_of_max = new_max/32
-		reset_timer(cooldown_segment_timer, segment_of_max)
-
-
-# REVIEW should this be part of pickup function?
-# changes ui weapon graphic
 func update_ui_weapon_cooldown_graphic(weapon_style_id):
 	# get correct sprite paths
 	var sprite_path_prog
@@ -172,12 +163,6 @@ func update_ui_weapon_cooldown_graphic(weapon_style_id):
 		weapon_cooldown.texture_progress = load(sprite_path_prog)
 
 
-func reset_timer(timer_to_set, new_wait_time):
-	timer_to_set.stop()
-	timer_to_set.wait_time = new_wait_time
-	timer_to_set.start()
-
-
 func update_time():
 	current_game_time_second -= 1
 	if current_game_time_second < 0:
@@ -194,13 +179,19 @@ func update_time():
 
 
 
-func _on_WeaponSegmentTimer_timeout():
-	weapon_cooldown.value += 1
+###############################################################################
 
 
-func _on_Ability1SegmentTimer_timeout():
-	ability1_cooldown.value += 1
+func reset_timer(timer_to_set, new_wait_time):
+	timer_to_set.stop()
+	timer_to_set.wait_time = new_wait_time
+	timer_to_set.start()
 
 
-func _on_Ability2SegmentTimer_timeout():
-	ability2_cooldown.value += 1
+func ui_modify_cooldown(cooldown_node, cooldown_segment_timer, new_value, new_max):
+	# set value of radial progress node on ui
+	cooldown_node.value = new_value
+	if new_max != null:
+		cooldown_node.max_value = 32
+		var segment_of_max = new_max/32
+		reset_timer(cooldown_segment_timer, segment_of_max)

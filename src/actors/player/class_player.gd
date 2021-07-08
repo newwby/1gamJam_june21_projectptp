@@ -83,7 +83,7 @@ onready var time_slow_ability_audio3 = $AudioEffectsHolder/AbilityTimeSlowEffect
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# adjust the player sprite according to (var sprite_intended_size)
-	setup_sprite_scale()
+	set_sprite_scale()
 	set_ability_nodes()
 	update_life_hearts()
 
@@ -95,20 +95,20 @@ func _process(delta):
 		get_attack_input()
 		get_ability_input()
 		# handle per tick functions
-		_process_orbit_handler_rotate(delta)
-		_process_rotate_targeting_sprite(delta)
-		_process_rotate_sprite_eyes(delta)
-		_process_tween_speed(delta)
+		process_orbit_handler_rotate(delta)
+		process_rotate_targeting_sprite(delta)
+		process_rotate_sprite_eyes(delta)
+		process_tween_speed(delta)
 
 # for orbital and radar projectiles
-func _process_orbit_handler_rotate(_dt):
+func process_orbit_handler_rotate(_dt):
 	# reversed rotation to fix projectiles spawning and vanishing
 	# so they do so in the 'correct' order
 	orbit_handler_node.rotation_degrees -= orbiting_rotation_rate
 
 
 # target sprites point (arrow and sniper target line) point toward mouse pos
-func _process_rotate_targeting_sprite(_dt):
+func process_rotate_targeting_sprite(_dt):
 	target_line_sniper.visible = show_sniper_line
 	target_sprite_rotator.visible = show_rotate_target_sprites
 	# make sure these are allowed to rotate
@@ -118,21 +118,12 @@ func _process_rotate_targeting_sprite(_dt):
 		# godot engine problem brute force fix
 		target_sprite_rotator.rotation_degrees += 90
 
-# track any mouse movement as new co-ordinates for mouse position
-func _input(event):
-	# Mouse in viewport coordinates.
-	if event is InputEventMouseMotion:
-		current_mouse_position = event.position
-
 
 # eyes turn to face the mouse cursor
-func _process_rotate_sprite_eyes(_dt):
+func process_rotate_sprite_eyes(_dt):
 	# make sprite eyes look at mouse cursor
 	for eye in [left_eye_sprite, right_eye_sprite]:
 		eye.look_at(get_global_mouse_position())
-
-
-###############################################################################
 
 
 # player class override for handling movement, with key input
@@ -144,7 +135,7 @@ func process_handle_movement(_dt):
 
 
 # control the speed of the animation based on whether the player is moving
-func _process_tween_speed(_dt):
+func process_tween_speed(_dt):
 	# if player is currently moving
 	if is_moving and \
 	 sprite_animation_tween.playback_speed != moving_anim_tween_playback_rate:
@@ -160,23 +151,27 @@ func _process_tween_speed(_dt):
 ###############################################################################
 
 
+# track any mouse movement as new co-ordinates for mouse position
+func _input(event):
+	# Mouse in viewport coordinates.
+	if event is InputEventMouseMotion:
+		current_mouse_position = event.position
+
+###############################################################################
+
+
 # player sprite is scaled according to its own dimensions and the
 # intended sprite size, adjusting scale by proportions
-func setup_sprite_scale():
+func set_sprite_scale():
 	var get_sprite_dimensions = player_sprite.get_rect().size
 		# calculate if the dimensions of the sprite are the same length or not
-	# needing to know the exact difference is now defunct
-	# all references to dimension_diff commented out
-	#var dimension_diff
+		
 	var shorter_dimension
 	if get_sprite_dimensions.x > get_sprite_dimensions.y:
-		#dimension_diff = get_sprite_dimensions.x-get_sprite_dimensions.y
 		shorter_dimension = get_sprite_dimensions.y
 	elif get_sprite_dimensions.y > get_sprite_dimensions.x:
-		#dimension_diff = get_sprite_dimensions.y-get_sprite_dimensions.x
 		shorter_dimension = get_sprite_dimensions.x
 	else:
-		#dimension_diff = 0
 		shorter_dimension = get_sprite_dimensions.x
 	
 	# apply the scale adjustment
@@ -247,29 +242,35 @@ func get_ability_input():
 ###############################################################################
 
 
-# player is a signal switchboard between ability nodes and HUD/UI
-func handle_ability_cooldown_signal(ability_node, ability_type, new_value, new_cooldown):
-	
-	# need to pass to the UI
-	# enum ID for weapon style or ability type
-	# ability type so we know what to use enum id for
-	# new value
-	# new cooldown
-#	func update_cooldown(ability_type, enum_id, new_value, new_max):
-	
-	var ability_enum_id
-	if ability_type == BaseAbility.AbilityType.ACTIVE:
-		ability_enum_id = ability_node.current_ability_loadout
-		if GlobalDebug.ability_cooldown_call_logs: print("ability is enum id ", weapon_ability_node.selected_weapon_style)
-	elif ability_type == BaseAbility.AbilityType.WEAPON:
-		if weapon_ability_node != null:
-			if GlobalDebug.ability_cooldown_call_logs: print("wep is enum id ", weapon_ability_node.selected_weapon_style)
-			ability_enum_id = weapon_ability_node.selected_weapon_style
-	
-	# pass relevant info to the HUD
-	if player_HUD != null:
-		player_HUD.update_cooldown(\
-		ability_type, ability_enum_id, new_value, new_cooldown)
+func get_shot_sound_and_play():
+	var audio_array_shot = [\
+	shot_audio1, shot_audio2, shot_audio3, shot_audio4, shot_audio5]
+	if GlobalDebug.PLAYER_SE_ENABLED:
+		GlobalFuncs.shuffle_audio_and_play(audio_array_shot)
+
+
+func get_damaged_sound_and_play():
+	var audio_array_damaged = [\
+	damaged_audio1, damaged_audio2]
+	if GlobalDebug.PLAYER_SE_ENABLED:
+		GlobalFuncs.shuffle_audio_and_play(audio_array_damaged)
+
+
+func get_blink_sound_and_play():
+	var audio_array_blink = [\
+	blink_ability_audio1, blink_ability_audio2, blink_ability_audio3]
+	if GlobalDebug.PLAYER_SE_ENABLED:
+		GlobalFuncs.shuffle_audio_and_play(audio_array_blink)
+
+
+func get_time_slow_sound_and_play():
+	var audio_array_time_slow = [\
+	time_slow_ability_audio1, time_slow_ability_audio2, time_slow_ability_audio3]
+	if GlobalDebug.PLAYER_SE_ENABLED:
+		GlobalFuncs.shuffle_audio_and_play(audio_array_time_slow)
+
+
+###############################################################################
 
 
 func _on_WeaponAbility_updated_cooldown(ability_node, ability_type, new_value, new_cooldown):
@@ -300,6 +301,56 @@ func _on_Player_damaged(damage_taken, _damager):
 			player_died()
 
 
+func _on_GameEnvironment_game_started():
+	player_HUD.is_time_passing = true
+#	player_HUD._on_GameTimer_Seconds_timeout()
+
+
+func _on_WeaponAbility_weapon_fired():
+	get_shot_sound_and_play()
+
+
+func _on_ActiveAbility1_activate_signal(ability_type):
+	if ability_type == "blink":
+		get_blink_sound_and_play()
+
+
+func _on_ActiveAbility2_activate_signal(ability_type):
+	if ability_type == "time_slow":
+		get_time_slow_sound_and_play()
+
+
+###############################################################################
+
+
+# player is a signal switchboard between ability nodes and HUD/UI
+func handle_ability_cooldown_signal(ability_node, ability_type, new_value, new_cooldown):
+	
+	# need to pass to the UI
+	# enum ID for weapon style or ability type
+	# ability type so we know what to use enum id for
+	# new value
+	# new cooldown
+#	func update_cooldown(ability_type, enum_id, new_value, new_max):
+	
+	var ability_enum_id
+	if ability_type == BaseAbility.AbilityType.ACTIVE:
+		ability_enum_id = ability_node.current_ability_loadout
+		if GlobalDebug.ability_cooldown_call_logs: print("ability is enum id ", weapon_ability_node.selected_weapon_style)
+	elif ability_type == BaseAbility.AbilityType.WEAPON:
+		if weapon_ability_node != null:
+			if GlobalDebug.ability_cooldown_call_logs: print("wep is enum id ", weapon_ability_node.selected_weapon_style)
+			ability_enum_id = weapon_ability_node.selected_weapon_style
+	
+	# pass relevant info to the HUD
+	if player_HUD != null:
+		player_HUD.update_cooldown(\
+		ability_type, ability_enum_id, new_value, new_cooldown)
+
+
+###############################################################################
+
+
 # update life heart gui
 func update_life_hearts():
 	#clear all
@@ -319,50 +370,3 @@ func update_life_hearts():
 
 func player_died():
 	self.queue_free()
-
-
-func _on_GameEnvironment_game_started():
-	player_HUD.is_time_passing = true
-#	player_HUD._on_GameTimer_Seconds_timeout()
-
-
-func _on_WeaponAbility_weapon_fired():
-	get_shot_sound_and_play()
-
-
-func get_shot_sound_and_play():
-	var audio_array_shot = [\
-	shot_audio1, shot_audio2, shot_audio3, shot_audio4, shot_audio5]
-	if GlobalDebug.PLAYER_SE_ENABLED:
-		GlobalFuncs.shuffle_audio_and_play(audio_array_shot)
-
-
-func get_damaged_sound_and_play():
-	var audio_array_damaged = [\
-	damaged_audio1, damaged_audio2]
-	if GlobalDebug.PLAYER_SE_ENABLED:
-		GlobalFuncs.shuffle_audio_and_play(audio_array_damaged)
-
-
-func get_blink_sound_and_play():
-	var audio_array_blink = [\
-	blink_ability_audio1, blink_ability_audio2, blink_ability_audio3]
-	if GlobalDebug.PLAYER_SE_ENABLED:
-		GlobalFuncs.shuffle_audio_and_play(audio_array_blink)
-
-
-func get_time_slow_sound_and_play():
-	var audio_array_time_slow = [\
-	time_slow_ability_audio1, time_slow_ability_audio2, time_slow_ability_audio3]
-	if GlobalDebug.PLAYER_SE_ENABLED:
-		GlobalFuncs.shuffle_audio_and_play(audio_array_time_slow)
-
-
-func _on_ActiveAbility1_activate_signal(ability_type):
-	if ability_type == "blink":
-		get_blink_sound_and_play()
-
-
-func _on_ActiveAbility2_activate_signal(ability_type):
-	if ability_type == "time_slow":
-		get_time_slow_sound_and_play()

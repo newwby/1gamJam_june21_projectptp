@@ -30,7 +30,7 @@ onready var background_music = $BackgroundBGM
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	setup_logo_fade_in()
+	starting_game_splash_fade_in()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
@@ -41,7 +41,7 @@ func _ready():
 
 
 # part 1, on ready
-func setup_logo_fade_in():
+func starting_game_splash_fade_in():
 	start_timer.wait_time = start_timer_dur
 	ui_node.modulate.a = fade_zero
 	player_node.visible = true

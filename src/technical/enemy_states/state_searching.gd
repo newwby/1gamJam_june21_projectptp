@@ -25,8 +25,6 @@ func set_state_priority():
 #
 ################################################################################
 ##
-# TODO REVIEW is the search state implemented? implement if so
-# TODO TASK reimplement roaming/wandering state
 #
 ### placeholder function to be derived by child classes
 ### returns false without any superseding child class function

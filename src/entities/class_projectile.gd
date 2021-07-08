@@ -3,6 +3,8 @@
 class_name Projectile
 extends Area2D
 
+signal projectile_expired # DEBUGGER ISSUE, UNUSED
+
 # constant float for modifying velocity inherited from spawner
 const INHERITED_VELOCITY_MULTIPLIER := 0.5
 
@@ -39,10 +41,7 @@ var is_projectile_moving_this_tick = true
 
 # simplified velocity
 var velocity = Vector2.ZERO
-
-# defunct?
-# final projectile movement vector
-var projectile_travel_vector = Vector2.ZERO
+#
 # projectile travels this direction multiplied by its speed
 var facing_direction = Vector2.ZERO
 # initial speed of the attacker passed at spawn
@@ -96,7 +95,7 @@ func _ready():
 	set_collision_and_sprite_size()
 	set_projectile_lifespan_timer()
 	set_particle_effects()
-	init_orbit_and_radar()
+	set_orbit_and_radar()
 	set_maximum_projectile_range()
 	set_collision_layers()
 
@@ -238,13 +237,10 @@ func set_particle_effects():
 
 
 # initialise handling orbit and orbit-related projectile movement
-func init_orbit_and_radar():
-	# defunct timer
+func set_orbit_and_radar():
 	if projectile_movement_behaviour == GlobalVariables.ProjectileMovement.ORBIT:
 		start_projectile_orbit()
 	elif projectile_movement_behaviour == GlobalVariables.ProjectileMovement.RADAR:
-		# disabled temporary
-#		orbit_init_timer.start()
 		start_projectile_radar_sweep()
 
 
@@ -255,6 +251,18 @@ func set_maximum_projectile_range():
 
 
 ##############################################################################
+
+func _on_Projectile_body_entered(body):
+	if body is Actor and body != projectile_owner:
+		if body.is_active:
+			if body is Player and not body.is_damageable_by_foes:
+				return
+			else:
+				body.emit_signal("damaged", projectile_damage, projectile_owner)
+				call_projectile_expiry()
+
+
+###############################################################################
 
 
 # if the timer for the projectile's lifespan expires, delete the projectile
@@ -281,6 +289,16 @@ func _on_ProjectileVisibilityNotifier_screen_exited():
 ##############################################################################
 
 
+
+
+func _on_FadeTween_tween_completed(_object, _key):
+	call_projectile_expiry()
+
+func _on_FadeTween_tween_all_completed():
+	queue_free()
+
+
+# defunct, remove?
 # if orbital behaviour timer elapses we must set the projectile
 # to rotate around the orbital handler node of the projectile owner
 func _on_OrbitInitialisationTimer_timeout():
@@ -311,31 +329,7 @@ func _on_OrbitInitialisationTimer_timeout():
 #		new_parent.orbit_handler_node.add_child(self)
 
 
-
-
-func _on_FadeTween_tween_completed(_object, _key):
-	call_projectile_expiry()
-
-func _on_FadeTween_tween_all_completed():
-	queue_free()
-
-
 ##############################################################################
-
-
-# begin a tween to fade projectile away rapidly
-func begin_projectile_expiry():
-#	call_projectile_expiry()
-	if fading_tween.is_inside_tree():
-		fading_tween.interpolate_property(self,\
-		 "modulate:a", modulate.a, 0, projectile_expiry_fade_duration,\
-		 Tween.TRANS_LINEAR, Tween.EASE_OUT)
-		fading_tween.start()
-
-
-# whenever you feel ready to delete this safely godot, go for it
-func call_projectile_expiry():
-	queue_free()
 
 
 func start_projectile_orbit():
@@ -361,51 +355,23 @@ func start_projectile_radar_sweep():
 #	is_projectile_movement_allowed = false
 
 
-###############################################################################
-#
-#
-## projectile moves according to given vector instruction
-#func defunct_process_handle_movement(dt):
-#	if is_projectile_movement_allowed and is_projectile_moving_this_tick:
-#		# clear previous vector
-#		#projectile_travel_vector = Vector2.ZERO
-#		# apply initial velocity, then add facing multiplied by speed
-#		projectile_travel_vector = \
-#		initial_velocity * INHERITED_VELOCITY_MULTIPLIER + \
-#		(facing_direction * projectile_speed)
-#		# adjust own position by ticks since last calculation
-#		self.position += projectile_travel_vector * dt
-#		_process_ticks_travelled(dt)
-#
-#
-## NOW DEFUNCT, this is the original func I used for testing
-## projectile collision is set according to var projectile_set_size
-#func defunct_setup_collision_extents(given_vector):
-#	projectile_collision.shape.extents = given_vector
-#
-## NOW DEFUNCT, this is the original func I used for testing
-## sprite holder node contains animated sprites that make up projectile graphics
-## this function assigns a scale adjustment to all children of that node
-## scale adjustment is  set according to var projectile_set_size
-#func defunct_setup_sprite_size(size_to_set):
-#	# sprite scale adjustment set to default
-#	var set_sprite_scale = Vector2(1.0, 1.0)
-#
-#	# if node in sprite holder node is animated sprite
-#	# set to adjusted value and play
-#	for anim_sprite in projectile_sprite_holder.get_children():
-#		if anim_sprite is AnimatedSprite:
-#			set_sprite_scale = Vector2(0.15, 0.15)
-#			anim_sprite.scale = set_sprite_scale
-#			anim_sprite.playing = true
-#			if GlobalDebug.proj_sprite_handling: print(anim_sprite.name, "set")
+##############################################################################
 
 
-func _on_Projectile_body_entered(body):
-	if body is Actor and body != projectile_owner:
-		if body.is_active:
-			if body is Player and not body.is_damageable_by_foes:
-				return
-			else:
-				body.emit_signal("damaged", projectile_damage, projectile_owner)
-				self.queue_free()
+# begin a tween to fade projectile away rapidly
+func begin_projectile_expiry():
+#	call_projectile_expiry()
+	if fading_tween.is_inside_tree():
+		fading_tween.interpolate_property(self,\
+		 "modulate:a", modulate.a, 0, projectile_expiry_fade_duration,\
+		 Tween.TRANS_LINEAR, Tween.EASE_OUT)
+		fading_tween.start()
+
+
+# whenever you feel ready to delete this safely godot, go for it
+func call_projectile_expiry():
+	emit_signal("projectile_expired")
+	queue_free()
+
+
+##############################################################################

@@ -34,13 +34,6 @@ func _ready():
 ###############################################################################
 
 
-func _on_TimerController_timeout():
-	spawn_new_leaf()
-
-
-###############################################################################
-
-
 # set up and control the timer for spawning (self)
 func set_spawn_rate_of_leaves():
 	leaf_timer.wait_time = spawn_delay
@@ -48,13 +41,6 @@ func set_spawn_rate_of_leaves():
 	leaf_timer.one_shot = false
 	if leaf_timer.is_stopped():
 		leaf_timer.start()
-
-
-func spawn_new_leaf():
-	var new_leaf = leaf_object.instance()
-	new_leaf.position = leaf_spawn_position
-	new_leaf.velocity = set_velocity_variance()
-	self.add_child(new_leaf)
 
 
 # give the velocity some adjustment so it looks less uniform
@@ -71,5 +57,22 @@ func set_velocity_variance():
 	)
 	
 	return velocity_to_set.normalized()
+
+
+###############################################################################
+
+
+func _on_TimerController_timeout():
+	spawn_new_leaf()
+
+
+###############################################################################
+
+
+func spawn_new_leaf():
+	var new_leaf = leaf_object.instance()
+	new_leaf.position = leaf_spawn_position
+	new_leaf.velocity = set_velocity_variance()
+	self.add_child(new_leaf)
 
 ###############################################################################

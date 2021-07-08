@@ -21,16 +21,7 @@ func _ready():
 	modifier_expiry_timer.start()
 
 
-func apply_effect():
-	if GlobalDebug.log_parent_modifier_steps: print("apply_effect")
-	# announce we're done
-	emit_signal("effect_applied")
-
-
-func remove_effect():
-	if GlobalDebug.log_parent_modifier_steps: print("remove_effect")
-	# announce we're done
-	emit_signal("effect_removed")
+###############################################################################
 
 
 func _on_ExpiryTimer_timeout():
@@ -41,3 +32,18 @@ func _on_ExpiryTimer_timeout():
 	yield(self, "effect_removed")
 	# delete self
 	queue_free()
+
+
+###############################################################################
+
+
+func apply_effect():
+	if GlobalDebug.log_parent_modifier_steps: print("apply_effect")
+	# announce we're done
+	emit_signal("effect_applied")
+
+
+func remove_effect():
+	if GlobalDebug.log_parent_modifier_steps: print("remove_effect")
+	# announce we're done
+	emit_signal("effect_removed")

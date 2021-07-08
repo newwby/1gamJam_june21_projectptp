@@ -42,6 +42,13 @@ func process_handle_movement(_dt):
 	pass
 
 
+# called on the projectile owner whenever a projectile expires
+func owned_projectile_expired():
+	# removed debug print
+#	print(self.name, " has had projectile expire")
+	pass
+
+
 ###############################################################################
 
 

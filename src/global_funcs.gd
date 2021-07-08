@@ -4,10 +4,6 @@ func ReturnRandomRange(value_floor: float, value_ceiling: float):
 	randomize()
 	return rand_range(value_floor, value_ceiling)
 
-# TODO REVIEW search up and address all REVIEW references for code improvements
-# TODO OUT-OF-SCOPE search up and address all OUT-OF-SCOPE references
-# OUT-OF-SCOPE make audio controller for handling audio nodes
-
 # play a random sound effect from a list/array of sound effects
 func shuffle_audio_and_play(audio_array: Array):
 	# get array size
