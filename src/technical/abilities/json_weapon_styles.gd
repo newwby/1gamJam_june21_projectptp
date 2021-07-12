@@ -31,6 +31,7 @@ enum Style {
 enum SpawnPattern {
 	SPREAD, # additional projectiles fire from sides, widening spread
 	SERIES, # additional projectiles fire from same point as first
+	SNIPER_SERIES, # freezes targeting line then calls series before resuming
 	O, # spawn pattern does not matter, just spawn
 }
 
@@ -242,7 +243,7 @@ const STYLE_DATA = {
 		DataType.PROJECTILE_MAX_LIFESPAN	: 8.0,
 		DataType.PROJECTILE_OFFSCREEN_SPAN	: 4.0,
 		DataType.PROJECTILE_MOVE_PATTERN	: GlobalVariables.ProjectileMovement.DIRECT,
-		DataType.PROJECTILE_SPAWN_PATTERN	: SpawnPattern.SERIES,
+		DataType.PROJECTILE_SPAWN_PATTERN	: SpawnPattern.SNIPER_SERIES,
 		DataType.PROJECTILE_SPAWN_DELAY		: 1.2,
 		DataType.USE_SNIPER_AIM_LINE		: true,
 		DataType.PROJECTILE_COUNT			: 1,
@@ -358,7 +359,7 @@ const STYLE_DATA = {
 		DataType.SHOT_AUDIO_STYLE			: AudioStyle.ON_FIRE,
 		DataType.SHOT_SOUND_EFFECT			: ShotSound.NONE,
 		DataType.SHOT_SURGE_EFFECT			: SpawnSurgeEffect.NONE,
-		DataType.SHOT_AIM_TYPE				: AimType.SNIPER_AIM,
+		DataType.SHOT_AIM_TYPE				: AimType.FREE_AIM,
 		DataType.SHOT_USE_COOLDOWN			: 0.6,
 		DataType.SHOT_STATIONARY_BONUS		: 1.00,
 		DataType.AI_MIN_USE_RANGE			: GlobalVariables.RangeGroup.MELEE,

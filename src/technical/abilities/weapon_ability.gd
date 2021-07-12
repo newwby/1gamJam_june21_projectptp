@@ -163,11 +163,9 @@ func set_owner_targetting_sprites(override = null):
 		else:
 			target_sprite_valid = true
 	
-		owner.can_rotate_target_sprites = target_sprite_valid
 		owner.show_rotate_target_sprites = target_sprite_valid
 	else:
 		if override is bool:
-			owner.can_rotate_target_sprites = override
 			owner.show_rotate_target_sprites = true
 
 
@@ -239,6 +237,8 @@ func call_projectile_spawn_pattern_function():
 				call_spawn_pattern_spread()
 			weapon.SpawnPattern.SERIES:
 				call_spawn_pattern_series()
+			weapon.SpawnPattern.SNIPER_SERIES:
+				call_spawn_pattern_sniper_series()
 
 
 func call_spawn_pattern_spread():
@@ -340,9 +340,13 @@ func call_spawn_pattern_spread():
 	end_spawn_pattern()
 
 
-func call_spawn_pattern_series():
+func call_spawn_pattern_sniper_series():
+	call_spawn_pattern_series(true)
+
+
+func call_spawn_pattern_series(is_sniper_variant: bool = false):
 	if GlobalDebug.log_projectile_spawn_steps: ("call_spawn_pattern_series")
-	set_owner_targetting_sprites(false)
+#	set_owner_targetting_sprites(false)
 	owner.show_sniper_line = current_weapon_style[weapon.DataType.USE_SNIPER_AIM_LINE]
 	
 	# adjusted velocity is the velocity accounting for projectile spread
@@ -355,6 +359,10 @@ func call_spawn_pattern_series():
 	# don't change this if not free aim
 	# bandaid to fix sniper retargeting
 	var stored_velocity = given_velocity
+	
+	if is_sniper_variant:
+		owner.can_rotate_target_sprites = false
+	set_owner_targetting_sprites(false)
 
 	# on to the actual spawning of projectiles
 	
@@ -383,6 +391,8 @@ func call_spawn_pattern_series():
 	owner.show_sniper_line = false
 	
 	set_owner_targetting_sprites(true)
+	if is_sniper_variant:
+		owner.can_rotate_target_sprites = true
 	
 	end_spawn_pattern()
 
@@ -528,6 +538,7 @@ func get_projectile_initial_velocity():
 			firing_velocity = owner.firing_target.normalized()
 		elif current_weapon_style[weapon.DataType.SHOT_AIM_TYPE] == weapon.AimType.FREE_AIM\
 		or current_weapon_style[weapon.DataType.SHOT_AIM_TYPE] == weapon.AimType.SNIPER_AIM:
+			
 			firing_velocity = owner.current_mouse_target.normalized()
 	else:
 		if GlobalDebug.weapon_initial_velocity_check: print("initial velocity not set")
