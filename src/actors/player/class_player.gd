@@ -2,6 +2,10 @@
 class_name Player
 extends Actor
 
+const VELOCITY_MULTIPLIER_IF_FIRING: float = 0.75
+# this is the movement rate per tick of the player at instantiation
+var BASE_PLAYER_MOVEMENT_SPEED = 300
+
 var last_facing_not_firing: Vector2 = Vector2.ZERO
 
 # player sprite is automatically resized according to this value
@@ -129,8 +133,13 @@ func process_rotate_sprite_eyes(_dt):
 # player class override for handling movement, with key input
 func process_handle_movement(_dt):
 	if is_active:
+		# move slower if firing
+		var actual_movement_speed =\
+		 movement_speed * VELOCITY_MULTIPLIER_IF_FIRING\
+		if is_firing else movement_speed
+		
 		velocity = Vector2(0,0)
-		velocity = get_movement_input() * movement_speed
+		velocity = get_movement_input() * actual_movement_speed
 		var _collided_with = move_and_slide(velocity)
 
 
@@ -158,6 +167,11 @@ func _input(event):
 		current_mouse_position = event.position
 
 ###############################################################################
+
+
+# player has a different base speed to default actor class
+func set_player_base_speed():
+	movement_speed = BASE_PLAYER_MOVEMENT_SPEED
 
 
 # player sprite is scaled according to its own dimensions and the
