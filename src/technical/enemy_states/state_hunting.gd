@@ -2,6 +2,8 @@
 class_name StateHunting, "res://art/shrek_pup_eye_sprite.png"
 extends StateParent
 
+const BASE_APPROACH_DISTANCE = 400
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
@@ -13,9 +15,23 @@ func _ready():
 
 ###############################################################################
 
+
 # set the state priority
 func set_state_priority():
 	state_priority = 40
+	
+
+################################################################################
+
+
+# only should be called if state node has if_active set true
+# divide approach distance by enemy aggression modifier
+func get_approach_proximity():
+	if is_active:
+	# higher aggression = enemy continues to pursue
+	# lower aggression = enemy stops further away
+		return BASE_APPROACH_DISTANCE / enemy_parent_node.enemy_aggression_modifier
+
 
 ################################################################################
 #
@@ -48,7 +64,12 @@ func state_action():
 # without other logic will move on that heading forever
 # if called repeatedly will chase the player perfectly
 func track_and_move_toward_target():
+	
+	# how close do we move to the target
+	var maximum_approach_distance
+	
 	if is_active:
+
 		
 # if not set, set the detection manager
 		if detection_manager == null:
@@ -59,6 +80,9 @@ func track_and_move_toward_target():
 		var current_target = detection_manager.current_target
 		# if we can see the target, update positon
 		if check_target_is_visible(current_target):
+			
+			maximum_approach_distance = get_approach_proximity()
+			
 			# get enemy parent node's position
 			var self_pos = enemy_parent_node.position
 			# get current target of enemy parent's detection manager
@@ -68,7 +92,7 @@ func track_and_move_toward_target():
 			detection_manager.target_last_known_location = target_pos
 			# calls the enemy parent node's function for moving
 #			if enemy_parent_node
-			if self_pos.distance_to(target_pos) > 400:
+			if self_pos.distance_to(target_pos) > maximum_approach_distance:
 				enemy_parent_node.move_toward_given_position(self_pos, target_pos)
 			else:
 				enemy_parent_node.velocity = Vector2.ZERO

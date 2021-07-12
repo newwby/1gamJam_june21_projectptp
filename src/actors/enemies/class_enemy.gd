@@ -5,8 +5,10 @@ extends Actor
 signal enemy_defeated # DEBUGGER ISSUE, UNUSED
 
 const ENEMY_TYPE_BASE_MOVEMENT_SPEED = 150
+var BASE_AGGRESSION_TIMER_WAIT_TIME = 3.0
 
-export var enemy_life = 35
+export var enemy_life: int = 35
+export var enemy_aggression_modifier: float = 1.0
 
 var current_mouse_target
 var firing_target
@@ -26,7 +28,6 @@ var squish_duration  = 0.5
 
 var lifebar_visibility_wait_time = 2.0
 var offscreen_activity_time = 2.0
-var aggression_timer_if_damaged = 5.0
 
 onready var enemy_hitbox = $CollisionShape2D
 
@@ -134,6 +135,9 @@ func set_squish_randomness():
 
 func set_behaviour_timers():
 	offscreen_timer.wait_time = offscreen_activity_time
+	var aggression_timer_if_damaged =\
+	BASE_AGGRESSION_TIMER_WAIT_TIME * enemy_aggression_modifier
+	# higher aggression modifier adds more aggression wait time to pursue
 	aggression_timer.wait_time = aggression_timer_if_damaged
 
 
