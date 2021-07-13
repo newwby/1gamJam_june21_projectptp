@@ -18,6 +18,9 @@ var show_sniper_line = true
 var sprite_rescale_x = 0.75
 var sprite_rescale_y = 0.75
 
+# used for handling attack minimum range conflict edge case
+var approach_flag = false
+# used for handling idle state
 var is_offscreen = false
 
 var invert_squish = false
@@ -29,11 +32,15 @@ var squish_duration  = 0.5
 var lifebar_visibility_wait_time = 2.0
 var offscreen_activity_time = 2.0
 
+var is_firing = false
+
 onready var enemy_hitbox = $CollisionShape2D
 
 onready var enemy_sprite = $SpriteHolder/TestSprite
 onready var target_line = $AbilityHolder/WeaponAbility/TargetLine
 onready var squish_tween = $SpriteHolder/TestSprite/SquishingTween
+
+onready var orbit_handler_node = $OrbitalProjectileHolder
 
 onready var damage_immunity_timer = $SpriteHolder/TestSprite/DamageImmunityTimer
 
@@ -112,6 +119,7 @@ func _process(_delta):
 #			$DebugStateLabel.text = str(state_manager.current_state)
 	else:
 		state_manager.set_new_state(StateManager.State.IDLE)
+
 
 ###############################################################################
 
@@ -224,6 +232,10 @@ func _on_LifebarTimer_timeout():
 
 func _on_DeathTimer_timeout():
 	queue_free()
+
+
+func _on_State_Hunting_approach_distance(is_at_maximum_approach):
+	approach_flag = is_at_maximum_approach
 
 
 ###############################################################################

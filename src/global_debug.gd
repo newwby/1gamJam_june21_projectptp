@@ -41,3 +41,5 @@ var ability_cooldown_call_logs = false
 var enemy_state_logs = false
 # console logging for enemy dectection functions
 var enemy_detection_func_logs = false
+# console logging for weapon range checking calls in state_attack.gd
+var attack_weapon_range_checking = false

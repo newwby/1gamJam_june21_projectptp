@@ -2,6 +2,8 @@
 class_name StateHunting, "res://art/shrek_pup_eye_sprite.png"
 extends StateParent
 
+signal approach_distance(is_at_maximum_approach)
+
 const BASE_APPROACH_DISTANCE = 400
 
 # Called when the node enters the scene tree for the first time.
@@ -94,8 +96,10 @@ func track_and_move_toward_target():
 #			if enemy_parent_node
 			if self_pos.distance_to(target_pos) > maximum_approach_distance:
 				enemy_parent_node.move_toward_given_position(self_pos, target_pos)
+				emit_signal("approach_distance", false)
 			else:
 				enemy_parent_node.velocity = Vector2.ZERO
+				emit_signal("approach_distance", true)
 		# if we can't see target,
 		else:
 			# clear current target of detection manager

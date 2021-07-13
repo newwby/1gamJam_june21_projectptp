@@ -67,6 +67,7 @@ immunity_duration = 0.25
 show_behind_parent = true
 
 [node name="WeaponAbility" parent="AbilityHolder" instance=ExtResource( 1 )]
+base_weapon_override = 5
 
 [node name="TargetLine" type="Line2D" parent="AbilityHolder/WeaponAbility"]
 visible = false
@@ -170,7 +171,10 @@ one_shot = true
 [connection signal="tween_all_completed" from="SpriteHolder/TestSprite/SquishingTween" to="." method="_on_SquishingTween_tween_all_completed"]
 [connection signal="screen_entered" from="OffscreenNotifier" to="." method="_on_OffscreenNotifier_screen_entered"]
 [connection signal="screen_exited" from="OffscreenNotifier" to="." method="_on_OffscreenNotifier_screen_exited"]
+[connection signal="approach_distance" from="StateManager/State_Hunting" to="." method="_on_State_Hunting_approach_distance"]
 [connection signal="body_changed_detection_radius" from="DetectionHandler" to="." method="_on_DetectionHandler_body_changed_detection_radius"]
 [connection signal="timeout" from="Lifebar/LifebarTimer" to="." method="_on_LifebarTimer_timeout"]
 [connection signal="timeout" from="OffscreenTimer" to="." method="_on_OffscreenTimer_timeout"]
 [connection signal="timeout" from="DeathEffect/DeathTimer" to="." method="_on_DeathTimer_timeout"]
+
+[editable path="StateManager"]

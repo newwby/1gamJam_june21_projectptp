@@ -31,10 +31,14 @@ script = ExtResource( 2 )
 [node name="State_Attack" type="Node2D" parent="."]
 script = ExtResource( 3 )
 
-[node name="AttackDelayTimer" type="Timer" parent="State_Attack"]
+[node name="AttackDelay" type="Timer" parent="State_Attack"]
 one_shot = true
 
-[node name="AimingPauseTimer" type="Timer" parent="State_Attack"]
+[node name="AimingPause" type="Timer" parent="State_Attack"]
+wait_time = 0.5
+one_shot = true
+
+[node name="AttackCheckFrequency" type="Timer" parent="State_Attack"]
 wait_time = 0.5
 one_shot = true
 

@@ -17,11 +17,17 @@ const NODE_2D_DELETION_HANDLER = GlobalReferences.node_2d_deletion
 # has a chance to update)
 const MINIMUM_SHOT_COOLDOWN = 0.1
 
+# override the base_weapon_style variable with weapon at enum_id in style_data
 export var base_weapon_override = 8
 
+# handling for initial weapon style and changed weapon style
 var base_weapon_style = weapon.Style.FLAMETHROWER
 var selected_weapon_style
 var current_weapon_style
+
+# if enemy node set and utilise these variables for attack state handling
+var ai_weapon_minimum_range
+var ai_weapon_maximum_range
 
 # damage dealt by a single instance of the attack
 var base_damage: int = 1
@@ -135,6 +141,11 @@ func set_weapon_style(new_weapon_style):
 		
 		weapon.Style.BOLT_LANCE :
 			ability_data = weapon.STYLE_DATA[weapon.Style.BOLT_LANCE]
+	
+	# set ai ranges if owner is enemy
+	if owner is Enemy:
+		ai_weapon_minimum_range = ability_data[weapon.DataType.AI_MIN_USE_RANGE]
+		ai_weapon_maximum_range = ability_data[weapon.DataType.AI_MAX_USE_RANGE]
 	
 	# set the current weapon_style
 	selected_weapon_style = new_weapon_style
