@@ -1,5 +1,5 @@
 
-class_name LeafSpriteController, "res://art/kenney_world_sprites/abstract-platformer-370-assets/PNG/Other/plantTop_leaves.png"
+class_name LeafSpriteController, "res://art/kenney_world_sprites/kenneynl_abstract-platformer-370-assets_plantTop_leaves.png"
 extends Node2D
 
 # reference a string path held elsewhere (for simpler path changes)
@@ -22,9 +22,10 @@ onready var leaf_timer = $TimerController
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	set_spawn_rate_of_leaves()
-	leaf_spawn_position = Vector2(\
-	self.position.x-5,\
-	self.position.y-5)
+	leaf_spawn_position = self.position
+#	leaf_spawn_position = Vector2(\
+#	self.position.x-5,\
+#	self.position.y-5)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

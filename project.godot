@@ -138,7 +138,7 @@ _global_script_class_icons={
 "BaseAbility": "",
 "DetectionManager": "res://art/projectile/kenney_particlePack_1.1/circle_03.png",
 "Enemy": "",
-"LeafSpriteController": "res://art/kenney_world_sprites/abstract-platformer-370-assets/PNG/Other/plantTop_leaves.png",
+"LeafSpriteController": "res://art/kenney_world_sprites/kenneynl_abstract-platformer-370-assets_plantTop_leaves.png",
 "ModifierTimeSlow": "",
 "Player": "",
 "Projectile": "",

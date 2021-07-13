@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://src/effect/level_windy_leaf_particle.gd" type="Script" id=1]
-[ext_resource path="res://art/kenney_world_sprites/abstract-platformer-370-assets/PNG/Other/plantTop_leaves.png" type="Texture" id=2]
+[ext_resource path="res://art/kenney_world_sprites/kenneynl_abstract-platformer-370-assets_plantTop_leaves.png" type="Texture" id=2]
 
 [node name="LeafSprite" type="Sprite"]
 modulate = Color( 1, 1, 1, 0.784314 )
