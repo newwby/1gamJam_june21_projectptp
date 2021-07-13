@@ -63,6 +63,8 @@ onready var damaged_audio3 = $EnemyOtherAudio/Damaged3
 onready var death_particles = $DeathEffect
 onready var death_timer = $DeathEffect/DeathTimer
 
+onready var state_emote_anim = $SpriteHolder/TestSprite/StateEmote
+
 # stat PERCEPTION --
 # stat PERCEPTION --
 	# multiplies the initial detection radii
@@ -107,9 +109,9 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	if velocity != Vector2.ZERO:
-		squish_tween.playback_speed = 2.0
+		squish_tween.playback_speed = (squish_tween.active_tween_speed_override)
 	else:
-		squish_tween.playback_speed = 0.5
+		squish_tween.playback_speed = squish_tween.passive_tween_speed_override
 	if is_active:
 	#	_process_check_state()
 	#	_process_call_state_behaviour(delta)
@@ -232,6 +234,13 @@ func _on_LifebarTimer_timeout():
 
 func _on_DeathTimer_timeout():
 	queue_free()
+
+
+func _on_State_new_state_texture(new_texture):
+	if state_emote_anim != null:
+		state_emote_anim.set_new_texture(new_texture)
+	else:
+		print("nulll")
 
 
 func _on_State_Hunting_approach_distance(is_at_maximum_approach):

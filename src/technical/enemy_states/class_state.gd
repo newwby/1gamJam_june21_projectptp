@@ -4,8 +4,11 @@ extends Node2D
 
 signal clear_state # DEBUGGER ISSUE, UNUSED
 signal check_state # DEBUGGER ISSUE, UNUSED
+signal new_state_texture(new_texture) # DEBUGGER ISSUE, UNUSED
 
 var is_active = false
+
+var state_emote_texture = null
 
 # action states interrupt other states (except action states)
 # and remember their previous state via the state register
@@ -36,6 +39,7 @@ func _ready():
 	set_state_priority()
 	set_state_manager_and_enemy_self()
 	set_state_signals()
+	set_state_emote_texture()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
@@ -47,6 +51,12 @@ func _ready():
 # if not derived will set all states to lowest priority
 func set_state_priority():
 	state_priority = 0
+
+
+# placeholer function to be derived by child classes
+# if not derived will set the texture to null again
+func set_state_emote_texture():
+	state_emote_texture = null
 
 
 # this set function is crucial to the operation of the state node system
@@ -127,3 +137,4 @@ func state_action():
 func voidfunc():
 	emit_signal("check_state")
 	emit_signal("clear_state")
+	emit_signal("new_state_texture")

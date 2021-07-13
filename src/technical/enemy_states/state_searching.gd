@@ -2,7 +2,6 @@
 class_name StateSearching, "res://art/shrek_pup_eye_sprite.png"
 extends StateParent
 
-
 # stop searching after this
 onready var search_state_first_phase = $SearchTimer
 
@@ -18,10 +17,17 @@ func _ready():
 
 ###############################################################################
 
+
 # set the state priority
 func set_state_priority():
 	state_priority = 30
-#
+
+
+# if the state has a specific state emote, set the texture here
+func set_state_emote_texture():
+	state_emote_texture = GlobalReferences.state_emote_searching
+	emit_signal("new_state_texture", state_emote_texture)
+
 #
 ################################################################################
 ##

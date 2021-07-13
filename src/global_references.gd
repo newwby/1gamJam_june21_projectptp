@@ -48,6 +48,12 @@ const sprite_projectile_fire_cloud = "res://art/projectile/kenney_particlePack_1
 const sprite_projectile_scythe = "res://art/kenney_particle1.1/twirl_01.png"
 const sprite_projectile_bolt_lance = "res://art/projectile/kenney_particlePack_1.1/trace_05.png"
 
+#
+
+const state_emote_roaming = "res://art/icons/kenney_emotespack/PNG/Vector/Style 1/emote_question.png"
+const state_emote_searching = "res://art/icons/kenney_emotespack/PNG/Vector/Style 1/emote_alert.png"
+const state_emote_hunting = "res://art/icons/kenney_emotespack/PNG/Vector/Style 1/emote_anger.png"
+
 ###############################################################################
 
 # string references for descriptions

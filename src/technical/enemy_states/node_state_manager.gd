@@ -131,6 +131,8 @@ func set_new_state(new_state):
 			state_register.append(current_state)
 			if GlobalDebug.enemy_state_logs: print("state register = ", state_register)
 		current_state = new_state
+		if check_action_state.state_emote_texture != null:
+			enemy_parent_node.state_emote_anim.start_tween()
 		state_change_timer.start()
 
 

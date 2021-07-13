@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://src/technical/abilities/weapon_ability.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/actors/enemies/class_enemy.gd" type="Script" id=2]
@@ -9,7 +9,8 @@
 [ext_resource path="res://art/icons/enemy_lifebar_full.png" type="Texture" id=7]
 [ext_resource path="res://art/icons/enemy_lifebar_empty.png" type="Texture" id=8]
 [ext_resource path="res://art/kenney_particle1.1/star_04.png" type="Texture" id=9]
-[ext_resource path="res://src/actors/enemies/SquishingTween.gd" type="Script" id=10]
+[ext_resource path="res://src/technical/squishing_tween.tscn" type="PackedScene" id=10]
+[ext_resource path="res://src/technical/state_emote.tscn" type="PackedScene" id=11]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 50, 50 )
@@ -55,11 +56,14 @@ shape = SubResource( 1 )
 [node name="TestSprite" type="Sprite" parent="SpriteHolder"]
 texture = ExtResource( 3 )
 
-[node name="SquishingTween" type="Tween" parent="SpriteHolder/TestSprite"]
-script = ExtResource( 10 )
+[node name="SquishingTween" parent="SpriteHolder/TestSprite" instance=ExtResource( 10 )]
+passive_tween_speed_override = 0.5
 
 [node name="DamageImmunityTimer" parent="SpriteHolder/TestSprite" instance=ExtResource( 6 )]
 immunity_duration = 0.25
+
+[node name="StateEmote" parent="SpriteHolder/TestSprite" instance=ExtResource( 11 )]
+position = Vector2( 0, -75 )
 
 [node name="OrbitalProjectileHolder" type="Node2D" parent="."]
 
@@ -169,10 +173,12 @@ scale_amount = 0.1
 [node name="DeathTimer" type="Timer" parent="DeathEffect"]
 one_shot = true
 [connection signal="damaged" from="." to="." method="_on_Enemy_damaged"]
-[connection signal="tween_all_completed" from="SpriteHolder/TestSprite/SquishingTween" to="SpriteHolder/TestSprite/SquishingTween" method="_on_SquishingTween_tween_all_completed"]
 [connection signal="screen_entered" from="OffscreenNotifier" to="." method="_on_OffscreenNotifier_screen_entered"]
 [connection signal="screen_exited" from="OffscreenNotifier" to="." method="_on_OffscreenNotifier_screen_exited"]
+[connection signal="new_state_texture" from="StateManager/State_Roaming" to="." method="_on_State_new_state_texture"]
+[connection signal="new_state_texture" from="StateManager/State_Searching" to="." method="_on_State_new_state_texture"]
 [connection signal="approach_distance" from="StateManager/State_Hunting" to="." method="_on_State_Hunting_approach_distance"]
+[connection signal="new_state_texture" from="StateManager/State_Hunting" to="." method="_on_State_new_state_texture"]
 [connection signal="body_changed_detection_radius" from="DetectionHandler" to="." method="_on_DetectionHandler_body_changed_detection_radius"]
 [connection signal="timeout" from="Lifebar/LifebarTimer" to="." method="_on_LifebarTimer_timeout"]
 [connection signal="timeout" from="OffscreenTimer" to="." method="_on_OffscreenTimer_timeout"]
