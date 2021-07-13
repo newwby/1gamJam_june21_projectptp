@@ -67,7 +67,6 @@ immunity_duration = 0.25
 show_behind_parent = true
 
 [node name="WeaponAbility" parent="AbilityHolder" instance=ExtResource( 1 )]
-base_weapon_override = 5
 
 [node name="TargetLine" type="Line2D" parent="AbilityHolder/WeaponAbility"]
 visible = false

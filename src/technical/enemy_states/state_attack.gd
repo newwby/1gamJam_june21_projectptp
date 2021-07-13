@@ -17,7 +17,6 @@ onready var aim_randomisation = 0.75
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-#	set_attack_delay_wait_time()
 	pass
 
 
@@ -27,17 +26,11 @@ func _ready():
 
 ###############################################################################
 
+
 # set the state priority
 func set_state_priority():
 	state_priority = 50
 
-
-# attack delay is set by enemy parent node perception
-func set_attack_delay_wait_time():
-	attack_delay_timer.wait_time = attack_delay_timer_wait_time
-	attack_delay_timer.start()
-
-#
 
 ## set attack reaction times that are modified by reaction gamestat
 ## call if reaction gamestat is modified
