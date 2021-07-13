@@ -15,19 +15,19 @@ var firing_target
 #
 var show_sniper_line = true
 
-var sprite_rescale_x = 0.75
-var sprite_rescale_y = 0.75
+#var sprite_rescale_x = 0.75
+#var sprite_rescale_y = 0.75
 
 # used for handling attack minimum range conflict edge case
 var approach_flag = false
 # used for handling idle state
 var is_offscreen = false
-
-var invert_squish = false
-var horizontal_squish = Vector2(1.05, 0.95)
-var vertical_squish = Vector2(0.95, 1.05)
-var squish_randomness_cap = 0.05
-var squish_duration  = 0.5
+#
+#var invert_squish = false
+#var horizontal_squish = Vector2(1.05, 0.95)
+#var vertical_squish = Vector2(0.95, 1.05)
+#var squish_randomness_cap = 0.05
+#var squish_duration  = 0.5
 
 var lifebar_visibility_wait_time = 2.0
 var offscreen_activity_time = 2.0
@@ -97,8 +97,8 @@ onready var state_manager = $StateManager
 func _ready():
 	self.add_to_group("enemies")
 	set_enemy_stats()
-	set_squish_randomness()
-	start_squish_tween()
+#	set_squish_randomness()
+#	start_squish_tween()
 	set_lifebar()
 	set_behaviour_timers()
 #	set_initial_state(State.IDLE)
@@ -124,21 +124,21 @@ func _process(_delta):
 ###############################################################################
 
 
-func set_squish_randomness():
-	var random_squish =\
-	 GlobalFuncs.ReturnRandomRange(\
-	 -squish_randomness_cap, squish_randomness_cap)
-	
-	if random_squish < 0.03 and random_squish > 0:
-		random_squish += 0.03
-	elif random_squish < 0 and random_squish > -0.03:
-		random_squish -= 0.03
-	
-	horizontal_squish = Vector2(\
-	sprite_rescale_x - random_squish, sprite_rescale_y + random_squish)
-	vertical_squish = Vector2(\
-	sprite_rescale_x + random_squish, sprite_rescale_y - random_squish)
-	squish_duration += random_squish
+#func set_squish_randomness():
+#	var random_squish =\
+#	 GlobalFuncs.ReturnRandomRange(\
+#	 -squish_randomness_cap, squish_randomness_cap)
+#
+#	if random_squish < 0.03 and random_squish > 0:
+#		random_squish += 0.03
+#	elif random_squish < 0 and random_squish > -0.03:
+#		random_squish -= 0.03
+#
+#	horizontal_squish = Vector2(\
+#	sprite_rescale_x - random_squish, sprite_rescale_y + random_squish)
+#	vertical_squish = Vector2(\
+#	sprite_rescale_x + random_squish, sprite_rescale_y - random_squish)
+#	squish_duration += random_squish
 
 
 func set_behaviour_timers():
@@ -206,9 +206,9 @@ func _on_OffscreenTimer_timeout():
 		velocity = Vector2.ZERO
 
 
-func _on_SquishingTween_tween_all_completed():
-	invert_squish = !invert_squish
-	start_squish_tween()
+#func _on_SquishingTween_tween_all_completed():
+#	invert_squish = !invert_squish
+#	start_squish_tween()
 
 
 func _on_Enemy_damaged(damage_taken, damager):
@@ -252,13 +252,13 @@ func start_offscreen_timer():
 		offscreen_timer.start()
 
 
-func start_squish_tween():
-	var start_scale = horizontal_squish if invert_squish else vertical_squish
-	var end_scale = vertical_squish if invert_squish else horizontal_squish
-	squish_tween.interpolate_property(enemy_sprite, "scale",\
-	 start_scale, end_scale, squish_duration,\
-	 Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
-	squish_tween.start()
+#func start_squish_tween():
+#	var start_scale = horizontal_squish if invert_squish else vertical_squish
+#	var end_scale = vertical_squish if invert_squish else horizontal_squish
+#	squish_tween.interpolate_property(enemy_sprite, "scale",\
+#	 start_scale, end_scale, squish_duration,\
+#	 Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+#	squish_tween.start()
 
 
 ###############################################################################
