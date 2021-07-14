@@ -4,11 +4,8 @@ extends Node2D
 
 signal clear_state # DEBUGGER ISSUE, UNUSED
 signal check_state # DEBUGGER ISSUE, UNUSED
-signal new_state_texture(new_texture) # DEBUGGER ISSUE, UNUSED
 
 var is_active = false
-
-var state_emote_texture = null
 
 # action states interrupt other states (except action states)
 # and remember their previous state via the state register
@@ -34,12 +31,19 @@ var enemy_parent_node# = owner.owner
 # the detection manager of the enemy parent node is also called frequently
 var detection_manager# = owner.owner.detection_scan
 
+# placeholder variable to be derived by child state classes with state emotes
+var state_emote_node
+
+
+###############################################################################
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	set_state_priority()
 	set_state_manager_and_enemy_self()
 	set_state_signals()
-	set_state_emote_texture()
+	set_state_emote_position()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
@@ -55,8 +59,8 @@ func set_state_priority():
 
 # placeholer function to be derived by child classes
 # if not derived will set the texture to null again
-func set_state_emote_texture():
-	state_emote_texture = null
+func set_state_emote_position():
+	pass
 
 
 # this set function is crucial to the operation of the state node system

@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://src/actors/player/class_player.gd" type="Script" id=1]
 [ext_resource path="res://art/kenneynl_testsprite_dog.png" type="Texture" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://art/shrek_pup_eye_sprite.png" type="Texture" id=8]
 [ext_resource path="res://src/interface/ui_player_hud.tscn" type="PackedScene" id=9]
 [ext_resource path="res://src/technical/DamageImmunityTimer.tscn" type="PackedScene" id=10]
+[ext_resource path="res://src/technical/audio_array_controller.tscn" type="PackedScene" id=11]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 50, 50 )
@@ -134,7 +135,7 @@ visible = false
 
 [node name="AudioEffectsHolder" type="Node2D" parent="."]
 
-[node name="WeaponFireEffects" type="Node2D" parent="AudioEffectsHolder"]
+[node name="WeaponFireEffects" parent="AudioEffectsHolder" instance=ExtResource( 11 )]
 
 [node name="Shot1" type="AudioStreamPlayer2D" parent="AudioEffectsHolder/WeaponFireEffects"]
 stream = SubResource( 3 )
@@ -161,15 +162,17 @@ stream = SubResource( 7 )
 volume_db = -5.0
 pitch_scale = 1.25
 
-[node name="DamagedEffects" type="Node2D" parent="AudioEffectsHolder"]
+[node name="DamagedEffects" parent="AudioEffectsHolder" instance=ExtResource( 11 )]
 
 [node name="Damaged1" type="AudioStreamPlayer2D" parent="AudioEffectsHolder/DamagedEffects"]
 stream = SubResource( 8 )
+volume_db = -10.0
 
 [node name="Damaged2" type="AudioStreamPlayer2D" parent="AudioEffectsHolder/DamagedEffects"]
 stream = SubResource( 9 )
+volume_db = -10.0
 
-[node name="AbilityBlinkEffects" type="Node2D" parent="AudioEffectsHolder"]
+[node name="AbilityBlinkEffects" parent="AudioEffectsHolder" instance=ExtResource( 11 )]
 
 [node name="Blink1" type="AudioStreamPlayer2D" parent="AudioEffectsHolder/AbilityBlinkEffects"]
 stream = SubResource( 10 )
@@ -186,7 +189,7 @@ stream = SubResource( 12 )
 volume_db = -5.0
 pitch_scale = 1.25
 
-[node name="AbilityTimeSlowEffects" type="Node2D" parent="AudioEffectsHolder"]
+[node name="AbilityTimeSlowEffects" parent="AudioEffectsHolder" instance=ExtResource( 11 )]
 
 [node name="TimeSlow1" type="AudioStreamPlayer2D" parent="AudioEffectsHolder/AbilityTimeSlowEffects"]
 stream = SubResource( 13 )

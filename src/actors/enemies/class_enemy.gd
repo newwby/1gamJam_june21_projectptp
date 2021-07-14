@@ -22,12 +22,6 @@ var show_sniper_line = true
 var approach_flag = false
 # used for handling idle state
 var is_offscreen = false
-#
-#var invert_squish = false
-#var horizontal_squish = Vector2(1.05, 0.95)
-#var vertical_squish = Vector2(0.95, 1.05)
-#var squish_randomness_cap = 0.05
-#var squish_duration  = 0.5
 
 var lifebar_visibility_wait_time = 2.0
 var offscreen_activity_time = 2.0
@@ -50,20 +44,14 @@ onready var damaged_recently_timer = $Lifebar/LifebarTimer
 onready var offscreen_timer = $OffscreenTimer
 onready var aggression_timer = $AggressionTimer
 
-onready var shot_audio1 = $EnemyShots/Shot1
-onready var shot_audio2 = $EnemyShots/Shot2
-onready var shot_audio3 = $EnemyShots/Shot3
-onready var shot_audio4 = $EnemyShots/Shot4
-onready var shot_audio5 = $EnemyShots/Shot5
-
-onready var damaged_audio1 = $EnemyOtherAudio/Damaged1
-onready var damaged_audio2 = $EnemyOtherAudio/Damaged2
-onready var damaged_audio3 = $EnemyOtherAudio/Damaged3
+onready var enemy_shot_array_audio = $AudioEffectsHolder/EnemyShots
+onready var enemy_damaged_array_audio = $AudioEffectsHolder/EnemyDamaged
+onready var enemy_emote_array_audio = $AudioEffectsHolder/EnemyIdles
 
 onready var death_particles = $DeathEffect
 onready var death_timer = $DeathEffect/DeathTimer
 
-onready var state_emote_anim = $SpriteHolder/TestSprite/StateEmote
+onready var hud_gfx_pos2d = $SpriteHolder/HudGFXPosition
 
 # stat PERCEPTION --
 # stat PERCEPTION --
@@ -99,8 +87,6 @@ onready var state_manager = $StateManager
 func _ready():
 	self.add_to_group("enemies")
 	set_enemy_stats()
-#	set_squish_randomness()
-#	start_squish_tween()
 	set_lifebar()
 	set_behaviour_timers()
 #	set_initial_state(State.IDLE)
@@ -124,23 +110,6 @@ func _process(_delta):
 
 
 ###############################################################################
-
-
-#func set_squish_randomness():
-#	var random_squish =\
-#	 GlobalFuncs.ReturnRandomRange(\
-#	 -squish_randomness_cap, squish_randomness_cap)
-#
-#	if random_squish < 0.03 and random_squish > 0:
-#		random_squish += 0.03
-#	elif random_squish < 0 and random_squish > -0.03:
-#		random_squish -= 0.03
-#
-#	horizontal_squish = Vector2(\
-#	sprite_rescale_x - random_squish, sprite_rescale_y + random_squish)
-#	vertical_squish = Vector2(\
-#	sprite_rescale_x + random_squish, sprite_rescale_y - random_squish)
-#	squish_duration += random_squish
 
 
 func set_behaviour_timers():
@@ -168,7 +137,7 @@ func set_lifebar():
 	debug_lifebar.max_value = enemy_life#
 	damaged_recently_timer.wait_time = lifebar_visibility_wait_time
 	update_lifebar()
-
+	
 
 ###############################################################################
 
@@ -208,11 +177,6 @@ func _on_OffscreenTimer_timeout():
 		velocity = Vector2.ZERO
 
 
-#func _on_SquishingTween_tween_all_completed():
-#	invert_squish = !invert_squish
-#	start_squish_tween()
-
-
 func _on_Enemy_damaged(damage_taken, damager):
 	if damage_immunity_timer.is_stopped():
 		damage_immunity_timer.start_immunity()
@@ -236,11 +200,12 @@ func _on_DeathTimer_timeout():
 	queue_free()
 
 
-func _on_State_new_state_texture(new_texture):
-	if state_emote_anim != null:
-		state_emote_anim.set_new_texture(new_texture)
-	else:
-		print("nulll")
+func _on_StateManager_play_state_emote_sound_effect(state_id):
+	# state_id should always be 0, just exists to make it extensible
+	# for different audio arrays per state change
+	if state_id == 0:
+		if GlobalDebug.ENEMY_SE_ENABLED:
+			enemy_emote_array_audio.call_audio_array()
 
 
 func _on_State_Hunting_approach_distance(is_at_maximum_approach):
@@ -259,15 +224,6 @@ func start_offscreen_timer():
 	else:
 		offscreen_timer.stop()
 		offscreen_timer.start()
-
-
-#func start_squish_tween():
-#	var start_scale = horizontal_squish if invert_squish else vertical_squish
-#	var end_scale = vertical_squish if invert_squish else horizontal_squish
-#	squish_tween.interpolate_property(enemy_sprite, "scale",\
-#	 start_scale, end_scale, squish_duration,\
-#	 Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
-#	squish_tween.start()
 
 
 ###############################################################################
@@ -303,17 +259,14 @@ func enemy_died():
 
 
 func get_shot_sound_and_play():
-	var audio_array_shot = [\
-	shot_audio1, shot_audio2, shot_audio3, shot_audio4, shot_audio5]
 	if GlobalDebug.ENEMY_SE_ENABLED:
-		GlobalFuncs.shuffle_audio_and_play(audio_array_shot)
+		enemy_shot_array_audio.call_audio_array()
 
 
 func get_damaged_sound_and_play():
-	var audio_array_damaged = [\
-	damaged_audio1, damaged_audio2, damaged_audio3]
 	if GlobalDebug.ENEMY_SE_ENABLED:
-		GlobalFuncs.shuffle_audio_and_play(audio_array_damaged)
+		enemy_damaged_array_audio.call_audio_array()
+
 
 ##############################################################################
 

@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/alien_06.ogg-8fa1190e280e13cecd90feaa4edd6195.oggstr"
+
+[deps]
+
+source_file="res://sound/enemy_idles/alien_06.ogg"
+dest_files=[ "res://.import/alien_06.ogg-8fa1190e280e13cecd90feaa4edd6195.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

@@ -4,7 +4,7 @@
 [ext_resource path="res://art/icons/kenney_emotespack/PNG/Vector/Style 1/emote_anger.png" type="Texture" id=2]
 [ext_resource path="res://src/technical/state_emote.gd" type="Script" id=4]
 
-[node name="StateEmote" type="Position2D"]
+[node name="StateEmote" type="Node2D"]
 visible = false
 script = ExtResource( 4 )
 
@@ -20,4 +20,3 @@ sprite_rescale_y = 0.95
 passive_tween_speed_override = 2.0
 
 [node name="AnimationTween" type="Tween" parent="Sprite"]
-[connection signal="tween_all_completed" from="Sprite/AnimationTween" to="Sprite" method="_on_AnimationTween_tween_all_completed"]

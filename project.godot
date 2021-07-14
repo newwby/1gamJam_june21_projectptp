@@ -35,6 +35,11 @@ _global_script_classes=[ {
 "path": "res://src/technical/vibrating_tween.gd"
 }, {
 "base": "Node2D",
+"class": "AudioArrayController",
+"language": "GDScript",
+"path": "res://src/technical/audio_array_controller.gd"
+}, {
+"base": "Node2D",
 "class": "BaseAbility",
 "language": "GDScript",
 "path": "res://src/technical/abilities/class_ability.gd"
@@ -135,6 +140,7 @@ _global_script_class_icons={
 "Actor": "",
 "AnimationTween_SpriteVibrating": "",
 "AnimationTween_Spritevibrating": "",
+"AudioArrayController": "res://art/icons/kenney_emotespack/PNG/Vector/Style 1/emote_music.png",
 "BaseAbility": "",
 "DetectionManager": "res://art/projectile/kenney_particlePack_1.1/circle_03.png",
 "Enemy": "",

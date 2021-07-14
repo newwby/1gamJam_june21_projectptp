@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/bug_08.ogg-459bc3f45a6895dab7ccf9afb6ee9c46.oggstr"
+
+[deps]
+
+source_file="res://sound/enemy_idles/bug_08.ogg"
+dest_files=[ "res://.import/bug_08.ogg-459bc3f45a6895dab7ccf9afb6ee9c46.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

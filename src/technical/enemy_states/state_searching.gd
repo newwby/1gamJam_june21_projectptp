@@ -5,7 +5,6 @@ extends StateParent
 # stop searching after this
 onready var search_state_first_phase = $SearchTimer
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
@@ -24,9 +23,11 @@ func set_state_priority():
 
 
 # if the state has a specific state emote, set the texture here
-func set_state_emote_texture():
-	state_emote_texture = GlobalReferences.state_emote_searching
-	emit_signal("new_state_texture", state_emote_texture)
+func set_state_emote_position():
+	if not is_active:
+		yield(enemy_parent_node, "ready")
+	state_emote_node = $StateEmote
+	state_emote_node.position = enemy_parent_node.hud_gfx_pos2d.position
 
 #
 ################################################################################

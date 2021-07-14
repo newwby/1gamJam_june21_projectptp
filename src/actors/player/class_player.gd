@@ -64,22 +64,10 @@ onready var lifeheart_3_hp456 = $UICanvasLayer/PlayerHUD/MarginContainer/TopHUDB
 onready var lifeheart_4_hp678 = $UICanvasLayer/PlayerHUD/MarginContainer/TopHUDBar/TopRightHUD/HBox2/LifeBackground/HeartIcon4
 onready var lifeheart_5_hp8910 = $UICanvasLayer/PlayerHUD/MarginContainer/TopHUDBar/TopRightHUD/HBox2/LifeBackground/HeartIcon5
 
-onready var shot_audio1 = $AudioEffectsHolder/WeaponFireEffects/Shot1
-onready var shot_audio2 = $AudioEffectsHolder/WeaponFireEffects/Shot2
-onready var shot_audio3 = $AudioEffectsHolder/WeaponFireEffects/Shot3
-onready var shot_audio4 = $AudioEffectsHolder/WeaponFireEffects/Shot4
-onready var shot_audio5 = $AudioEffectsHolder/WeaponFireEffects/Shot5
-
-onready var damaged_audio1 = $AudioEffectsHolder/DamagedEffects/Damaged1
-onready var damaged_audio2 = $AudioEffectsHolder/DamagedEffects/Damaged2
-
-onready var blink_ability_audio1 = $AudioEffectsHolder/AbilityBlinkEffects/Blink1
-onready var blink_ability_audio2 = $AudioEffectsHolder/AbilityBlinkEffects/Blink2
-onready var blink_ability_audio3 = $AudioEffectsHolder/AbilityBlinkEffects/Blink3
-
-onready var time_slow_ability_audio1 = $AudioEffectsHolder/AbilityTimeSlowEffects/TimeSlow1
-onready var time_slow_ability_audio2 = $AudioEffectsHolder/AbilityTimeSlowEffects/TimeSlow2
-onready var time_slow_ability_audio3 = $AudioEffectsHolder/AbilityTimeSlowEffects/TimeSlow3
+onready var player_shot_array_audio = $AudioEffectsHolder/WeaponFireEffects
+onready var player_damaged_array_audio = $AudioEffectsHolder/DamagedEffects
+onready var player_blink_ability_array_audio = $AudioEffectsHolder/AbilityBlinkEffects
+onready var player_time_slow_ability_array_audio = $AudioEffectsHolder/AbilityTimeSlowEffects
 
 ###############################################################################
 
@@ -257,31 +245,23 @@ func get_ability_input():
 
 
 func get_shot_sound_and_play():
-	var audio_array_shot = [\
-	shot_audio1, shot_audio2, shot_audio3, shot_audio4, shot_audio5]
 	if GlobalDebug.PLAYER_SE_ENABLED:
-		GlobalFuncs.shuffle_audio_and_play(audio_array_shot)
+		player_shot_array_audio.call_audio_array()
 
 
 func get_damaged_sound_and_play():
-	var audio_array_damaged = [\
-	damaged_audio1, damaged_audio2]
 	if GlobalDebug.PLAYER_SE_ENABLED:
-		GlobalFuncs.shuffle_audio_and_play(audio_array_damaged)
+		player_damaged_array_audio.call_audio_array()
 
 
 func get_blink_sound_and_play():
-	var audio_array_blink = [\
-	blink_ability_audio1, blink_ability_audio2, blink_ability_audio3]
 	if GlobalDebug.PLAYER_SE_ENABLED:
-		GlobalFuncs.shuffle_audio_and_play(audio_array_blink)
+		player_blink_ability_array_audio.call_audio_array()
 
 
 func get_time_slow_sound_and_play():
-	var audio_array_time_slow = [\
-	time_slow_ability_audio1, time_slow_ability_audio2, time_slow_ability_audio3]
 	if GlobalDebug.PLAYER_SE_ENABLED:
-		GlobalFuncs.shuffle_audio_and_play(audio_array_time_slow)
+		player_time_slow_ability_array_audio.call_audio_array()
 
 
 ###############################################################################

@@ -12,6 +12,7 @@ class_name StateManager, "res://art/shrek_pup_eye_sprite.png"
 extends Node2D
 
 signal check_state
+signal play_state_emote_sound_effect(state_id)
 signal state_manager_active # DEBUGGER ISSUE, UNUSED
 
 # list of potential states for the enemy
@@ -131,8 +132,11 @@ func set_new_state(new_state):
 			state_register.append(current_state)
 			if GlobalDebug.enemy_state_logs: print("state register = ", state_register)
 		current_state = new_state
-		if check_action_state.state_emote_texture != null:
-			enemy_parent_node.state_emote_anim.start_tween()
+		
+		if check_action_state.state_emote_node != null:
+			check_action_state.state_emote_node.start_tween()
+			emit_signal("play_state_emote_sound_effect", 0)
+		
 		state_change_timer.start()
 
 
