@@ -2,7 +2,7 @@
 class_name AudioArrayController, "res://art/icons/kenney_emotespack/PNG/Vector/Style 1/emote_music.png"
 extends Node2D
 
-const TESTING_MODE = true
+const TESTING_MODE = false
 
 # no implementation of the following blocks/functions yet
 

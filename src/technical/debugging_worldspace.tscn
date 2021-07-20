@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://src/effect/TimeBubbleZone.tscn" type="PackedScene" id=1]
+[ext_resource path="res://src/actors/player/player_controller.tscn" type="PackedScene" id=2]
+
+[node name="Node" type="Node"]
+
+[node name="Player" parent="." instance=ExtResource( 2 )]
+position = Vector2( 828.623, 366.69 )
+
+[node name="TimeBubbleZone" parent="." instance=ExtResource( 1 )]
