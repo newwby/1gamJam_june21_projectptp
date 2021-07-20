@@ -4,8 +4,8 @@ signal successful_setup
 
 export var immunity_duration = 1.0
 export var total_flashes = 5
-export var alpha_flash_on_tick = 0.25
-export var alpha_flash_off_tick = 0.75
+export var alpha_flash_on_tick = 0.35
+export var alpha_flash_off_tick = 0.85
 
 var is_active = false
 var is_flashed_on = false

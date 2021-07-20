@@ -143,7 +143,7 @@ func shuffle_audio_and_play(given_audio_array: Array, remaining_iterations: int)
 			else:
 				if GlobalDebug.audio_array_controller_logs: print("\nend of iterations")
 			if GlobalDebug.audio_array_controller_logs: print("finishing yielded chosen_sound func")
-			func_play_chosen.resume()
+#			func_play_chosen.resume()
 
 
 # function for applying modifiers to audio parameters then playing sound

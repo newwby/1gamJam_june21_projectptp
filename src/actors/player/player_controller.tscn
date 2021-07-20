@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://src/actors/player/class_player.gd" type="Script" id=1]
 [ext_resource path="res://art/kenneynl_testsprite_dog.png" type="Texture" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://src/interface/ui_player_hud.tscn" type="PackedScene" id=9]
 [ext_resource path="res://src/technical/DamageImmunityTimer.tscn" type="PackedScene" id=10]
 [ext_resource path="res://src/technical/audio_array_controller.tscn" type="PackedScene" id=11]
+[ext_resource path="res://src/effect/shadermaterial_glitch.tres" type="Material" id=12]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 50, 50 )
@@ -88,6 +89,7 @@ texture_mode = 2
 [node name="SpriteHolder" type="Node2D" parent="."]
 
 [node name="StaticSprite" type="Sprite" parent="SpriteHolder"]
+material = ExtResource( 12 )
 texture = ExtResource( 7 )
 
 [node name="RockingTween" parent="SpriteHolder/StaticSprite" instance=ExtResource( 3 )]
@@ -200,6 +202,7 @@ stream = SubResource( 14 )
 [node name="TimeSlow3" type="AudioStreamPlayer2D" parent="AudioEffectsHolder/AbilityTimeSlowEffects"]
 stream = SubResource( 15 )
 [connection signal="damaged" from="." to="." method="_on_Player_damaged"]
+[connection signal="timeout" from="SpriteHolder/StaticSprite/DamageImmunityTimer" to="." method="_on_DamageImmunityTimer_timeout"]
 [connection signal="updated_cooldown" from="AbilityHolder/WeaponAbility" to="." method="_on_WeaponAbility_updated_cooldown"]
 [connection signal="weapon_fired" from="AbilityHolder/WeaponAbility" to="." method="_on_WeaponAbility_weapon_fired"]
 [connection signal="activate_signal" from="AbilityHolder/ActiveAbility1" to="." method="_on_ActiveAbility1_activate_signal"]

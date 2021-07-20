@@ -2,6 +2,8 @@
 class_name Player
 extends Actor
 
+#var outline_material = load("res://src/effect/shadermaterial_glitch.tres").duplicate()
+
 const VELOCITY_MULTIPLIER_IF_FIRING: float = 0.75
 # this is the movement rate per tick of the player at instantiation
 var BASE_PLAYER_MOVEMENT_SPEED = 300
@@ -39,6 +41,9 @@ var show_sniper_line: bool = false
 # different settings for animation tween playback speed
 var moving_anim_tween_playback_rate = 2.0
 var static_anim_tween_playback_rate = 0.5
+
+var glitch_effect_amplitude = 1.5
+var glitch_effect_speed = 25
 
 onready var player_sprite = $SpriteHolder/StaticSprite
 onready var sprite_animation_tween = $SpriteHolder/StaticSprite/RockingTween
@@ -289,11 +294,11 @@ func _on_Player_damaged(damage_taken, _damager):
 		var damage_taken_scaled = damage_taken/10
 		player_life -= damage_taken_scaled
 		get_damaged_sound_and_play()
+		modify_glitch_effect(true)
 		if player_life > 0:
 			update_life_hearts()
 		else:
 			player_died()
-
 
 func _on_GameEnvironment_game_started():
 	player_HUD.is_time_passing = true
@@ -345,6 +350,27 @@ func handle_ability_cooldown_signal(ability_node, ability_type, new_value, new_c
 ###############################################################################
 
 
+func modify_glitch_effect(turn_on):
+	# get glitch parameters
+	var new_glitch_effect_amplitude
+	var new_glitch_effect_speed
+	var can_set_glitch_effect = false
+	if turn_on:
+		new_glitch_effect_amplitude = glitch_effect_amplitude
+		new_glitch_effect_speed = glitch_effect_speed
+		can_set_glitch_effect = true
+	elif not turn_on:
+		new_glitch_effect_amplitude = 0
+		new_glitch_effect_speed = 0
+		can_set_glitch_effect = true
+	# must have passed bool
+	if can_set_glitch_effect:
+		# set material shadeer's parameters to influence intensity of the effect
+		player_sprite.material.set_shader_param("AMPLITUDE", new_glitch_effect_amplitude)
+		player_sprite.material.set_shader_param("SPEED", new_glitch_effect_speed)
+	#	player_sprite.material = outline_material
+
+
 # update life heart gui
 func update_life_hearts():
 	#clear all
@@ -364,3 +390,7 @@ func update_life_hearts():
 
 func player_died():
 	self.queue_free()
+
+
+func _on_DamageImmunityTimer_timeout():
+	modify_glitch_effect(false)
