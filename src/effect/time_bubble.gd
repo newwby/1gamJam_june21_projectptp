@@ -78,9 +78,7 @@ func _on_Area2D_body_exited(body):
 
 func _on_Area2D_area_shape_entered(area_id, area, area_shape, self_shape):
 	if area is Projectile:
-		print("a")
 		if not area.projectile_owner is Player:
-			print("b")
 			apply_time_slow_effect(area, "projectile")
 
 
