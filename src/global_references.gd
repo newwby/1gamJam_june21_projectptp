@@ -13,6 +13,10 @@ const modifier_time_slow = "res://src/technical/modifiers/modifier_time_slow.tsc
 # graphical effects
 # particle that travels across the screen at a rotating offset
 const windy_leaf_particle = "res://src/effect/level_windy_leaf_particle.tscn"
+# particles for nodes affected by the player's time slow bubble
+const time_slow_particles = "res://src/effect/time_slowed_effect.tscn"
+# the time slow bubble scene
+const time_slow_bubble = "res://src/effect/TimeBubbleZone.tscn"
 
 ###############################################################################
 

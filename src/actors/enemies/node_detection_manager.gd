@@ -19,7 +19,7 @@ var near_range_group
 var far_range_group
 var distant_range_group
 
-const DETECTION_RADIUS_SIZE = 200
+const DETECTION_RADIUS_SIZE = 250
 const MELEE_RADIUS_MULTIPLIER = 1.0
 const CLOSE_RADIUS_MULTIPLIER = 2.0
 const NEAR_RADIUS_MULTIPLIER = 3.0

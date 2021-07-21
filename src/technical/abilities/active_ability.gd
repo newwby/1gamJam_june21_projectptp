@@ -170,18 +170,25 @@ func call_ability_time_slow():
 	
 	time_slow_bubble_effect()
 	
-	# call actor speed func on all actors active
-	var group_to_call = get_tree().get_nodes_in_group("actors")
-	# call	
-	for actor in group_to_call:
-		if actor != self.owner:
-			time_slow_actor_speed(actor)
+	var new_time_bubble = load(GlobalReferences.time_slow_bubble)
+	var new_bubble_instance = new_time_bubble.instance()
+	new_bubble_instance.position = owner.position
+	get_tree().get_root().add_child(new_bubble_instance)
+	
+	# defunct code?
+#	# call actor speed func on all actors active
+#	var group_to_call = get_tree().get_nodes_in_group("actors")
+#	# call	
+#	for actor in group_to_call:
+#		if actor != self.owner:
+#			time_slow_actor_speed(actor)
+#
+#	# call projectile speed func on all projectiles active
+#	group_to_call = get_tree().get_nodes_in_group("projectiles")
+#	for projectile in group_to_call:
+#		if projectile.projectile_owner != self.owner:
+#			time_slow_projectile_speed(projectile)
 
-	# call projectile speed func on all projectiles active
-	group_to_call = get_tree().get_nodes_in_group("projectiles")
-	for projectile in group_to_call:
-		if projectile.projectile_owner != self.owner:
-			time_slow_projectile_speed(projectile)
 	emit_signal("activate_signal", "time_slow")
 
 
@@ -211,8 +218,23 @@ func time_slow_bubble_effect():
 #var time_bubble_sprite_tween_duration = 0.5
 
 
+# defunct?
 # function for slowing actor movement speed
 func time_slow_actor_speed(target):
+	
+	# need to create a time bubble
+	# pause ability refresh timer
+	# time bubble adds enemies and enemy proj to bubble node group on enter
+	# time bubble removes enemies/enemy proj from said group if they leave
+	# call start time slow on anything entering group
+	# call end time slow on anything leaving group
+	# connect time bubble to time modifier timers
+	# connect time bubble to player
+	# apply modifier to slow coefficient based on enemy strength
+	# if time bubble expires, signal player and active group
+	# signal on player > restart ability refresh timer
+	# signal on node group > call end time slow on nodes in group, end group
+	
 	var original_speed = target.movement_speed
 	var new_speed = (target.movement_speed)*0.25
 	target.movement_speed = new_speed
@@ -228,6 +250,7 @@ func time_slow_actor_speed(target):
 	target.movement_speed = original_speed
 
 
+# defunct?
 # function for slowing projectile flight speed and rotation speed
 func time_slow_projectile_speed(target):
 	var original_flight_speed = target.projectile_speed

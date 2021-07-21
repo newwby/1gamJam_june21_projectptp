@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://src/effect/time_bubble.gd" type="Script" id=1]
 [ext_resource path="res://art/projectile/kenney_particlePack_1.1/circle_03.png" type="Texture" id=2]
@@ -31,7 +31,7 @@ uniform float palette_speed = 0.1;
 
 void fragment()
 {
-	float diff_x = amplitude * sin((frequency * UV.y) + (speed * TIME));
+	float diff_x = amplitude * sin((frequency * UV.x) + (speed * TIME));
 	float diff_y = amplitude_vertical * sin((frequency_vertical * UV.y)  + (speed_vertical * TIME));
 	vec2 scroll = scroll_direction * TIME * scrolling_speed;
 	vec4 tex = texture(TEXTURE, vec2(UV.x + diff_x, UV.y + diff_y) + scroll);
@@ -47,17 +47,21 @@ void fragment()
 
 [sub_resource type="ShaderMaterial" id=11]
 shader = SubResource( 10 )
-shader_param/screen_height = 1024.0
+shader_param/screen_height = 1920.0
 shader_param/amplitude = 0.03
-shader_param/frequency = 15.0
-shader_param/speed = 5.0
-shader_param/amplitude_vertical = 1.0
-shader_param/frequency_vertical = 0.0
+shader_param/frequency = 25.0
+shader_param/speed = 2.0
+shader_param/amplitude_vertical = 0.03
+shader_param/frequency_vertical = 25.0
 shader_param/speed_vertical = 0.0
 shader_param/scroll_direction = Vector2( 0, 0 )
-shader_param/scrolling_speed = 1.0
+shader_param/scrolling_speed = 0.02
 shader_param/enable_palette_cycling = false
-shader_param/palette_speed = 15.0
+shader_param/palette_speed = 0.1
+
+[sub_resource type="StreamTexture" id=9]
+flags = 4
+load_path = "res://.import/circle_03.png-8bc127d8f1beb53cf6718fc4219169ea.stex"
 
 [sub_resource type="Shader" id=2]
 code = "shader_type canvas_item;
@@ -100,41 +104,6 @@ shader_param/intensity = 5.0
 shader_param/invert = true
 shader_param/rel_rect_size = Vector2( 1024, 600 )
 
-[sub_resource type="Shader" id=6]
-code = "shader_type canvas_item;
- 
-uniform float width;
-uniform vec4 outline_color : hint_color;
- 
-void fragment()
-{
-    vec2 size = (vec2(width) * TEXTURE_PIXEL_SIZE);
-   
-    vec4 sprite_color = texture(TEXTURE, UV);
-   
-    float alpha = sprite_color.a;
-    alpha += texture(TEXTURE, UV + vec2(0.0, -size.y)).a;
-    alpha += texture(TEXTURE, UV + vec2(size.x, -size.y)).a;
-    alpha += texture(TEXTURE, UV + vec2(size.x, 0.0)).a;
-    alpha += texture(TEXTURE, UV + vec2(size.x, size.y)).a;
-    alpha += texture(TEXTURE, UV + vec2(0.0, size.y)).a;
-    alpha += texture(TEXTURE, UV + vec2(-size.x, size.y)).a;
-    alpha += texture(TEXTURE, UV + vec2(-size.x, 0.0)).a;
-    alpha += texture(TEXTURE, UV + vec2(-size.x, -size.y)).a;
-   
-    vec3 final_color = mix(outline_color.rgb, sprite_color.rgb, sprite_color.a);
-    COLOR = vec4(final_color, clamp(alpha, 0.0, 1.0));
-}"
-
-[sub_resource type="ShaderMaterial" id=7]
-shader = SubResource( 6 )
-shader_param/width = 35.0
-shader_param/outline_color = Color( 1, 1, 1, 1 )
-
-[sub_resource type="StreamTexture" id=8]
-flags = 4
-load_path = "res://.import/circle_03.png-8bc127d8f1beb53cf6718fc4219169ea.stex"
-
 [sub_resource type="Shader" id=4]
 code = "shader_type canvas_item;
 
@@ -175,11 +144,8 @@ shader = SubResource( 4 )
 shader_param/outline_width = 2.0
 shader_param/outline_color = null
 
-[sub_resource type="StreamTexture" id=9]
-flags = 4
-load_path = "res://.import/circle_03.png-8bc127d8f1beb53cf6718fc4219169ea.stex"
-
 [node name="TimeBubbleZone" type="Node2D"]
+visible = false
 modulate = Color( 1, 1, 1, 0.392157 )
 position = Vector2( 347.963, 326.636 )
 z_index = 3000
@@ -197,6 +163,8 @@ __meta__ = {
 }
 
 [node name="Area2D" type="Area2D" parent="."]
+collision_layer = 32
+collision_mask = 15
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource( 1 )
@@ -209,22 +177,30 @@ __meta__ = {
 "_editor_description_": ""
 }
 
+[node name="ThickBorder" type="Sprite" parent="."]
+modulate = Color( 0.0980392, 0.0980392, 0.294118, 0.588235 )
+scale = Vector2( 1.25, 1.25 )
+texture = SubResource( 9 )
+
 [node name="DistortionSprite" type="Sprite" parent="."]
 self_modulate = Color( 1, 1, 1, 0.607843 )
 material = SubResource( 3 )
 texture = ExtResource( 2 )
 
-[node name="OutlineBorderSprite" type="Sprite" parent="DistortionSprite"]
-modulate = Color( 0.294118, 0.294118, 0.588235, 0.588235 )
-self_modulate = Color( 1, 1, 1, 0.607843 )
-material = SubResource( 7 )
-scale = Vector2( 0.75, 0.75 )
-texture = SubResource( 8 )
-
 [node name="RipplingBorderSprite" type="Sprite" parent="DistortionSprite"]
-visible = false
 modulate = Color( 0.294118, 0.294118, 0.588235, 0.588235 )
 self_modulate = Color( 1, 1, 1, 0.607843 )
 material = SubResource( 5 )
 scale = Vector2( 1.25, 1.25 )
 texture = SubResource( 9 )
+
+[node name="AnimationTween" type="Tween" parent="."]
+
+[node name="LifespanTimer" type="Timer" parent="."]
+one_shot = true
+[connection signal="area_shape_entered" from="Area2D" to="." method="_on_Area2D_area_shape_entered"]
+[connection signal="area_shape_exited" from="Area2D" to="." method="_on_Area2D_area_shape_exited"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_Area2D_body_exited"]
+[connection signal="tween_completed" from="AnimationTween" to="." method="_on_AnimationTween_tween_completed"]
+[connection signal="timeout" from="LifespanTimer" to="." method="_on_LifespanTimer_timeout"]

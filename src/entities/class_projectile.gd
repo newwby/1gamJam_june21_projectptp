@@ -139,6 +139,8 @@ func set_collision_layers():
 	
 	# projectiles should only ever be spawned by readied actors
 	if projectile_owner is Actor:
+		set_collision_mask_bit(\
+		GlobalVariables.CollisionLayers.EFFECT, true)
 		#
 		# if projectile is spawned by a player actor
 		if projectile_owner is Player:

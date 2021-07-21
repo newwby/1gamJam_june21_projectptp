@@ -238,7 +238,7 @@ debug={
 2d_physics/layer_3="enemy body"
 2d_physics/layer_4="enemy entity"
 2d_physics/layer_5="obstacle"
-2d_physics/layer_6="ground effect"
+2d_physics/layer_6="effect"
 2d_physics/layer_7="room wall"
 2d_physics/layer_8="collectable"
 
