@@ -1,15 +1,18 @@
 extends Node2D
 
+signal bubble_expired
+
 var is_active = false
 
 var sprite_size
 var tween_anim_duration = 0.75
 var time_bubble_group_id = "time_bubble_"
 
-var ability_duration = 40.0
+var ability_duration = 8.0
 
 onready var debug_underlay = $DebuggingRect
 onready var sprite_node = $DistortionSprite
+onready var bubble_area = $Area2D
 onready var bubble_collision = $Area2D/CollisionShape2D
 onready var anim_tween = $AnimationTween
 onready var lifespan_timer = $LifespanTimer
@@ -67,7 +70,7 @@ func _on_Area2D_body_entered(body):
 	# validate whether the body entering is a valid target
 	# can only affect non-player actors and non-player projectiles
 	if not body is Player:
-		apply_time_slow_effect(body, "actor")
+		apply_time_slow_effect(body)
 
 
 func _on_Area2D_body_exited(body):
@@ -76,13 +79,13 @@ func _on_Area2D_body_exited(body):
 		remove_time_slow_effect(body)
 
 
-func _on_Area2D_area_shape_entered(area_id, area, area_shape, self_shape):
+func _on_Area2D_area_shape_entered(_area_id, area, _area_shape, _self_shape):
 	if area is Projectile:
 		if not area.projectile_owner is Player:
-			apply_time_slow_effect(area, "projectile")
+			apply_time_slow_effect(area)
 
 
-func _on_Area2D_area_shape_exited(area_id, area, area_shape, self_shape):
+func _on_Area2D_area_shape_exited(_area_id, area, _area_shape, _self_shape):
 	# validation incase the projectile is freed before this is called
 	if area != null:
 		if area.is_in_group(time_bubble_group_id):
@@ -95,11 +98,16 @@ func _on_AnimationTween_tween_completed(_object, _key):
 	# if first time running
 	if not is_active:
 		is_active = true
+		# turn effect on
+		bubble_area.monitoring = true
+		bubble_area.monitorable = true
+		# start timer to despawn bubble
 		lifespan_timer.start()
 	
 	# if last time running
 	elif is_active:
 		is_active = false
+		emit_signal("bubble_expired")
 		self.visible = false
 		get_tree().call_group(time_bubble_group_id, "remove_time_slow_effect")
 		queue_free()
@@ -139,7 +147,7 @@ func tickEffect():
 	sprite_node.material.set_shader_param("rel_rect_size", get_canvas_transform().get_scale()*sprite_size)
 
 
-func apply_time_slow_effect(affected_target, target_type):
+func apply_time_slow_effect(affected_target):
 	if is_active:
 		# instantiate new particle effect
 		var time_slow_particles = load(GlobalReferences.time_slow_particles)
@@ -165,7 +173,7 @@ func remove_time_slow_effect(affected_target):
 		# emit signal to remove particles
 		if affected_target.has_signal("lost_time_slow"):
 			affected_target.emit_signal("lost_time_slow")
-
+	
 #		# debugging
 #		affected_target.visible = true
 		

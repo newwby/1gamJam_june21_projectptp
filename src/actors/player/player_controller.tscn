@@ -128,6 +128,8 @@ offset = Vector2( 4, 5 )
 
 [node name="ActiveAbility2" parent="AbilityHolder" instance=ExtResource( 5 )]
 
+[node name="ActiveAbility3" parent="AbilityHolder" instance=ExtResource( 5 )]
+
 [node name="OrbitalProjectileHolder" type="Node2D" parent="."]
 
 [node name="UICanvasLayer" type="CanvasLayer" parent="."]
@@ -209,3 +211,5 @@ stream = SubResource( 15 )
 [connection signal="updated_cooldown" from="AbilityHolder/ActiveAbility1" to="." method="_on_ActiveAbility1_updated_cooldown"]
 [connection signal="activate_signal" from="AbilityHolder/ActiveAbility2" to="." method="_on_ActiveAbility2_activate_signal"]
 [connection signal="updated_cooldown" from="AbilityHolder/ActiveAbility2" to="." method="_on_ActiveAbility2_updated_cooldown"]
+[connection signal="activate_signal" from="AbilityHolder/ActiveAbility3" to="." method="_on_ActiveAbility2_activate_signal"]
+[connection signal="updated_cooldown" from="AbilityHolder/ActiveAbility3" to="." method="_on_ActiveAbility2_updated_cooldown"]

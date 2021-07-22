@@ -16,6 +16,11 @@ var time_bubble_sprite_tween_scale_ceiling = Vector2(4.0, 4.0)
 var time_bubble_sprite_tween_alpha_floor = 0.05
 var time_bubble_sprite_tween_duration = 0.15
 
+# this should not be part of a parent active ability
+# active abilities should be their own distinct classes
+# in future a refactor of this to make it more extensible would be a good idea
+var is_active_time_bubble = false
+
 # resource path of the projectile actors can spawn
 onready var modifier_time_slow_object = preload(MODIFIER_TIME_SLOW_PATH)
 
@@ -33,11 +38,6 @@ func _ready():
 	set_ability_effects()
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
-
 ###############################################################################
 
 
@@ -48,7 +48,10 @@ func activate_ability():
 	if current_ability_loadout == GlobalVariables.AbilityTypes.BLINK:
 		call_ability_blink()
 	if current_ability_loadout == GlobalVariables.AbilityTypes.TIME_SLOW:
-		call_ability_time_slow()
+		if is_active_time_bubble == false:
+			call_ability_time_slow()
+	if current_ability_loadout == GlobalVariables.AbilityTypes.POO_BOMB:
+		print("hello")
 
 
 ###############################################################################
@@ -110,7 +113,7 @@ func call_ability_blink():
 	# disable collision with everything except walls/obstacles
 	owner.set_collision_mask_bit(GlobalVariables.CollisionLayers.ENEMY_BODY, false)
 	owner.set_collision_mask_bit(GlobalVariables.CollisionLayers.ENEMY_ENTITY, false)
-	owner.set_collision_mask_bit(GlobalVariables.CollisionLayers.GROUND_EFFECT, false)
+	owner.set_collision_mask_bit(GlobalVariables.CollisionLayers.EFFECT, false)
 	owner.set_collision_mask_bit(GlobalVariables.CollisionLayers.ENEMY_BODY, false)
 	
 	# create a timer and set properties for this function
@@ -151,7 +154,7 @@ func call_ability_blink():
 	
 	owner.set_collision_mask_bit(GlobalVariables.CollisionLayers.ENEMY_BODY, true)
 	owner.set_collision_mask_bit(GlobalVariables.CollisionLayers.ENEMY_ENTITY, true)
-	owner.set_collision_mask_bit(GlobalVariables.CollisionLayers.GROUND_EFFECT, true)
+	owner.set_collision_mask_bit(GlobalVariables.CollisionLayers.EFFECT, true)
 	owner.set_collision_mask_bit(GlobalVariables.CollisionLayers.ENEMY_BODY, true)
 
 	# reset actor properties modified within this function
@@ -162,9 +165,7 @@ func call_ability_blink():
 	self.remove_child(blink_timer)
 	blink_timer.queue_free()
 
-
 # ability code for time slow below
-
 # function for slowing time
 func call_ability_time_slow():
 	
@@ -173,7 +174,10 @@ func call_ability_time_slow():
 	var new_time_bubble = load(GlobalReferences.time_slow_bubble)
 	var new_bubble_instance = new_time_bubble.instance()
 	new_bubble_instance.position = owner.position
+#	new_bubble_instance.connect()
+	new_bubble_instance.connect("bubble_expired", self, "on_time_bubble_expiry")
 	get_tree().get_root().add_child(new_bubble_instance)
+	is_active_time_bubble = true
 	
 	# defunct code?
 #	# call actor speed func on all actors active
@@ -190,6 +194,14 @@ func call_ability_time_slow():
 #			time_slow_projectile_speed(projectile)
 
 	emit_signal("activate_signal", "time_slow")
+
+
+###############################################################################
+
+
+# ability code for restarting time bubble cooldown
+func on_time_bubble_expiry():
+	is_active_time_bubble = false
 
 
 ###############################################################################

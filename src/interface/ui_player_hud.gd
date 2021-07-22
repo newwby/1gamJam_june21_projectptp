@@ -136,12 +136,13 @@ func update_cooldown(ability_type, ability_enum_id, new_value, new_max):
 			current_weapon_cooldown_ui_graphic = ability_enum_id
 			update_ui_weapon_cooldown_graphic(ability_enum_id)
 	elif ability_type == BaseAbility.AbilityType.ACTIVE:
+		# blink
 		if ability_enum_id == 0:
 			ui_modify_cooldown(ability1_cooldown, ability1_cooldown_segment_timer, new_value, new_max)
-			#blink
+		# time slow
 		elif ability_enum_id == 1:
 			ui_modify_cooldown(ability2_cooldown, ability2_cooldown_segment_timer, new_value, new_max)
-			#time slow
+		# poo bomb goes here
 
 
 func update_ui_weapon_cooldown_graphic(weapon_style_id):

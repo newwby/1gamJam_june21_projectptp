@@ -32,4 +32,5 @@ enum ProjectileMovement {
 enum AbilityTypes {
 	BLINK,
 	TIME_SLOW,
+	POO_BOMB,
 }

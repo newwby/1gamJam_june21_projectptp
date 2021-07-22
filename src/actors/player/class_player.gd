@@ -45,12 +45,17 @@ var static_anim_tween_playback_rate = 0.5
 var glitch_effect_amplitude = 1.5
 var glitch_effect_speed = 25
 
+var ability_cooldown_blink_dash = 2.0
+var ability_cooldown_time_slow = 6.0
+var ability_cooldown_poo_bomb = 4.0
+
 onready var player_sprite = $SpriteHolder/StaticSprite
 onready var sprite_animation_tween = $SpriteHolder/StaticSprite/RockingTween
 
 onready var weapon_ability_node = $AbilityHolder/WeaponAbility
 onready var active_ability_node_1 = $AbilityHolder/ActiveAbility1 #q
 onready var active_ability_node_2 = $AbilityHolder/ActiveAbility2 #e
+onready var active_ability_node_3 = $AbilityHolder/ActiveAbility3 #r
 
 onready var target_sprite_rotator = $TargetingSpriteHolder
 onready var target_line_sniper = $TargetingSpriteHolder/TargetingSprite/SniperTargetingLine
@@ -186,11 +191,16 @@ func set_sprite_scale():
 	player_sprite.scale = Vector2(sprite_scale_adj,sprite_scale_adj)
 
 
+# sets the cooldown for ability nodes
+# note: this should probably be moved into the ndoes themselves
+# they could be setup with an enum id or exported var and auto-configure
 func set_ability_nodes():
 	active_ability_node_1.set_new_ability(GlobalVariables.AbilityTypes.BLINK)
-	active_ability_node_1.activation_cooldown = 1.0
+	active_ability_node_1.activation_cooldown = ability_cooldown_blink_dash
 	active_ability_node_2.set_new_ability(GlobalVariables.AbilityTypes.TIME_SLOW)
-	active_ability_node_2.activation_cooldown = 2.0
+	active_ability_node_2.activation_cooldown = ability_cooldown_time_slow
+	active_ability_node_3.set_new_ability(GlobalVariables.AbilityTypes.POO_BOMB)
+	active_ability_node_3.activation_cooldown = ability_cooldown_poo_bomb
 
 
 ###############################################################################
@@ -244,6 +254,8 @@ func get_ability_input():
 			active_ability_node_1.attempt_ability()
 		if Input.is_action_pressed("power_item_2"):
 			active_ability_node_2.attempt_ability()
+		if Input.is_action_pressed("alt_weapon"):
+			active_ability_node_3.attempt_ability()
 
 
 ###############################################################################
@@ -277,14 +289,21 @@ func _on_WeaponAbility_updated_cooldown(ability_node, ability_type, new_value, n
 	handle_ability_cooldown_signal(ability_node, ability_type, new_value, new_cooldown)
 
 
+# blink
 func _on_ActiveAbility1_updated_cooldown(ability_node, ability_type, new_value, new_cooldown):
 	if GlobalDebug.ability_cooldown_call_logs: print("signal from ab1", ", ability_node=", ability_node, ", ability_type=", ability_type, ", new_value=", new_value, ", new_cooldown=", new_cooldown)
 	handle_ability_cooldown_signal(ability_node, ability_type, new_value, new_cooldown)
 
 
+# time bubble
 func _on_ActiveAbility2_updated_cooldown(ability_node, ability_type, new_value, new_cooldown):
 	if GlobalDebug.ability_cooldown_call_logs: print("signal from ab2", ", ability_node=", ability_node, ", ability_type=", ability_type, ", new_value=", new_value, ", new_cooldown=", new_cooldown)
-	handle_ability_cooldown_signal(ability_node, ability_type, new_value, new_cooldown)
+	if ability_node.is_active_time_bubble == false:
+		handle_ability_cooldown_signal(ability_node, ability_type, new_value, new_cooldown)
+
+
+# poo bomb goes here
+##
 
 
  # DEBUGGER ISSUE, 'damager' param UNUSED
@@ -317,6 +336,9 @@ func _on_ActiveAbility1_activate_signal(ability_type):
 func _on_ActiveAbility2_activate_signal(ability_type):
 	if ability_type == "time_slow":
 		get_time_slow_sound_and_play()
+
+
+# poo bomb goes here
 
 
 ###############################################################################

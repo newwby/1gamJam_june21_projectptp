@@ -128,7 +128,8 @@ func shuffle_audio_and_play(given_audio_array: Array, remaining_iterations: int)
 			if GlobalDebug.audio_array_controller_logs: print("chosen sound ", chosen_sound, " playing")
 			# this goes into function
 			if GlobalDebug.audio_array_controller_logs: print("set funcstateobj")
-			var func_play_chosen = play_chosen_sound(chosen_sound)
+#			var func_play_chosen = play_chosen_sound(chosen_sound)
+			play_chosen_sound(chosen_sound)
 			if GlobalDebug.audio_array_controller_logs: print("returned to shuffle_audio_func")
 			# does the array carry on
 			if remaining_iterations-1 > 0:
