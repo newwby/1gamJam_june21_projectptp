@@ -46,8 +46,8 @@ var glitch_effect_amplitude = 1.5
 var glitch_effect_speed = 25
 
 var ability_cooldown_blink_dash = 2.0
-var ability_cooldown_time_slow = 6.0
-var ability_cooldown_poo_bomb = 4.0
+var ability_cooldown_time_slow = 12.0
+var ability_cooldown_poo_bomb = 6.0
 
 onready var player_sprite = $SpriteHolder/StaticSprite
 onready var sprite_animation_tween = $SpriteHolder/StaticSprite/RockingTween
@@ -302,8 +302,9 @@ func _on_ActiveAbility2_updated_cooldown(ability_node, ability_type, new_value, 
 		handle_ability_cooldown_signal(ability_node, ability_type, new_value, new_cooldown)
 
 
-# poo bomb goes here
-##
+func _on_ActiveAbility3_updated_cooldown(ability_node, ability_type, new_value, new_cooldown):
+	if GlobalDebug.ability_cooldown_call_logs: print("signal from ab1", ", ability_node=", ability_node, ", ability_type=", ability_type, ", new_value=", new_value, ", new_cooldown=", new_cooldown)
+	handle_ability_cooldown_signal(ability_node, ability_type, new_value, new_cooldown)
 
 
  # DEBUGGER ISSUE, 'damager' param UNUSED
@@ -338,8 +339,11 @@ func _on_ActiveAbility2_activate_signal(ability_type):
 		get_time_slow_sound_and_play()
 
 
-# poo bomb goes here
-
+func _on_ActiveAbility3_activate_signal(ability_type):
+	if ability_type == "poo_bomb":
+		#play poo bomb sound
+		# replace >> get_time_slow_sound_and_play()
+		pass
 
 ###############################################################################
 

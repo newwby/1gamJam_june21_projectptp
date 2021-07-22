@@ -33,16 +33,19 @@ var current_weapon_cooldown_ui_graphic
 onready var weapon_cooldown = $CooldownRadialHolder/WeaponCooldownRadial
 onready var ability1_cooldown = $CooldownRadialHolder/Ability1CooldownRadial
 onready var ability2_cooldown = $CooldownRadialHolder/Ability2CooldownRadial
+onready var ability3_cooldown = $CooldownRadialHolder/Ability3CooldownRadial
 
 onready var weapon_cooldown_segment_timer = $CooldownRadialHolder/WeaponCooldownRadial/WeaponSegmentTimer
 onready var ability1_cooldown_segment_timer = $CooldownRadialHolder/Ability1CooldownRadial/Ability1SegmentTimer
 onready var ability2_cooldown_segment_timer = $CooldownRadialHolder/Ability2CooldownRadial/Ability2SegmentTimer
+onready var ability3_cooldown_segment_timer = $CooldownRadialHolder/Ability3CooldownRadial/Ability3SegmentTimer
 
 onready var decor_strip = $CooldownRadialHolder/CooldownDecorStripe
 
 onready var weapon_sprite = $MarginContainer/TopHUDBar/TopLeftHUD/HBox/HBox/Weapon/WeaponSpriteAnchor
 onready var ability1_sprite = $MarginContainer/TopHUDBar/TopLeftHUD/HBox/HBox/Ability1/AbilitySprite1Anchor
 onready var ability2_sprite = $MarginContainer/TopHUDBar/TopLeftHUD/HBox/HBox/Ability2/AbilitySprite2Anchor
+onready var ability3_sprite = $MarginContainer/TopHUDBar/TopLeftHUD/HBox/HBox/Ability3/AbilitySprite3Anchor
 
 onready var game_time_label = $ClockLabel
 onready var game_timer = $GameTimer_Seconds
@@ -91,6 +94,7 @@ func set_cooldown_texture_positions_and_dimensions():
 	set_scale_and_center_radial(weapon_sprite, weapon_cooldown)
 	set_scale_and_center_radial(ability1_sprite, ability1_cooldown)
 	set_scale_and_center_radial(ability2_sprite, ability2_cooldown)
+	set_scale_and_center_radial(ability3_sprite, ability3_cooldown)
 	# account for scale adjustment when getting rect size
 	var half_rect_y = (weapon_cooldown.rect_size.y * weapon_cooldown.rect_scale.y) / 8
 	# set decor strip to be positioned with radial cooldown timers
@@ -142,7 +146,8 @@ func update_cooldown(ability_type, ability_enum_id, new_value, new_max):
 		# time slow
 		elif ability_enum_id == 1:
 			ui_modify_cooldown(ability2_cooldown, ability2_cooldown_segment_timer, new_value, new_max)
-		# poo bomb goes here
+		elif ability_enum_id == 2:
+			ui_modify_cooldown(ability3_cooldown, ability3_cooldown_segment_timer, new_value, new_max)
 
 
 func update_ui_weapon_cooldown_graphic(weapon_style_id):

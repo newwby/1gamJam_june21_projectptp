@@ -60,14 +60,14 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="HBox" type="HBoxContainer" parent="MarginContainer/TopHUDBar/TopLeftHUD/HBox"]
-margin_right = 268.0
+margin_right = 405.0
 margin_bottom = 96.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 1
 
 [node name="Weapon" type="CenterContainer" parent="MarginContainer/TopHUDBar/TopLeftHUD/HBox/HBox"]
-margin_right = 86.0
+margin_right = 98.0
 margin_bottom = 96.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -79,8 +79,8 @@ texture = ExtResource( 2 )
 centered = false
 
 [node name="Ability1" type="CenterContainer" parent="MarginContainer/TopHUDBar/TopLeftHUD/HBox/HBox"]
-margin_left = 90.0
-margin_right = 176.0
+margin_left = 102.0
+margin_right = 200.0
 margin_bottom = 96.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -92,8 +92,8 @@ texture = ExtResource( 5 )
 centered = false
 
 [node name="Ability2" type="CenterContainer" parent="MarginContainer/TopHUDBar/TopLeftHUD/HBox/HBox"]
-margin_left = 180.0
-margin_right = 268.0
+margin_left = 204.0
+margin_right = 302.0
 margin_bottom = 96.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -104,15 +104,21 @@ scale = Vector2( 0.13, 0.13 )
 texture = ExtResource( 5 )
 centered = false
 
-[node name="HBox1" type="HBoxContainer" parent="MarginContainer/TopHUDBar/TopLeftHUD/HBox"]
-margin_left = 272.0
-margin_right = 540.0
+[node name="Ability3" type="CenterContainer" parent="MarginContainer/TopHUDBar/TopLeftHUD/HBox/HBox"]
+margin_left = 306.0
+margin_right = 405.0
 margin_bottom = 96.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="AbilitySprite3Anchor" type="Sprite" parent="MarginContainer/TopHUDBar/TopLeftHUD/HBox/HBox/Ability3"]
+modulate = Color( 0, 0, 0, 0.294118 )
+scale = Vector2( 0.13, 0.13 )
+texture = ExtResource( 5 )
+centered = false
+
 [node name="HBox2" type="HBoxContainer" parent="MarginContainer/TopHUDBar/TopLeftHUD/HBox"]
-margin_left = 544.0
+margin_left = 409.0
 margin_right = 814.0
 margin_bottom = 96.0
 size_flags_horizontal = 3
@@ -271,9 +277,9 @@ __meta__ = {
 }
 
 [node name="CooldownDecorStripe" type="ColorRect" parent="CooldownRadialHolder"]
-margin_top = 33.8542
-margin_right = 300.0
-margin_bottom = 79.8542
+margin_top = 34.0
+margin_right = 403.0
+margin_bottom = 80.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 color = Color( 0, 0, 0, 0.686275 )
@@ -298,10 +304,10 @@ __meta__ = {
 autostart = true
 
 [node name="Ability1CooldownRadial" type="TextureProgress" parent="CooldownRadialHolder"]
-margin_left = 115.0
-margin_top = 25.0
-margin_right = 627.0
-margin_bottom = 537.0
+margin_left = 126.0
+margin_top = 24.0
+margin_right = 638.0
+margin_bottom = 536.0
 rect_scale = Vector2( 0.125, 0.125 )
 texture_under = ExtResource( 6 )
 texture_progress = ExtResource( 9 )
@@ -314,9 +320,9 @@ __meta__ = {
 autostart = true
 
 [node name="Ability2CooldownRadial" type="TextureProgress" parent="CooldownRadialHolder"]
-margin_left = 205.0
+margin_left = 228.0
 margin_top = 25.0
-margin_right = 717.0
+margin_right = 740.0
 margin_bottom = 537.0
 rect_scale = Vector2( 0.125, 0.125 )
 texture_under = ExtResource( 8 )
@@ -327,6 +333,22 @@ __meta__ = {
 }
 
 [node name="Ability2SegmentTimer" type="Timer" parent="CooldownRadialHolder/Ability2CooldownRadial"]
+autostart = true
+
+[node name="Ability3CooldownRadial" type="TextureProgress" parent="CooldownRadialHolder"]
+margin_left = 330.5
+margin_top = 25.5
+margin_right = 842.5
+margin_bottom = 537.5
+rect_scale = Vector2( 0.125, 0.125 )
+texture_under = ExtResource( 8 )
+texture_progress = ExtResource( 7 )
+fill_mode = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Ability3SegmentTimer" type="Timer" parent="CooldownRadialHolder/Ability3CooldownRadial"]
 autostart = true
 
 [node name="ClockLabel" type="Label" parent="."]
@@ -346,4 +368,5 @@ __meta__ = {
 [connection signal="timeout" from="CooldownRadialHolder/WeaponCooldownRadial/WeaponSegmentTimer" to="." method="_on_WeaponSegmentTimer_timeout"]
 [connection signal="timeout" from="CooldownRadialHolder/Ability1CooldownRadial/Ability1SegmentTimer" to="." method="_on_Ability1SegmentTimer_timeout"]
 [connection signal="timeout" from="CooldownRadialHolder/Ability2CooldownRadial/Ability2SegmentTimer" to="." method="_on_Ability2SegmentTimer_timeout"]
+[connection signal="timeout" from="CooldownRadialHolder/Ability3CooldownRadial/Ability3SegmentTimer" to="." method="_on_Ability2SegmentTimer_timeout"]
 [connection signal="timeout" from="GameTimer_Seconds" to="." method="_on_GameTimer_Seconds_timeout"]

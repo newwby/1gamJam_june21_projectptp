@@ -14,7 +14,7 @@ var time_bubble_sprite_base_scale = Vector2(1.0, 1.0)
 var time_bubble_sprite_base_alpha_value = 0.5
 var time_bubble_sprite_tween_scale_ceiling = Vector2(4.0, 4.0)
 var time_bubble_sprite_tween_alpha_floor = 0.05
-var time_bubble_sprite_tween_duration = 0.15
+var time_bubble_sprite_tween_duration = 0.45
 
 # this should not be part of a parent active ability
 # active abilities should be their own distinct classes
@@ -24,7 +24,7 @@ var is_active_time_bubble = false
 # resource path of the projectile actors can spawn
 onready var modifier_time_slow_object = preload(MODIFIER_TIME_SLOW_PATH)
 
-	
+
 onready var blink_particle_effect = $BlinkParticles
 onready var time_bubble_effect_sprite = $TimeBubbleExpansion
 onready var time_bubble_effect_tween = $TimeBubbleExpansion/BubbleFadeTween
@@ -51,8 +51,7 @@ func activate_ability():
 		if is_active_time_bubble == false:
 			call_ability_time_slow()
 	if current_ability_loadout == GlobalVariables.AbilityTypes.POO_BOMB:
-		print("hello")
-
+		create_poo_bomb()
 
 ###############################################################################
 
@@ -287,5 +286,16 @@ func time_slow_projectile_speed(target):
 	target.rotation_per_tick = original_rotation_speed
 	#haven't slowed orbit rotation
 #	target.owner.orbiting_rotation_rate = 3
+
+
+func create_poo_bomb():
+	var poo_bomb_scene = load(GlobalReferences.poo_bomb)
+	var new_bomb = poo_bomb_scene.instance()
+	#bomb_owner
+	new_bomb.bomb_owner = owner
+	new_bomb.position = Vector2(owner.position.x-50, owner.position.y)
+	get_tree().get_root().add_child(new_bomb)
+	emit_signal("activate_signal", "poo_bomb")
+
 
 ###############################################################################
