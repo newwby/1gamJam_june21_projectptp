@@ -156,28 +156,7 @@ func _on_DetectionHandler_body_changed_detection_radius(body, is_entering_radius
 		 and aggression_timer.is_stopped():
 			#
 			#
-			print("DEBUGTEMP; TRY TO SEARCH; BTW REMOVE THIS LOG")
-			# NOTE HERE
-			# TODO/FIND ME
-			# OK SO PROGRESS NOTE
-			#
-			# search state is already implemented
-			# roaming state is not
-			# roaming state should be the default
-			# search state behaviour is to go to last known location
-			# then clear last known location
-			# maybe get approx heading and wander that way?
-			# roaming behaviour is just to get random nearby places
-			# (based on aggression or perception?)
-			# (new curiosity stat?)
-			# then move toward it
-			# start wait timer
-			# wait for time (determined by curiosity?)
-			# or try to group up with other nearby enemies? < out of scope
-			#
 			state_manager.set_new_state(StateManager.State.SEARCHING)
-#			state_manager.state_node_searching.start_timer()
-#			.search_state_first_phase.start()
 			detection_scan.current_target = null
 
 

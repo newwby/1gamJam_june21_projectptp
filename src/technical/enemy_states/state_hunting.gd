@@ -110,7 +110,6 @@ func track_and_move_toward_target():
 				emit_signal("approach_distance", true)
 		# if we can't see target,
 		else:
-			print("cleared target")
 			# clear current target of detection manager
 			detection_manager.current_target = null
 			# need to check for new state
