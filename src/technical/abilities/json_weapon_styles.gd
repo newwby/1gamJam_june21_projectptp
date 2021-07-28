@@ -18,6 +18,7 @@ enum Style {
 	HEAVY_SHOT,
 	VORTEX_SHOT,
 	WIND_SCYTHE,
+	# defunct
 	BOLT_LANCE,
 	# enemy only
 	BASIC_SHOT,
@@ -204,7 +205,7 @@ const STYLE_DATA = {
 		DataType.SHOT_STATIONARY_BONUS		: 1.0,#0.85,
 		DataType.AI_MIN_USE_RANGE			: GlobalVariables.RangeGroup.CLOSE,
 		DataType.AI_MAX_USE_RANGE			: GlobalVariables.RangeGroup.FAR,
-		DataType.BASE_DAMAGE				: 15,
+		DataType.BASE_DAMAGE				: 18,
 		DataType.PROJECTILE_SIZE			: 0.8,
 		DataType.PROJECTILE_MAX_MOVE_TICKS	: 6000,
 		DataType.PROJECTILE_MAX_RANGE		: 600,

@@ -19,6 +19,8 @@ const time_slow_particles = "res://src/effect/time_slowed_effect.tscn"
 const time_slow_bubble = "res://src/effect/TimeBubbleZone.tscn"
 # the poo bomb ability scene
 const poo_bomb = "res://src/technical/abilities/weapon_object_poo_bomb.tscn"
+# creep zone ground effect scene
+const creep_ground = "res://src/effect/ground_effect_creep_area.tscn"
 
 ###############################################################################
 

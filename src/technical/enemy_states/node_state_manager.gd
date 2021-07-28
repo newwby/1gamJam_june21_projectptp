@@ -11,7 +11,7 @@
 class_name StateManager, "res://art/shrek_pup_eye_sprite.png"
 extends Node2D
 
-signal check_state
+#signal check_state
 signal play_state_emote_sound_effect(state_id)
 signal state_manager_active # DEBUGGER ISSUE, UNUSED
 
@@ -83,7 +83,8 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	if current_state == null:
-		emit_signal("check_state")
+#		emit_signal("check_state")
+		set_new_state(State.ROAMING)
 	else:
 		call_active_state_node_action()
 

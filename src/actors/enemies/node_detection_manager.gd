@@ -4,6 +4,19 @@ extends Node2D
 
 signal body_changed_detection_radius(body, is_entering_radius, range_group)
 
+export var all_radii_enabled = true
+export var melee_radii_enabled = true
+export var close_radii_enabled = true
+export var near_radii_enabled = true
+export var far_radii_enabled = true
+
+# future-proofing variables for enemies with variable detection
+export var base_radii_flat_override: int = 200
+export var melee_radii_multiplier_override: float = 1.0
+export var close_radii_multiplier_override: float = 2.0
+export var near_radii_multiplier_override: float = 3.0
+export var far_radii_multiplier_override: float = 4.0
+
 # the current actor the enemy is hunting
 var current_target
 # last known location of the target if lost sight of them
@@ -33,13 +46,6 @@ var distant_range_string_suffix = GlobalVariables.RangeGroup.keys()[GlobalVariab
 
 var grouping_string = str(self)+"_"
 
-# future-proofing variables for enemies with variable detection
-var perception_bonus_flat_size_increase: int = 0
-var perception_bonus_multiplier_melee: float = 0.0
-var perception_bonus_multiplier_close: float = 0.0
-var perception_bonus_multiplier_near: float = 0.0
-var perception_bonus_multiplier_far: float = 0.0
-
 # variables holding references to the detection radii nodes
 onready var detection_radius_melee = $Range_Melee
 onready var detection_radius_close = $Range_Close
@@ -57,7 +63,7 @@ onready var collision_radius_far = $Range_Far/CollisionShape2D
 
 
 func _ready():
-	set_collision_radii()
+	set_collision_radii_override()
 	set_detection_group_strings()
 	set_group_call_dict()
 #	print(call_range_group(GlobalVariables.RangeGroup.NEAR))
@@ -74,6 +80,19 @@ func set_detection_group_strings():
 	far_range_group = grouping_string + far_range_string_suffix
 	distant_range_group = grouping_string + distant_range_string_suffix
 
+func set_collision_radii_override():
+	collision_radius_melee.shape.radius =\
+	 base_radii_flat_override * melee_radii_multiplier_override
+	collision_radius_close.shape.radius =\
+	 base_radii_flat_override * close_radii_multiplier_override
+	collision_radius_near.shape.radius =\
+	 base_radii_flat_override * near_radii_multiplier_override
+#	print(get_parent().name, " ", collision_radius_far.shape.radius)
+	collision_radius_far.shape.radius =\
+	 base_radii_flat_override * far_radii_multiplier_override
+#	print(get_parent().name, " ", collision_radius_far.shape.radius)
+
+
 # collision radii are set in code as they may be changeable
 # by specific enemy subclasses
 # must set the collision extents for each detection radius
@@ -88,34 +107,70 @@ func set_collision_radii():
 	
 	# the flat detection radius
 	var base_perception_radius =\
-	 DETECTION_RADIUS_SIZE+perception_bonus_flat_size_increase
+	 DETECTION_RADIUS_SIZE if base_radii_flat_override == 0\
+	else base_radii_flat_override
 	# the multiplier for the melee range (closest to self)
 	var melee_range_multiplier =\
-	 MELEE_RADIUS_MULTIPLIER + perception_bonus_multiplier_melee
+	 MELEE_RADIUS_MULTIPLIER if melee_radii_multiplier_override == 0\
+	else melee_radii_multiplier_override
 	# the multiplier for the close range (second closest to self)
 	var close_range_multiplier =\
-	 CLOSE_RADIUS_MULTIPLIER + perception_bonus_multiplier_close
+	 CLOSE_RADIUS_MULTIPLIER if close_radii_multiplier_override == 0\
+	else close_radii_multiplier_override
 	# the multiplier for the near range (second furthest from self)
 	var near_range_multiplier =\
-	 NEAR_RADIUS_MULTIPLIER + perception_bonus_multiplier_near
+	 NEAR_RADIUS_MULTIPLIER if near_radii_multiplier_override == 0\
+	else near_radii_multiplier_override
 	# the multiplier for the far range (furthest from self)
-	var far_range_multiplier =\
-	 FAR_RADIUS_MULTIPLIER + perception_bonus_multiplier_far
+	var far_range_multiplier=\
+	 FAR_RADIUS_MULTIPLIER if far_radii_multiplier_override == 0\
+	else far_radii_multiplier_override
 	
 	# now we set the collision extents for the collision shape
 	# (circle shape) of each detection radius
 	# set the melee range
 	collision_radius_melee.shape.radius =\
 	 base_perception_radius*melee_range_multiplier
+	# if either individual or 'all' bools enabling radii are set, turn it on
+	if melee_radii_enabled:
+		collision_radius_melee.disabled = false
+	elif all_radii_enabled:
+		collision_radius_melee.disabled = false
+	else:
+		collision_radius_melee.disabled = true
+	
 	# set the close range
 	collision_radius_close.shape.radius =\
 	 base_perception_radius*close_range_multiplier
+	# if either individual or 'all' bools enabling radii are set, turn it on
+	if close_radii_enabled:
+		collision_radius_close.disabled = false
+	elif all_radii_enabled:
+		collision_radius_close.disabled = false
+	else:
+		collision_radius_close.disabled = true
+	
 	# set the near range
 	collision_radius_near.shape.radius =\
 	 base_perception_radius*near_range_multiplier
+	# if either individual or 'all' bools enabling radii are set, turn it on
+	if near_radii_enabled:
+		collision_radius_near.disabled = false
+	elif all_radii_enabled:
+		collision_radius_near.disabled = false
+	else:
+		collision_radius_near.disabled = true
+	
 	# set the far range
 	collision_radius_far.shape.radius =\
 	 base_perception_radius*far_range_multiplier
+	# if either individual or 'all' bools enabling radii are set, turn it on
+	if far_radii_enabled:
+		collision_radius_far.disabled = false
+	elif all_radii_enabled:
+		collision_radius_far.disabled = false
+	else:
+		collision_radius_far.disabled = true
 	
 	# not listed here, as it does not have a detection radius, is
 	# the 'distant' range, which is for any actor not in a range group

@@ -2,13 +2,14 @@
 class_name StateRoaming, "res://art/shrek_pup_eye_sprite.png"
 extends StateParent
 
-var roaming_max_range = 400
-var roaming_wait_delay = 2.0
-var roaming_wait_delay_randomness = 1.5
+export var roaming_max_range = 400
+export var roaming_wait_delay = 2.0
+export var roaming_wait_delay_randomness = 1.5
+export var roaming_max_duration = 4.0
+
 var roaming_target_position = Vector2.ZERO
 var distance_to_roaming_target_to_complete = 25
 var distance_to_during_last_frame = null
-var roaming_max_duration = 4.0
 var can_roam_again = false
 var has_roam_target = false
 

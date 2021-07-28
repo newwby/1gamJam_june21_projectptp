@@ -9,6 +9,7 @@ var BASE_AGGRESSION_TIMER_WAIT_TIME = 3.0
 
 export var enemy_life: int = 35
 export var enemy_aggression_modifier: float = 1.0
+#export var enemy_perception_modifier: float = 1.0
 
 var current_mouse_target
 var firing_target
@@ -86,7 +87,6 @@ onready var state_manager = $StateManager
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	self.add_to_group("enemies")
-	set_enemy_stats()
 	set_lifebar()
 	set_behaviour_timers()
 #	set_initial_state(State.IDLE)
@@ -118,10 +118,6 @@ func set_behaviour_timers():
 	BASE_AGGRESSION_TIMER_WAIT_TIME * enemy_aggression_modifier
 	# higher aggression modifier adds more aggression wait time to pursue
 	aggression_timer.wait_time = aggression_timer_if_damaged
-
-
-func set_enemy_stats():
-	movement_speed = ENEMY_TYPE_BASE_MOVEMENT_SPEED
 
 
 func set_parent_spawn_handler():
@@ -166,6 +162,7 @@ func _on_OffscreenNotifier_screen_exited():
 #	current_state = State.IDLE
 	start_offscreen_timer()
 	is_offscreen = true
+
 
 func _on_OffscreenNotifier_screen_entered():
 	is_offscreen = false

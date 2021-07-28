@@ -7,7 +7,7 @@ signal damaged(hp_damage_taken) # DEBUGGER ISSUE, UNUSED
 export var is_active = true
 
 # this is the movement rate per tick of the actor
-var movement_speed = 400
+export var movement_speed = 400
 # this is the actor's current velocity
 var velocity: Vector2 = Vector2.ZERO
 # this is the last direction the actor moved and changed facing
