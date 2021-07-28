@@ -27,10 +27,13 @@ func set_state_priority():
 #
 ## placeholder function to be derived by child classes
 ## returns false without any superseding child class function
-#func check_state_condition():
-#	return false
+func check_state_condition():
+	pass
 #
 #
 ## placeholder function to be derived by child classes
-#func state_action():
-#	pass
+func state_action():
+	if detection_manager.current_target == null\
+	 and detection_manager.target_last_known_location == null:
+		state_manager_node.set_new_state(StateManager.State.ROAMING)
+		

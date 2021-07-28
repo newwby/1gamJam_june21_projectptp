@@ -4,7 +4,6 @@ extends Node2D
 
 signal body_changed_detection_radius(body, is_entering_radius, range_group)
 
-#			state_manager_node.set_new_state(StateManager.State.ATTACK)
 # the current actor the enemy is hunting
 var current_target
 # last known location of the target if lost sight of them
@@ -19,7 +18,7 @@ var near_range_group
 var far_range_group
 var distant_range_group
 
-const DETECTION_RADIUS_SIZE = 250
+const DETECTION_RADIUS_SIZE = 200
 const MELEE_RADIUS_MULTIPLIER = 1.0
 const CLOSE_RADIUS_MULTIPLIER = 2.0
 const NEAR_RADIUS_MULTIPLIER = 3.0

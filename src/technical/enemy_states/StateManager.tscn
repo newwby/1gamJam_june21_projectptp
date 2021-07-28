@@ -24,6 +24,10 @@ script = ExtResource( 7 )
 pos_y_travel_px = 25
 tween_anim_duration = 1.0
 
+[node name="BetweenRoamTimer" type="Timer" parent="State_Roaming"]
+
+[node name="MaxRoamTimer" type="Timer" parent="State_Roaming"]
+
 [node name="State_Searching" type="Node2D" parent="."]
 script = ExtResource( 8 )
 
@@ -67,5 +71,7 @@ script = ExtResource( 9 )
 [node name="ReactionTimer" type="Timer" parent="."]
 one_shot = true
 [connection signal="check_state" from="." to="." method="_on_check_state"]
+[connection signal="timeout" from="State_Roaming/BetweenRoamTimer" to="State_Roaming" method="_on_BetweenRoamTimer_timeout"]
+[connection signal="timeout" from="State_Roaming/MaxRoamTimer" to="State_Roaming" method="_on_MaxRoamTimer_timeout"]
 [connection signal="timeout" from="State_Searching/SearchTimer" to="State_Searching" method="_on_SearchTimer_timeout"]
 [connection signal="timeout" from="ReactionTimer" to="." method="_on_ReactionTimer_timeout"]

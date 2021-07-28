@@ -10,6 +10,8 @@ var attack_delay_timer_wait_time = 0.1
 var aim_pause_timer_wait_time = 0.25
 var attack_check_frequency_timer_wait_time = 0.1
 
+var is_currently_firing = false
+
 onready var attack_delay_timer = $AttackDelay
 onready var aim_pause_timer = $AimingPause
 onready var attack_check_frequency_timer = $AttackCheckFrequency
@@ -155,22 +157,20 @@ func state_action():
 			var get_target = detection_manager.current_target
 #			print("find target", detection_manager, get_target, detection_manager.current_target)
 			var firing_target = detection_manager.target_last_known_location
-			if get_target != null and firing_target != null:#\
+			if get_target != null and firing_target != null and not is_currently_firing:#\
 #			and attack_delay.is_stopped():
 				var aiming_vector = -(enemy_parent_node.position-firing_target)
 				enemy_parent_node.current_mouse_target = aiming_vector
 				enemy_parent_node.firing_target = aiming_vector
 #				print("FIRE!")
 				perform_attack(get_target.position, get_weapon_node)
-				
-			
-			# start node behaviour again
-			state_manager_node.set_new_state(StateManager.State.HUNTING)
-#	get_weapon_node
+			else:
+				return_to_hunting_state()
 
 
 func perform_attack(target_pos, weapon_node):
 	if attack_delay_timer.is_stopped() and enemy_parent_node.is_active:
+		is_currently_firing = true
 		# start new delay timer
 		attack_delay_timer.start()
 		# set line
@@ -191,3 +191,15 @@ func perform_attack(target_pos, weapon_node):
 		# fire
 		weapon_node.attempt_ability()
 		enemy_parent_node.get_shot_sound_and_play()
+		is_currently_firing = false
+
+
+func return_to_hunting_state():
+#	pass
+#	# start node behaviour again
+	if state_manager_node.current_state == StateManager.State.ATTACK:
+		state_manager_node.set_new_state(StateManager.State.HUNTING)
+		# behaviour hangup where hunting state isn't doing anything
+		# TEMP THIS IS WHERE THE STATE BEHAVIOUR HANGUP IS
+#		print("# TEMP THIS IS WHERE THE STATE BEHAVIOUR HANGUP IS")
+#		emit_signal("check_state")

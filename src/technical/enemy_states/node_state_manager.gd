@@ -131,6 +131,7 @@ func set_new_state(new_state):
 		if check_action_state.is_action_state:
 			state_register.append(current_state)
 			if GlobalDebug.enemy_state_logs: print("state register = ", state_register)
+		
 		current_state = new_state
 		
 		if check_action_state.state_emote_node != null:
@@ -212,11 +213,13 @@ func call_state_condition_check(state_identifier):
 	get(state_call_dict[state_identifier]).check_state_condition()
 	return state_check
 
+
 # call this if a state can activate
 # gets the state_action() function from the current state's node
 func call_active_state_node_action():
 	if current_state != null:
 		get(state_call_dict[current_state]).state_action()
+
 
 ###############################################################################
 
