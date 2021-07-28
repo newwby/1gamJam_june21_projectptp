@@ -45,4 +45,4 @@ func state_action():
 	
 	enemy_parent_node.detection_scan.current_target =\
 	 detector.get_closest_player_in_near_group()
-	emit_signal("check_state")
+#	emit_signal("check_state")

@@ -139,6 +139,6 @@ func state_action():
 
 # for removing debugger complaints
 func voidfunc():
-	emit_signal("check_state")
+#	emit_signal("check_state")
 	emit_signal("clear_state")
 	emit_signal("new_state_texture")
