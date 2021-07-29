@@ -95,11 +95,11 @@ position = Vector2( 0, -100 )
 texture = ExtResource( 3 )
 
 [node name="SquishingTween" parent="SpriteHolder/TestSprite" instance=ExtResource( 10 )]
-squish_randomness_cap = 0.025
-sprite_rescale_x = 0.65
-sprite_rescale_y = 0.65
-active_tween_speed_override = 1.25
-passive_tween_speed_override = 0.75
+squish_randomness_cap = 0.05
+sprite_rescale_x = 0.55
+sprite_rescale_y = 0.55
+active_tween_speed_override = 0.5
+passive_tween_speed_override = 0.5
 
 [node name="DamageImmunityTimer" parent="SpriteHolder/TestSprite" instance=ExtResource( 6 )]
 immunity_duration = 0.25

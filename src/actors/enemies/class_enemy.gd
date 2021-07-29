@@ -5,7 +5,7 @@ extends Actor
 signal enemy_defeated # DEBUGGER ISSUE, UNUSED
 
 const ENEMY_TYPE_BASE_MOVEMENT_SPEED = 150
-var BASE_AGGRESSION_TIMER_WAIT_TIME = 3.0
+const BASE_AGGRESSION_TIMER_WAIT_TIME = 3.0
 
 export var enemy_life: int = 35
 export var enemy_aggression_modifier: float = 1.0
