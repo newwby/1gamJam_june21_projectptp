@@ -23,24 +23,28 @@ collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Range_Melee"]
 shape = SubResource( 1 )
+disabled = true
 
 [node name="Range_Close" type="Area2D" parent="."]
 collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Range_Close"]
 shape = SubResource( 2 )
+disabled = true
 
 [node name="Range_Near" type="Area2D" parent="."]
 collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Range_Near"]
 shape = SubResource( 3 )
+disabled = true
 
 [node name="Range_Far" type="Area2D" parent="."]
 collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Range_Far"]
 shape = SubResource( 4 )
+disabled = true
 [connection signal="body_entered" from="Range_Melee" to="." method="_on_Range_Melee_body_entered"]
 [connection signal="body_exited" from="Range_Melee" to="." method="_on_Range_Melee_body_exited"]
 [connection signal="body_entered" from="Range_Close" to="." method="_on_Range_Close_body_entered"]

@@ -79,6 +79,7 @@ func move_toward_target_location_and_stop():
 		# (should this check be time gated for performance?)
 	else:
 		print("we don't know where target is why are we in this state")
+		clear_search_state()
 
 
 func move_toward_target_location_for_duration():

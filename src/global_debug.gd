@@ -45,3 +45,5 @@ var enemy_detection_func_logs = false
 var attack_weapon_range_checking = false
 # console logging for audio array controller
 var audio_array_controller_logs = false
+# console logging for wave handlers and wave spawn master
+var wave_spawn_handling_logs = true

@@ -8,6 +8,9 @@
 [ext_resource path="res://art/kenney_particle1.1/star_08.png" type="Texture" id=6]
 [ext_resource path="res://art/kenney_particle1.1/star_07.png" type="Texture" id=7]
 
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 110.933, 731.933 )
+
 [sub_resource type="AnimatedTexture" id=2]
 flags = 4
 frames = 5
@@ -25,106 +28,8 @@ frame_4/delay_sec = 0.0
 [sub_resource type="Gradient" id=3]
 colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0.294118 )
 
-[sub_resource type="RectangleShape2D" id=1]
-
-[node name="WaveSpawnHandler" type="Node2D"]
+[node name="WaveSpawnMaster" type="Node2D"]
 script = ExtResource( 1 )
-
-[node name="WaveMaxLength" type="Timer" parent="."]
-
-[node name="WaveBetweenSpawnDelay" type="Timer" parent="."]
-
-[node name="WaveSpawnLocations" type="Node2D" parent="."]
-
-[node name="WaveSpawnPosition1" type="Position2D" parent="WaveSpawnLocations"]
-
-[node name="SpawnParticles" type="CPUParticles2D" parent="WaveSpawnLocations/WaveSpawnPosition1"]
-emitting = false
-amount = 32
-lifetime = 0.5
-texture = SubResource( 2 )
-emission_shape = 1
-emission_sphere_radius = 5.0
-gravity = Vector2( 0, -15 )
-damping = 5.0
-scale_amount = 1.5
-scale_amount_random = 1.0
-color_ramp = SubResource( 3 )
-
-[node name="WaveSpawnPosition2" type="Position2D" parent="WaveSpawnLocations"]
-
-[node name="SpawnParticles" type="CPUParticles2D" parent="WaveSpawnLocations/WaveSpawnPosition2"]
-emitting = false
-amount = 32
-lifetime = 0.5
-texture = SubResource( 2 )
-emission_shape = 1
-emission_sphere_radius = 5.0
-gravity = Vector2( 0, -15 )
-damping = 5.0
-scale_amount = 1.5
-scale_amount_random = 1.0
-color_ramp = SubResource( 3 )
-
-[node name="WaveSpawnPosition3" type="Position2D" parent="WaveSpawnLocations"]
-
-[node name="SpawnParticles" type="CPUParticles2D" parent="WaveSpawnLocations/WaveSpawnPosition3"]
-emitting = false
-amount = 32
-lifetime = 0.5
-texture = SubResource( 2 )
-emission_shape = 1
-emission_sphere_radius = 5.0
-gravity = Vector2( 0, -15 )
-damping = 5.0
-scale_amount = 1.5
-scale_amount_random = 1.0
-color_ramp = SubResource( 3 )
-
-[node name="WaveSpawnPosition4" type="Position2D" parent="WaveSpawnLocations"]
-
-[node name="SpawnParticles" type="CPUParticles2D" parent="WaveSpawnLocations/WaveSpawnPosition4"]
-emitting = false
-amount = 32
-lifetime = 0.5
-texture = SubResource( 2 )
-emission_shape = 1
-emission_sphere_radius = 5.0
-gravity = Vector2( 0, -15 )
-damping = 5.0
-scale_amount = 1.5
-scale_amount_random = 1.0
-color_ramp = SubResource( 3 )
-
-[node name="WaveSpawnPosition5" type="Position2D" parent="WaveSpawnLocations"]
-
-[node name="SpawnParticles" type="CPUParticles2D" parent="WaveSpawnLocations/WaveSpawnPosition5"]
-emitting = false
-amount = 32
-lifetime = 0.5
-texture = SubResource( 2 )
-emission_shape = 1
-emission_sphere_radius = 5.0
-gravity = Vector2( 0, -15 )
-damping = 5.0
-scale_amount = 1.5
-scale_amount_random = 1.0
-color_ramp = SubResource( 3 )
-
-[node name="WaveSpawnPosition6" type="Position2D" parent="WaveSpawnLocations"]
-
-[node name="SpawnParticles" type="CPUParticles2D" parent="WaveSpawnLocations/WaveSpawnPosition6"]
-emitting = false
-amount = 32
-lifetime = 0.5
-texture = SubResource( 2 )
-emission_shape = 1
-emission_sphere_radius = 5.0
-gravity = Vector2( 0, -15 )
-damping = 5.0
-scale_amount = 1.5
-scale_amount_random = 1.0
-color_ramp = SubResource( 3 )
 
 [node name="WaveTriggerArea" type="Area2D" parent="."]
 collision_layer = 128
@@ -133,8 +38,219 @@ collision_mask = 2
 [node name="WaveTriggerCollisionZone" type="CollisionShape2D" parent="WaveTriggerArea"]
 shape = SubResource( 1 )
 
-[node name="WaveHandlerContainer" type="Node2D" parent="."]
+[node name="WaveHandlers" type="Node2D" parent="."]
 
-[node name="WaveHandler1" type="Node2D" parent="WaveHandlerContainer"]
+[node name="SpawnWave1" type="Node2D" parent="WaveHandlers"]
 script = ExtResource( 2 )
+particle_scale_amount = 0.15
+enemy_to_spawn_in_1 = 1
+enemy_to_spawn_in_2 = 1
+enemy_to_spawn_in_3 = 1
+
+[node name="WaveMaxLength" type="Timer" parent="WaveHandlers/SpawnWave1"]
+
+[node name="WaveBetweenSpawnDelay" type="Timer" parent="WaveHandlers/SpawnWave1"]
+
+[node name="EnemySpawnLocations" type="Node2D" parent="WaveHandlers/SpawnWave1"]
+
+[node name="WaveSpawnPosition1" type="Position2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations"]
+
+[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations/WaveSpawnPosition1"]
+emitting = false
+amount = 32
+lifetime = 0.5
+texture = SubResource( 2 )
+emission_shape = 1
+emission_sphere_radius = 5.0
+gravity = Vector2( 0, -15 )
+damping = 5.0
+scale_amount = 1.5
+scale_amount_random = 1.0
+color_ramp = SubResource( 3 )
+
+[node name="WaveSpawnPosition2" type="Position2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations"]
+
+[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations/WaveSpawnPosition2"]
+emitting = false
+amount = 32
+lifetime = 0.5
+texture = SubResource( 2 )
+emission_shape = 1
+emission_sphere_radius = 5.0
+gravity = Vector2( 0, -15 )
+damping = 5.0
+scale_amount = 1.5
+scale_amount_random = 1.0
+color_ramp = SubResource( 3 )
+
+[node name="WaveSpawnPosition3" type="Position2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations"]
+
+[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations/WaveSpawnPosition3"]
+emitting = false
+amount = 32
+lifetime = 0.5
+texture = SubResource( 2 )
+emission_shape = 1
+emission_sphere_radius = 5.0
+gravity = Vector2( 0, -15 )
+damping = 5.0
+scale_amount = 1.5
+scale_amount_random = 1.0
+color_ramp = SubResource( 3 )
+
+[node name="WaveSpawnPosition4" type="Position2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations"]
+
+[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations/WaveSpawnPosition4"]
+emitting = false
+amount = 32
+lifetime = 0.5
+texture = SubResource( 2 )
+emission_shape = 1
+emission_sphere_radius = 5.0
+gravity = Vector2( 0, -15 )
+damping = 5.0
+scale_amount = 1.5
+scale_amount_random = 1.0
+color_ramp = SubResource( 3 )
+
+[node name="WaveSpawnPosition5" type="Position2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations"]
+
+[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations/WaveSpawnPosition5"]
+emitting = false
+amount = 32
+lifetime = 0.5
+texture = SubResource( 2 )
+emission_shape = 1
+emission_sphere_radius = 5.0
+gravity = Vector2( 0, -15 )
+damping = 5.0
+scale_amount = 1.5
+scale_amount_random = 1.0
+color_ramp = SubResource( 3 )
+
+[node name="WaveSpawnPosition6" type="Position2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations"]
+
+[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations/WaveSpawnPosition6"]
+emitting = false
+amount = 32
+lifetime = 0.5
+texture = SubResource( 2 )
+emission_shape = 1
+emission_sphere_radius = 5.0
+gravity = Vector2( 0, -15 )
+damping = 5.0
+scale_amount = 1.5
+scale_amount_random = 1.0
+color_ramp = SubResource( 3 )
+
+[node name="EnemyHolder" type="Node2D" parent="WaveHandlers/SpawnWave1"]
+
+[node name="SpawnWave2" type="Node2D" parent="WaveHandlers"]
+script = ExtResource( 2 )
+particle_scale_amount = 0.15
+enemy_to_spawn_in_1 = 2
+enemy_to_spawn_in_2 = 2
+enemy_to_spawn_in_3 = 2
+
+[node name="WaveMaxLength" type="Timer" parent="WaveHandlers/SpawnWave2"]
+
+[node name="WaveBetweenSpawnDelay" type="Timer" parent="WaveHandlers/SpawnWave2"]
+
+[node name="EnemySpawnLocations" type="Node2D" parent="WaveHandlers/SpawnWave2"]
+
+[node name="WaveSpawnPosition1" type="Position2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations"]
+
+[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations/WaveSpawnPosition1"]
+emitting = false
+amount = 32
+lifetime = 0.5
+texture = SubResource( 2 )
+emission_shape = 1
+emission_sphere_radius = 5.0
+gravity = Vector2( 0, -15 )
+damping = 5.0
+scale_amount = 0.5
+scale_amount_random = 1.0
+color_ramp = SubResource( 3 )
+
+[node name="WaveSpawnPosition2" type="Position2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations"]
+
+[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations/WaveSpawnPosition2"]
+emitting = false
+amount = 32
+lifetime = 0.5
+texture = SubResource( 2 )
+emission_shape = 1
+emission_sphere_radius = 5.0
+gravity = Vector2( 0, -15 )
+damping = 5.0
+scale_amount = 0.5
+scale_amount_random = 1.0
+color_ramp = SubResource( 3 )
+
+[node name="WaveSpawnPosition3" type="Position2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations"]
+
+[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations/WaveSpawnPosition3"]
+emitting = false
+amount = 32
+lifetime = 0.5
+texture = SubResource( 2 )
+emission_shape = 1
+emission_sphere_radius = 5.0
+gravity = Vector2( 0, -15 )
+damping = 5.0
+scale_amount = 0.5
+scale_amount_random = 1.0
+color_ramp = SubResource( 3 )
+
+[node name="WaveSpawnPosition4" type="Position2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations"]
+
+[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations/WaveSpawnPosition4"]
+emitting = false
+amount = 32
+lifetime = 0.5
+texture = SubResource( 2 )
+emission_shape = 1
+emission_sphere_radius = 5.0
+gravity = Vector2( 0, -15 )
+damping = 5.0
+scale_amount = 0.5
+scale_amount_random = 1.0
+color_ramp = SubResource( 3 )
+
+[node name="WaveSpawnPosition5" type="Position2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations"]
+
+[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations/WaveSpawnPosition5"]
+emitting = false
+amount = 32
+lifetime = 0.5
+texture = SubResource( 2 )
+emission_shape = 1
+emission_sphere_radius = 5.0
+gravity = Vector2( 0, -15 )
+damping = 5.0
+scale_amount = 0.5
+scale_amount_random = 1.0
+color_ramp = SubResource( 3 )
+
+[node name="WaveSpawnPosition6" type="Position2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations"]
+
+[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations/WaveSpawnPosition6"]
+emitting = false
+amount = 32
+lifetime = 0.5
+texture = SubResource( 2 )
+emission_shape = 1
+emission_sphere_radius = 5.0
+gravity = Vector2( 0, -15 )
+damping = 5.0
+scale_amount = 0.5
+scale_amount_random = 1.0
+color_ramp = SubResource( 3 )
+
+[node name="EnemyHolder" type="Node2D" parent="WaveHandlers/SpawnWave2"]
 [connection signal="body_entered" from="WaveTriggerArea" to="." method="_on_WaveTriggerArea_body_entered"]
+[connection signal="wave_complete" from="WaveHandlers/SpawnWave1" to="WaveHandlers/SpawnWave1" method="_on_SpawnWave1_wave_complete"]
+[connection signal="timeout" from="WaveHandlers/SpawnWave1/WaveMaxLength" to="WaveHandlers/SpawnWave1" method="_on_WaveMaxLength_timeout"]
+[connection signal="wave_complete" from="WaveHandlers/SpawnWave2" to="WaveHandlers/SpawnWave2" method="_on_SpawnWave1_wave_complete"]
+[connection signal="timeout" from="WaveHandlers/SpawnWave2/WaveMaxLength" to="WaveHandlers/SpawnWave2" method="_on_WaveMaxLength_timeout"]

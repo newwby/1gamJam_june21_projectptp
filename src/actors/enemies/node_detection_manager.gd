@@ -67,6 +67,7 @@ func _ready():
 	set_detection_group_strings()
 	set_group_call_dict()
 #	print(call_range_group(GlobalVariables.RangeGroup.NEAR))
+	enable_all_collision_radii()
 
 ###############################################################################
 
@@ -385,6 +386,14 @@ func remove_from_detection_group(range_group, body):
 #	var group_to_call = grouping_string # + pick any string above
 #	#get_tree().get_nodes_in_group(group_to_call)
 ##	get_tree().call_group(group_to_call, do_this_method_test_example)
+
+
+# disable all collision radii in detection manager when it has a moment
+func enable_all_collision_radii():
+	collision_radius_melee.set_deferred("disabled", false)#.disabled = true
+	collision_radius_close.set_deferred("disabled", false)#.disabled = true
+	collision_radius_near.set_deferred("disabled", false)#.disabled = true
+	collision_radius_far.set_deferred("disabled", false)#.disabled = true
 
 
 # disable all collision radii in detection manager when it has a moment
