@@ -165,7 +165,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Puppy Time Police"
-run/main_scene="res://src/world/world_environment.tscn"
+run/main_scene="res://src/Main.tscn"
 config/icon="res://art/kenneynl_testsprite_dog.png"
 
 [autoload]
