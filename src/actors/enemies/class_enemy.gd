@@ -253,6 +253,7 @@ func enemy_died():
 	enemy_sprite.visible = false
 	death_particles.emitting = true
 	get_damaged_sound_and_play()
+	emit_signal("enemy_defeated")
 	death_timer.start()
 
 

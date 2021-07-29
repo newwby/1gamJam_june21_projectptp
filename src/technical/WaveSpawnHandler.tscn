@@ -1,32 +1,11 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://src/technical/WaveSpawnHandler.gd" type="Script" id=1]
 [ext_resource path="res://src/technical/WaveHandler.gd" type="Script" id=2]
-[ext_resource path="res://art/kenney_particle1.1/star_06.png" type="Texture" id=3]
-[ext_resource path="res://art/kenney_particle1.1/star_04.png" type="Texture" id=4]
-[ext_resource path="res://art/kenney_particle1.1/star_05.png" type="Texture" id=5]
-[ext_resource path="res://art/kenney_particle1.1/star_08.png" type="Texture" id=6]
-[ext_resource path="res://art/kenney_particle1.1/star_07.png" type="Texture" id=7]
+[ext_resource path="res://src/effect/wave_spawn_particles.tscn" type="PackedScene" id=8]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 110.933, 731.933 )
-
-[sub_resource type="AnimatedTexture" id=2]
-flags = 4
-frames = 5
-fps = 10.0
-frame_0/texture = ExtResource( 4 )
-frame_1/texture = ExtResource( 5 )
-frame_1/delay_sec = 0.0
-frame_2/texture = ExtResource( 3 )
-frame_2/delay_sec = 0.0
-frame_3/texture = ExtResource( 7 )
-frame_3/delay_sec = 0.0
-frame_4/texture = ExtResource( 6 )
-frame_4/delay_sec = 0.0
-
-[sub_resource type="Gradient" id=3]
-colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0.294118 )
 
 [node name="WaveSpawnMaster" type="Node2D"]
 script = ExtResource( 1 )
@@ -42,7 +21,6 @@ shape = SubResource( 1 )
 
 [node name="SpawnWave1" type="Node2D" parent="WaveHandlers"]
 script = ExtResource( 2 )
-particle_scale_amount = 0.15
 enemy_to_spawn_in_1 = 1
 enemy_to_spawn_in_2 = 1
 enemy_to_spawn_in_3 = 1
@@ -55,99 +33,32 @@ enemy_to_spawn_in_3 = 1
 
 [node name="WaveSpawnPosition1" type="Position2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations"]
 
-[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations/WaveSpawnPosition1"]
-emitting = false
-amount = 32
-lifetime = 0.5
-texture = SubResource( 2 )
-emission_shape = 1
-emission_sphere_radius = 5.0
-gravity = Vector2( 0, -15 )
-damping = 5.0
-scale_amount = 1.5
-scale_amount_random = 1.0
-color_ramp = SubResource( 3 )
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations/WaveSpawnPosition1" instance=ExtResource( 8 )]
 
 [node name="WaveSpawnPosition2" type="Position2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations"]
 
-[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations/WaveSpawnPosition2"]
-emitting = false
-amount = 32
-lifetime = 0.5
-texture = SubResource( 2 )
-emission_shape = 1
-emission_sphere_radius = 5.0
-gravity = Vector2( 0, -15 )
-damping = 5.0
-scale_amount = 1.5
-scale_amount_random = 1.0
-color_ramp = SubResource( 3 )
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations/WaveSpawnPosition2" instance=ExtResource( 8 )]
 
 [node name="WaveSpawnPosition3" type="Position2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations"]
 
-[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations/WaveSpawnPosition3"]
-emitting = false
-amount = 32
-lifetime = 0.5
-texture = SubResource( 2 )
-emission_shape = 1
-emission_sphere_radius = 5.0
-gravity = Vector2( 0, -15 )
-damping = 5.0
-scale_amount = 1.5
-scale_amount_random = 1.0
-color_ramp = SubResource( 3 )
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations/WaveSpawnPosition3" instance=ExtResource( 8 )]
 
 [node name="WaveSpawnPosition4" type="Position2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations"]
 
-[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations/WaveSpawnPosition4"]
-emitting = false
-amount = 32
-lifetime = 0.5
-texture = SubResource( 2 )
-emission_shape = 1
-emission_sphere_radius = 5.0
-gravity = Vector2( 0, -15 )
-damping = 5.0
-scale_amount = 1.5
-scale_amount_random = 1.0
-color_ramp = SubResource( 3 )
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations/WaveSpawnPosition4" instance=ExtResource( 8 )]
 
 [node name="WaveSpawnPosition5" type="Position2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations"]
 
-[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations/WaveSpawnPosition5"]
-emitting = false
-amount = 32
-lifetime = 0.5
-texture = SubResource( 2 )
-emission_shape = 1
-emission_sphere_radius = 5.0
-gravity = Vector2( 0, -15 )
-damping = 5.0
-scale_amount = 1.5
-scale_amount_random = 1.0
-color_ramp = SubResource( 3 )
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations/WaveSpawnPosition5" instance=ExtResource( 8 )]
 
 [node name="WaveSpawnPosition6" type="Position2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations"]
 
-[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations/WaveSpawnPosition6"]
-emitting = false
-amount = 32
-lifetime = 0.5
-texture = SubResource( 2 )
-emission_shape = 1
-emission_sphere_radius = 5.0
-gravity = Vector2( 0, -15 )
-damping = 5.0
-scale_amount = 1.5
-scale_amount_random = 1.0
-color_ramp = SubResource( 3 )
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave1/EnemySpawnLocations/WaveSpawnPosition6" instance=ExtResource( 8 )]
 
 [node name="EnemyHolder" type="Node2D" parent="WaveHandlers/SpawnWave1"]
 
 [node name="SpawnWave2" type="Node2D" parent="WaveHandlers"]
 script = ExtResource( 2 )
-particle_scale_amount = 0.15
 enemy_to_spawn_in_1 = 2
 enemy_to_spawn_in_2 = 2
 enemy_to_spawn_in_3 = 2
@@ -160,97 +71,111 @@ enemy_to_spawn_in_3 = 2
 
 [node name="WaveSpawnPosition1" type="Position2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations"]
 
-[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations/WaveSpawnPosition1"]
-emitting = false
-amount = 32
-lifetime = 0.5
-texture = SubResource( 2 )
-emission_shape = 1
-emission_sphere_radius = 5.0
-gravity = Vector2( 0, -15 )
-damping = 5.0
-scale_amount = 0.5
-scale_amount_random = 1.0
-color_ramp = SubResource( 3 )
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations/WaveSpawnPosition1" instance=ExtResource( 8 )]
 
 [node name="WaveSpawnPosition2" type="Position2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations"]
 
-[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations/WaveSpawnPosition2"]
-emitting = false
-amount = 32
-lifetime = 0.5
-texture = SubResource( 2 )
-emission_shape = 1
-emission_sphere_radius = 5.0
-gravity = Vector2( 0, -15 )
-damping = 5.0
-scale_amount = 0.5
-scale_amount_random = 1.0
-color_ramp = SubResource( 3 )
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations/WaveSpawnPosition2" instance=ExtResource( 8 )]
 
 [node name="WaveSpawnPosition3" type="Position2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations"]
 
-[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations/WaveSpawnPosition3"]
-emitting = false
-amount = 32
-lifetime = 0.5
-texture = SubResource( 2 )
-emission_shape = 1
-emission_sphere_radius = 5.0
-gravity = Vector2( 0, -15 )
-damping = 5.0
-scale_amount = 0.5
-scale_amount_random = 1.0
-color_ramp = SubResource( 3 )
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations/WaveSpawnPosition3" instance=ExtResource( 8 )]
 
 [node name="WaveSpawnPosition4" type="Position2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations"]
 
-[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations/WaveSpawnPosition4"]
-emitting = false
-amount = 32
-lifetime = 0.5
-texture = SubResource( 2 )
-emission_shape = 1
-emission_sphere_radius = 5.0
-gravity = Vector2( 0, -15 )
-damping = 5.0
-scale_amount = 0.5
-scale_amount_random = 1.0
-color_ramp = SubResource( 3 )
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations/WaveSpawnPosition4" instance=ExtResource( 8 )]
 
 [node name="WaveSpawnPosition5" type="Position2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations"]
 
-[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations/WaveSpawnPosition5"]
-emitting = false
-amount = 32
-lifetime = 0.5
-texture = SubResource( 2 )
-emission_shape = 1
-emission_sphere_radius = 5.0
-gravity = Vector2( 0, -15 )
-damping = 5.0
-scale_amount = 0.5
-scale_amount_random = 1.0
-color_ramp = SubResource( 3 )
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations/WaveSpawnPosition5" instance=ExtResource( 8 )]
 
 [node name="WaveSpawnPosition6" type="Position2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations"]
 
-[node name="SpawnParticles" type="CPUParticles2D" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations/WaveSpawnPosition6"]
-emitting = false
-amount = 32
-lifetime = 0.5
-texture = SubResource( 2 )
-emission_shape = 1
-emission_sphere_radius = 5.0
-gravity = Vector2( 0, -15 )
-damping = 5.0
-scale_amount = 0.5
-scale_amount_random = 1.0
-color_ramp = SubResource( 3 )
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave2/EnemySpawnLocations/WaveSpawnPosition6" instance=ExtResource( 8 )]
 
 [node name="EnemyHolder" type="Node2D" parent="WaveHandlers/SpawnWave2"]
+
+[node name="SpawnWave3" type="Node2D" parent="WaveHandlers"]
+script = ExtResource( 2 )
+enemy_to_spawn_in_1 = 2
+enemy_to_spawn_in_2 = 2
+enemy_to_spawn_in_3 = 2
+
+[node name="WaveMaxLength" type="Timer" parent="WaveHandlers/SpawnWave3"]
+
+[node name="WaveBetweenSpawnDelay" type="Timer" parent="WaveHandlers/SpawnWave3"]
+
+[node name="EnemySpawnLocations" type="Node2D" parent="WaveHandlers/SpawnWave3"]
+
+[node name="WaveSpawnPosition1" type="Position2D" parent="WaveHandlers/SpawnWave3/EnemySpawnLocations"]
+
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave3/EnemySpawnLocations/WaveSpawnPosition1" instance=ExtResource( 8 )]
+
+[node name="WaveSpawnPosition2" type="Position2D" parent="WaveHandlers/SpawnWave3/EnemySpawnLocations"]
+
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave3/EnemySpawnLocations/WaveSpawnPosition2" instance=ExtResource( 8 )]
+
+[node name="WaveSpawnPosition3" type="Position2D" parent="WaveHandlers/SpawnWave3/EnemySpawnLocations"]
+
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave3/EnemySpawnLocations/WaveSpawnPosition3" instance=ExtResource( 8 )]
+
+[node name="WaveSpawnPosition4" type="Position2D" parent="WaveHandlers/SpawnWave3/EnemySpawnLocations"]
+
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave3/EnemySpawnLocations/WaveSpawnPosition4" instance=ExtResource( 8 )]
+
+[node name="WaveSpawnPosition5" type="Position2D" parent="WaveHandlers/SpawnWave3/EnemySpawnLocations"]
+
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave3/EnemySpawnLocations/WaveSpawnPosition5" instance=ExtResource( 8 )]
+
+[node name="WaveSpawnPosition6" type="Position2D" parent="WaveHandlers/SpawnWave3/EnemySpawnLocations"]
+
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave3/EnemySpawnLocations/WaveSpawnPosition6" instance=ExtResource( 8 )]
+
+[node name="EnemyHolder" type="Node2D" parent="WaveHandlers/SpawnWave3"]
+
+[node name="SpawnWave4" type="Node2D" parent="WaveHandlers"]
+script = ExtResource( 2 )
+enemy_to_spawn_in_1 = 2
+enemy_to_spawn_in_2 = 2
+enemy_to_spawn_in_3 = 2
+
+[node name="WaveMaxLength" type="Timer" parent="WaveHandlers/SpawnWave4"]
+
+[node name="WaveBetweenSpawnDelay" type="Timer" parent="WaveHandlers/SpawnWave4"]
+
+[node name="EnemySpawnLocations" type="Node2D" parent="WaveHandlers/SpawnWave4"]
+
+[node name="WaveSpawnPosition1" type="Position2D" parent="WaveHandlers/SpawnWave4/EnemySpawnLocations"]
+
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave4/EnemySpawnLocations/WaveSpawnPosition1" instance=ExtResource( 8 )]
+
+[node name="WaveSpawnPosition2" type="Position2D" parent="WaveHandlers/SpawnWave4/EnemySpawnLocations"]
+
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave4/EnemySpawnLocations/WaveSpawnPosition2" instance=ExtResource( 8 )]
+
+[node name="WaveSpawnPosition3" type="Position2D" parent="WaveHandlers/SpawnWave4/EnemySpawnLocations"]
+
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave4/EnemySpawnLocations/WaveSpawnPosition3" instance=ExtResource( 8 )]
+
+[node name="WaveSpawnPosition4" type="Position2D" parent="WaveHandlers/SpawnWave4/EnemySpawnLocations"]
+
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave4/EnemySpawnLocations/WaveSpawnPosition4" instance=ExtResource( 8 )]
+
+[node name="WaveSpawnPosition5" type="Position2D" parent="WaveHandlers/SpawnWave4/EnemySpawnLocations"]
+
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave4/EnemySpawnLocations/WaveSpawnPosition5" instance=ExtResource( 8 )]
+
+[node name="WaveSpawnPosition6" type="Position2D" parent="WaveHandlers/SpawnWave4/EnemySpawnLocations"]
+
+[node name="SpawnParticles" parent="WaveHandlers/SpawnWave4/EnemySpawnLocations/WaveSpawnPosition6" instance=ExtResource( 8 )]
+
+[node name="EnemyHolder" type="Node2D" parent="WaveHandlers/SpawnWave4"]
 [connection signal="body_entered" from="WaveTriggerArea" to="." method="_on_WaveTriggerArea_body_entered"]
 [connection signal="wave_complete" from="WaveHandlers/SpawnWave1" to="WaveHandlers/SpawnWave1" method="_on_SpawnWave1_wave_complete"]
 [connection signal="timeout" from="WaveHandlers/SpawnWave1/WaveMaxLength" to="WaveHandlers/SpawnWave1" method="_on_WaveMaxLength_timeout"]
 [connection signal="wave_complete" from="WaveHandlers/SpawnWave2" to="WaveHandlers/SpawnWave2" method="_on_SpawnWave1_wave_complete"]
 [connection signal="timeout" from="WaveHandlers/SpawnWave2/WaveMaxLength" to="WaveHandlers/SpawnWave2" method="_on_WaveMaxLength_timeout"]
+[connection signal="wave_complete" from="WaveHandlers/SpawnWave3" to="WaveHandlers/SpawnWave3" method="_on_SpawnWave1_wave_complete"]
+[connection signal="timeout" from="WaveHandlers/SpawnWave3/WaveMaxLength" to="WaveHandlers/SpawnWave3" method="_on_WaveMaxLength_timeout"]
+[connection signal="wave_complete" from="WaveHandlers/SpawnWave4" to="WaveHandlers/SpawnWave4" method="_on_SpawnWave1_wave_complete"]
+[connection signal="timeout" from="WaveHandlers/SpawnWave4/WaveMaxLength" to="WaveHandlers/SpawnWave4" method="_on_WaveMaxLength_timeout"]

@@ -14,8 +14,8 @@ export(int, 1, 60, 1) var wave_max_length = 30
 # length of time in seconds(/ms) between enemy spawns
 # also controls length of time spawn particles will emit for
 export(float, 0, 2, 0.1) var enemy_spawn_delay = 0.4
-# control particle spawn size
-export(float, 0.025, 1, 0.025)  var particle_scale_amount = 0.25
+
+export var wave_complete_on_all_spawned = false
 
 export(SpawnableEnemy) var enemy_to_spawn_in_1
 export(SpawnableEnemy) var enemy_to_spawn_in_2
@@ -157,7 +157,7 @@ func spawn_wave_enemies(target_to_attack):
 				# begin the spawn procedure
 				# get node path to particles then begin particle emit/spawn
 				var particle_path = str(next_spawn_position.get_path()) + "/SpawnParticles"
-				get_node(particle_path).scale_amount = particle_scale_amount
+#				Particles2D.scale
 				get_node(particle_path).emitting = true
 				# start wave delay timer and delay until wave delay timer elapses
 				spawn_delay_timer.start()
@@ -174,7 +174,8 @@ func spawn_wave_enemies(target_to_attack):
 				new_spawn_instance._on_Enemy_damaged(0, target_to_attack)
 	
 	# on finishing the list loop
-	if is_wave_active:
+	if is_wave_active and wave_complete_on_all_spawned:
+		if GlobalDebug.wave_spawn_handling_logs: print(self.name, " is complete spawning and wants to move on")
 		emit_signal("wave_complete")
 
 
@@ -202,20 +203,24 @@ func get_next_spawn_position():
 
 
 func _on_EnemyDefeated():
+	if GlobalDebug.wave_spawn_handling_logs: print("enemy defeated from ", self.name)
 	total_enemies_defeated += 1
 	if total_enemies_defeated >= total_number_of_enemies_to_spawn\
 	and is_wave_active:
+		if GlobalDebug.wave_spawn_handling_logs: print(self.name, " enemies all defeated!")
 		emit_signal("wave_complete")
 
 
 # handles if wave goes on too long to call next wave
 func _on_WaveMaxLength_timeout():
+	if GlobalDebug.wave_spawn_handling_logs: print(self.name, " length timeout!")
 	if is_wave_active:
 		emit_signal("wave_complete")
 
 
 # handles when wave calls the next wave
 func _on_SpawnWave1_wave_complete():
+	if GlobalDebug.wave_spawn_handling_logs: print(self.name, " emitting wave complete signal!")
 	is_wave_active = false
 	is_wave_completed = true
 	if not wave_length_timer.is_stopped():

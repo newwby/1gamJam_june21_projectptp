@@ -312,6 +312,8 @@ func _on_Player_damaged(damage_taken, _damager):
 	if damage_immunity_timer.is_stopped() and is_damageable_by_foes:
 		damage_immunity_timer.start_immunity()
 		var damage_taken_scaled = damage_taken/10
+		if damage_taken_scaled < 1:
+			damage_taken_scaled = 1
 		player_life -= damage_taken_scaled
 		get_damaged_sound_and_play()
 		modify_glitch_effect(true)

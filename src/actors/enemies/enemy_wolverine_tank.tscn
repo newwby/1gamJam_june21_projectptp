@@ -134,7 +134,7 @@ gradient = SubResource( 2 )
 position = Vector2( 0, 2 )
 
 [node name="DetectionHandler" parent="." instance=ExtResource( 4 )]
-base_radii_flat_override = 250
+base_radii_flat_override = 400
 
 [node name="CollisionShape2D" parent="DetectionHandler/Range_Melee" index="0"]
 shape = SubResource( 3 )

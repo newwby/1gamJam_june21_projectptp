@@ -87,7 +87,7 @@ collision_mask = 119
 script = ExtResource( 2 )
 movement_speed = 200
 enemy_life = 45
-enemy_aggression_modifier = 2.0
+enemy_aggression_modifier = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
@@ -164,7 +164,7 @@ roaming_max_duration = 8.0
 position = Vector2( 0, 2 )
 
 [node name="DetectionHandler" parent="." instance=ExtResource( 4 )]
-base_radii_flat_override = 35
+base_radii_flat_override = 80
 
 [node name="CollisionShape2D" parent="DetectionHandler/Range_Melee" index="0"]
 shape = SubResource( 4 )

@@ -96,8 +96,8 @@ texture = ExtResource( 3 )
 
 [node name="SquishingTween" parent="SpriteHolder/TestSprite" instance=ExtResource( 10 )]
 squish_randomness_cap = 0.05
-sprite_rescale_x = 0.55
-sprite_rescale_y = 0.55
+sprite_rescale_x = 0.75
+sprite_rescale_y = 0.75
 active_tween_speed_override = 0.5
 passive_tween_speed_override = 0.5
 
@@ -135,7 +135,7 @@ gradient = SubResource( 2 )
 position = Vector2( 0, 2 )
 
 [node name="DetectionHandler" parent="." instance=ExtResource( 4 )]
-base_radii_flat_override = 600
+base_radii_flat_override = 900
 
 [node name="CollisionShape2D" parent="DetectionHandler/Range_Melee" index="0"]
 shape = SubResource( 3 )

@@ -39,3 +39,4 @@ func begin_wave_spawning(body):
 			if GlobalDebug.wave_spawn_handling_logs: print("calling spawn_wave_enemies on ", wave.name)
 			wave.spawn_wave_enemies(body)
 			yield(wave, "wave_complete")
+			if GlobalDebug.wave_spawn_handling_logs: print(wave.name, " is complete!")
