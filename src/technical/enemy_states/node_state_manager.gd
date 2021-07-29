@@ -11,7 +11,7 @@
 class_name StateManager, "res://art/shrek_pup_eye_sprite.png"
 extends Node2D
 
-#signal check_state
+signal check_state # DEBUGGER ISSUE, UNUSED
 signal play_state_emote_sound_effect(state_id)
 signal state_manager_active # DEBUGGER ISSUE, UNUSED
 
@@ -385,4 +385,5 @@ func sort_dictionary_by_int_value(given_dict):
 
 # for removing debugger complaints
 func voidfunc():
+	emit_signal("check_state")
 	emit_signal("state_manager_active")

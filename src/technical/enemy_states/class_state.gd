@@ -42,7 +42,7 @@ var state_emote_node
 func _ready():
 	set_state_priority()
 	set_state_manager_and_enemy_self()
-	set_state_signals()
+#	set_state_signals()
 	set_state_emote_position()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -107,11 +107,11 @@ func set_detection_manager():
 
 
 # placeholder function to be derived by child classes
-func set_state_signals():
+#func set_state_signals():
 	# default signal connection
 	# DEBUGGER ISSUE, UNUSED (both signals return values but neither are used)
-	var _discard_value = self.connect("clear_state", state_manager_node, "_on_clear_state")
-	_discard_value = self.connect("check_state", state_manager_node, "_on_check_state")
+#	var _discard_value = self.connect("clear_state", state_manager_node, "_on_clear_state")
+#	_discard_value = self.connect("check_state", state_manager_node, "_on_check_state")
 
 ###############################################################################
 
@@ -139,6 +139,6 @@ func state_action():
 
 # for removing debugger complaints
 func voidfunc():
-#	emit_signal("check_state")
+	emit_signal("check_state")
 	emit_signal("clear_state")
 	emit_signal("new_state_texture")

@@ -70,7 +70,6 @@ script = ExtResource( 9 )
 
 [node name="ReactionTimer" type="Timer" parent="."]
 one_shot = true
-[connection signal="check_state" from="." to="." method="_on_check_state"]
 [connection signal="timeout" from="State_Roaming/BetweenRoamTimer" to="State_Roaming" method="_on_BetweenRoamTimer_timeout"]
 [connection signal="timeout" from="State_Roaming/MaxRoamTimer" to="State_Roaming" method="_on_MaxRoamTimer_timeout"]
 [connection signal="timeout" from="State_Searching/SearchTimer" to="State_Searching" method="_on_SearchTimer_timeout"]

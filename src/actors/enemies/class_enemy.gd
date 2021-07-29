@@ -90,7 +90,8 @@ func _ready():
 	set_lifebar()
 	set_behaviour_timers()
 #	set_initial_state(State.IDLE)
-	set_parent_spawn_handler()
+	# handled elsewhere now
+#	set_parent_spawn_handler()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -213,10 +214,10 @@ func _on_State_Hunting_approach_distance(is_at_maximum_approach):
 
 
 func start_offscreen_timer():
+	# check if not in tree and if it isn't, wait until it is
+	if !offscreen_timer.is_inside_tree():
+		yield(offscreen_timer, "tree_entered")
 	if offscreen_timer.is_stopped():
-		# check if not in tree and if it isn't, wait until it is
-		if !offscreen_timer.is_inside_tree():
-			yield(offscreen_timer, "tree_entered")
 		offscreen_timer.start()
 	else:
 		offscreen_timer.stop()

@@ -22,6 +22,14 @@ const poo_bomb = "res://src/technical/abilities/weapon_object_poo_bomb.tscn"
 # creep zone ground effect scene
 const creep_ground = "res://src/effect/ground_effect_creep_area.tscn"
 
+# paths to various enemy scenes
+const enemy_basic_snake = "res://src/actors/enemies/base_enemy.tscn"
+const enemy_croc_sniper = "res://src/actors/enemies/enemy_crocodile_totem_sniper.tscn"
+const enemy_wind_scyther = "res://src/actors/enemies/enemy_flying_wind_scyther.tscn"
+const enemy_creep_giraffe = "res://src/actors/enemies/enemy_giraffe_blood_creep.tscn"
+const enemy_elite_snake = "res://src/actors/enemies/enemy_red_snake_elite.tscn"
+const enemy_wolverine_tank = "res://src/actors/enemies/enemy_wolverine_tank.tscn"
+
 ###############################################################################
 
 # paths to sprite graphics for collectables and ui cooldown radial

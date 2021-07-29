@@ -17,7 +17,7 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 50, 50 )
 
-[sub_resource type="Gradient" id=22]
+[sub_resource type="Gradient" id=2]
 colors = PoolColorArray( 1, 0, 0, 0.215686, 1, 0.0980392, 0.0980392, 0 )
 
 [sub_resource type="Gradient" id=3]
@@ -115,7 +115,7 @@ texture = ExtResource( 12 )
 emission_shape = 2
 emission_rect_extents = Vector2( 35, 1 )
 gravity = Vector2( 0, 0 )
-color_ramp = SubResource( 22 )
+color_ramp = SubResource( 2 )
 
 [node name="CreepParticleTrail" type="CPUParticles2D" parent="SpriteHolder/TestSprite"]
 show_behind_parent = true
@@ -126,7 +126,7 @@ texture = ExtResource( 12 )
 emission_shape = 2
 emission_rect_extents = Vector2( 35, 1 )
 gravity = Vector2( 0, 0 )
-color_ramp = SubResource( 22 )
+color_ramp = SubResource( 2 )
 
 [node name="ShadowSprite" type="Sprite" parent="SpriteHolder/TestSprite"]
 modulate = Color( 0, 0, 0, 0.294118 )
