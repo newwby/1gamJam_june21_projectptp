@@ -2,6 +2,14 @@
 class_name AudioArrayController, "res://art/icons/kenney_emotespack/PNG/Vector/Style 1/emote_music.png"
 extends Node2D
 
+# this only signals that the array has finished calling sounds,
+# not that those sounds have finished
+signal audio_array_play_finished
+# this signal indicates that the array is built and play looping is beginning
+signal audio_array_play_started(array_contents)
+# this second signal indicates that all contained sounds have finished
+signal all_array_sounds_completed
+
 const TESTING_MODE = false
 
 # no implementation of the following blocks/functions yet
@@ -79,6 +87,15 @@ func set_iteration_timer():
 ##############################################################################
 
 
+func _on_PickupAudio_audio_array_play_started(audio_array):
+	for sound in audio_array:
+		yield(sound, "finished")
+		emit_signal("all_array_sounds_completed")
+
+
+##############################################################################
+
+
 # get all audiostreamplayer2d children, to pass to 'shuffle_audio_and_play()'
 func call_audio_array():
 	if is_enabled:
@@ -95,6 +112,7 @@ func call_audio_array():
 						full_audio_array.append(audio_slave_debug)
 		
 		if full_audio_array.size() > 0:
+			emit_signal("audio_array_play_started", full_audio_array)
 			shuffle_audio_and_play(full_audio_array, play_iterations)
 
 # HAVE NOT IMPLEMENTED UNIQUE ITERATIVE CONTROL/CHECKS
@@ -143,6 +161,7 @@ func shuffle_audio_and_play(given_audio_array: Array, remaining_iterations: int)
 				shuffle_audio_and_play(given_audio_array, remaining_iterations-1)
 			else:
 				if GlobalDebug.audio_array_controller_logs: print("\nend of iterations")
+				emit_signal("audio_array_play_finished")
 			if GlobalDebug.audio_array_controller_logs: print("finishing yielded chosen_sound func")
 #			func_play_chosen.resume()
 

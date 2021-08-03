@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://src/actors/player/class_player.gd" type="Script" id=1]
 [ext_resource path="res://art/kenneynl_testsprite_dog.png" type="Texture" id=2]
@@ -12,6 +12,7 @@
 [ext_resource path="res://src/technical/DamageImmunityTimer.tscn" type="PackedScene" id=10]
 [ext_resource path="res://src/technical/audio_array_controller.tscn" type="PackedScene" id=11]
 [ext_resource path="res://src/effect/shadermaterial_glitch.tres" type="Material" id=12]
+[ext_resource path="res://src/entities/pickups/key_collect.tscn" type="PackedScene" id=13]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 50, 50 )
@@ -97,6 +98,26 @@ texture = ExtResource( 7 )
 [node name="RockingTween" parent="SpriteHolder/StaticSprite" instance=ExtResource( 3 )]
 anim_duration = 0.75
 anim_max_angle = 3
+
+[node name="Key_Collectable" parent="SpriteHolder/StaticSprite" instance=ExtResource( 13 )]
+visible = false
+position = Vector2( 67.4093, 40.7126 )
+scale = Vector2( 0.25, 0.25 )
+key_active = false
+
+[node name="CollisionShape2D" parent="SpriteHolder/StaticSprite/Key_Collectable/Area2D" index="0"]
+disabled = true
+
+[node name="Sprite" parent="SpriteHolder/StaticSprite/Key_Collectable" index="1"]
+position = Vector2( 0, 0 )
+
+[node name="ShadowSprite" parent="SpriteHolder/StaticSprite/Key_Collectable" index="2"]
+visible = false
+modulate = Color( 0, 0, 0, 0.196078 )
+scale = Vector2( 1, 1 )
+
+[node name="SpriteStarParticlesAmbient" parent="SpriteHolder/StaticSprite/Key_Collectable" index="3"]
+emitting = false
 
 [node name="StaticSpriteShadowOutline" type="Sprite" parent="SpriteHolder/StaticSprite"]
 modulate = Color( 0, 0, 0, 0.215686 )
@@ -215,3 +236,5 @@ stream = SubResource( 15 )
 [connection signal="updated_cooldown" from="AbilityHolder/ActiveAbility2" to="." method="_on_ActiveAbility2_updated_cooldown"]
 [connection signal="activate_signal" from="AbilityHolder/ActiveAbility3" to="." method="_on_ActiveAbility3_activate_signal"]
 [connection signal="updated_cooldown" from="AbilityHolder/ActiveAbility3" to="." method="_on_ActiveAbility3_updated_cooldown"]
+
+[editable path="SpriteHolder/StaticSprite/Key_Collectable"]

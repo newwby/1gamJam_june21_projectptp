@@ -16,6 +16,7 @@ var is_setup = false
 
 onready var pickup_graphic = $Sprite
 onready var pickup_shadow = $Sprite/ShadowSprite
+onready var pickup_audio = $PickupAudio
 
 #######################################################################
 
@@ -84,7 +85,9 @@ func _on_NewWeaponPickup_collected():
 	if not is_collected:
 		is_collected = true
 		pickup_graphic.visible = false
-		queue_free()
+		pickup_audio.call_audio_array()
+		yield(pickup_audio, "all_array_sounds_completed")
+		call_deferred("queue_free")
 
 #######################################################################
 

@@ -49,6 +49,8 @@ var ability_cooldown_blink_dash = 2.0
 var ability_cooldown_time_slow = 12.0
 var ability_cooldown_poo_bomb = 6.0
 
+var has_key_collectable = false
+
 onready var player_sprite = $SpriteHolder/StaticSprite
 onready var sprite_animation_tween = $SpriteHolder/StaticSprite/RockingTween
 
@@ -67,6 +69,8 @@ onready var right_eye_sprite = $SpriteHolder/StaticSprite/EyeSprite_Right
 onready var player_HUD = $UICanvasLayer/PlayerHUD
 
 onready var damage_immunity_timer = $SpriteHolder/StaticSprite/DamageImmunityTimer
+
+onready var key_collectable_held_graphic = $SpriteHolder/StaticSprite/Key_Collectable
 
 onready var lifeheart_1_hp012 = $UICanvasLayer/PlayerHUD/MarginContainer/TopHUDBar/TopRightHUD/HBox2/LifeBackground/HeartIcon1
 onready var lifeheart_2_hp234 = $UICanvasLayer/PlayerHUD/MarginContainer/TopHUDBar/TopRightHUD/HBox2/LifeBackground/HeartIcon2
@@ -347,6 +351,11 @@ func _on_ActiveAbility3_activate_signal(ability_type):
 		# replace >> get_time_slow_sound_and_play()
 		pass
 
+
+func _on_DamageImmunityTimer_timeout():
+	modify_glitch_effect(false)
+
+
 ###############################################################################
 
 
@@ -420,5 +429,7 @@ func player_died():
 	self.queue_free()
 
 
-func _on_DamageImmunityTimer_timeout():
-	modify_glitch_effect(false)
+func player_key_collectable_status(player_gained_key: bool):
+	key_collectable_held_graphic.visible = player_gained_key
+	has_key_collectable = player_gained_key
+
