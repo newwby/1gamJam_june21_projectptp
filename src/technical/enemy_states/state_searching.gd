@@ -78,7 +78,7 @@ func move_toward_target_location_and_stop():
 		# if not close enough we just check again later
 		# (should this check be time gated for performance?)
 	else:
-		print("we don't know where target is why are we in this state")
+#		print("we don't know where target is why are we in this state")
 		clear_search_state()
 
 

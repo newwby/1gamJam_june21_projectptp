@@ -88,3 +88,7 @@ func _on_FadeInTween_tween_completed(_object, _key):
 	for actor_node in all_actors:
 		actor_node.is_active = true
 	emit_signal("game_started")
+
+
+func _on_BackgroundBGM_finished():
+	background_music.play()

@@ -16,7 +16,6 @@ data = PoolByteArray( 79, 103, 103, 83, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 169, 79, 1
 
 [node name="AudioArrayController" type="Node2D"]
 script = ExtResource( 1 )
-play_iterations = 8
 basic_mode_only = false
 pitch_randomness_modifier = 0.15
 pitch_is_randomised = true
